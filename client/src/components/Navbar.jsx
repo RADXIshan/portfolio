@@ -7,15 +7,22 @@ import { gsap } from "gsap";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navContainerRef = useRef(null); // For gsap context
-  const navLinksRef = useRef(null); // For menu container
-  const tl = useRef(null); // GSAP timeline
+  const navContainerRef = useRef(null);
+  const navLinksRef = useRef(null);
+  const tl = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.from([".logo img", ".menu-icon-container"], {
+        delay: 0.8,
+        duration: 1,
+        ease: "power2.out",
+        y: -50,
+        opacity: 0,
+        stagger: 0.1,
+      });
       tl.current = gsap.timeline({ paused: true });
 
-      // 1. Animate the container height
       tl.current.to(navLinksRef.current, {
         duration: 0.8,
         delay: 0.2,
@@ -23,26 +30,24 @@ const Navbar = () => {
         ease: "power3.inOut",
       });
 
-      // 2. Animate the nav links
       tl.current.fromTo(
         ".nav-link-item",
-        { y: 30, opacity: 0 },
+        { y: -300, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 0.5,
-          delay: 0.2,
+          delay: 0.1,
           ease: "power2.out",
           stagger: 0.1,
         },
         "-=0.4"
       );
 
-      // 3. Animate the close icon
       tl.current.fromTo(
         ".close-icon",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 },
+        { y:0 ,opacity: 0 },
+        { y: -300 , opacity: 1, duration: 0.3 },
         "-=0.5"
       );
     }, navContainerRef);
@@ -67,8 +72,8 @@ const Navbar = () => {
             <img src={logo} alt="logo" />
           </a>
         </div>
-        <div onClick={toggleMenu}>
-          <Menu className="menu-icon" />
+        <div className="menu-icon-container" onClick={toggleMenu}>
+          <Menu className="menu-icon" size={36} />
         </div>
       </nav>
 

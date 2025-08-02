@@ -1,0 +1,68 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 65vh;
+    gap: 1vw;
+    padding: 2rem; 
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 8vw; 
+    letter-spacing: 0.2rem;
+}
+
+.hero-subtitle { 
+    font-size: clamp(1.2rem, 3vw, 1.75rem);
+    color: #c7c7c7;
+    transition: color 0.3s ease-in-out;
+}
+
+.hero-subtitle:hover {
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    gap: 1vw;
+    margin-top: 1rem;
+}
+
+.social-link {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    color: #c7c7c7;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+    padding: 1vw;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.social-link::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: -2.5vw;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    padding: 0.2vw 5vw;
+    font-size: 1vw;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.social-link:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+.social-link:hover {
+    color: white;
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
