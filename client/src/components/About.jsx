@@ -8,8 +8,8 @@ const About = () => {
           <img src={aboutImage} alt="About" />
         </div>
         <div className="about-rightSide">
-          <h1>About</h1>
-          <p>Hello! I'm Ishan Roy, a passionate web developer with a love for creating dynamic and user-friendly websites. I have a strong foundation in HTML, CSS, and JavaScript, and I'm always eager to learn new technologies and frameworks.</p>
+          <h1>About Me</h1>
+          <p>Hi, I’m Ishan Roy, a FullStack Developer passionate about transforming ideas into impactful, real world products. I specialize in building scalable, intuitive, and user friendly web applications. Driven by curiosity, I’m constantly exploring new technologies and refining my skills to craft solutions that truly make a difference.</p>
         </div>
     </div>
   )
