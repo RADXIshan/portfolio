@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import About from '../components/About';
@@ -14,6 +15,16 @@ const Home = () => {
       {/* <Skills />
       <Projects /> */}
       <Contact />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        }}
+      />
     </>
   )
 }

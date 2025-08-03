@@ -2,14 +2,22 @@ import "../styles/Contact.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   const contactRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
   useEffect(() => {
     const element = contactRef.current;
@@ -24,13 +32,45 @@ const Contact = () => {
         ease: "power3.out",
         scrollTrigger: {
           trigger: element,
-          start: "top 40%", 
-          end: "top 35%",
+          start: "top 40%",
           toggleActions: "play none none reverse",
         },
       }
     );
   }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const toastId = toast.loading("Sending message...");
+
+  try {
+    const response = await axios.post(
+        "http://localhost:3000/contact", // We'll improve this later
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success(response.data.message, { id: toastId });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error, { id: toastId });
+      } else {
+        toast.error("An unexpected error occurred. Please try again.", { id: toastId });
+      }
+    }
+  };
 
   return (
     <div id="contact" className="contact" ref={contactRef}>
@@ -74,12 +114,14 @@ const Contact = () => {
       </div>
 
       <div className="right-side">
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name</label>
           <input
             type="text"
             id="name"
             name="name"
+            value={formData.name}
+            onChange={handleChange}
             placeholder="Enter your name"
             required
           />
@@ -89,6 +131,8 @@ const Contact = () => {
             type="email"
             id="email"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="Enter your email"
             required
           />
@@ -97,6 +141,8 @@ const Contact = () => {
           <textarea
             id="message"
             name="message"
+            value={formData.message}
+            onChange={handleChange}
             rows="4"
             placeholder="Type your message here..."
             required
