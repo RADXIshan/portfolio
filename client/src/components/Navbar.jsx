@@ -24,10 +24,10 @@ const Navbar = () => {
       tl.current = gsap.timeline({ paused: true });
 
       tl.current.to(navLinksRef.current, {
-        duration: 0.8,
+        duration: 0.6,
         delay: 0.2,
         height: "100vh",
-        ease: "power3.inOut",
+        ease: "power3.out",
       });
 
       tl.current.fromTo(
