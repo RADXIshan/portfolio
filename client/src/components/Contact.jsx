@@ -62,16 +62,16 @@ const Contact = () => {
         <h2>Get In Touch</h2>
         <p>I would love to hear from you!</p>
         <div className="contact-details">
-          <a className="social-link" href="https://www.linkedin.com/in/ishanroy-radx/" target="_blank" rel="noopener noreferrer">
+          <a className="social-link" href="https://www.linkedin.com/in/ishanroy-radx/" target="_blank" rel="noopener noreferrer" data-label="LinkedIn">
             <FontAwesomeIcon icon={faLinkedin} />
           </a>
-          <a className="social-link" href="https://github.com/RADXIshan" target="_blank" rel="noopener noreferrer">
+          <a className="social-link" href="https://github.com/RADXIshan" target="_blank" rel="noopener noreferrer" data-label="GitHub">
             <FontAwesomeIcon icon={faGithub} />
           </a>
-          <a className="social-link" href="mailto:ishanroy3118107@gmail.com">
+          <a className="social-link" href="mailto:ishanroy3118107@gmail.com" data-label="Email">
             <FontAwesomeIcon icon={faEnvelope} />
           </a>
-          <a className="social-link" href="tel:+919007195462">
+          <a className="social-link" href="tel:+919007195462" data-label="Phone">
             <FontAwesomeIcon icon={faPhone} />
           </a>
         </div>
