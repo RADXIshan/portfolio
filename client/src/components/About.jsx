@@ -19,7 +19,7 @@ const About = () => {
       scrollTrigger: {
         trigger: element,
         start: "top 50%",
-        end: "top 40%",
+        end: "top 45%",
         toggleActions: "play none none reverse",
       },
     });
@@ -27,11 +27,11 @@ const About = () => {
     tl.fromTo(
       leftSide,
       { x: -100, opacity: 0 },
-      { x: 0, opacity: 1, duration: 0.8, delay: 0.1, ease: "power2.out" }
+      { x: 0, opacity: 1, duration: 1, delay: 0.1, ease: "power2.out" }
     ).fromTo(
       rightSide,
       { x: 100, opacity: 0 },
-      { x: 0, opacity: 1, duration: 0.8, delay: 0.1, ease: "power2.out" },
+      { x: 0, opacity: 1, duration: 1, delay: 0.1, ease: "power2.out" },
       "-=0.5"
     );
   }, []);

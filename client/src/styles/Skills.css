@@ -1,0 +1,62 @@
+.skills {
+  height: 100vh;
+  width: 100%;
+  padding: 2vw 7.5vw;
+  margin-bottom: 15vw;
+  position: relative;
+}
+
+.skills h2 {
+  font-size: 6vw;
+  margin-bottom: 2vw;
+}
+
+.elem {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  border-bottom: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.elem h3 {
+  position: relative;
+  font-size: 4.5vw;
+  z-index: 2;
+}
+
+.elem .info {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 2vw 2.5vw;
+  border-radius: 2vw;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: all 0.25s ease;
+  min-width: 60%;      
+  max-width: 85%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2vw;
+  white-space: normal;
+  align-items: center;
+}
+
+.elem .info p {
+  margin: 0.4rem 0;
+  font-size: 2vw;   
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;             
+}
+.info img{
+    height: 2.5vw;
+    width: 2.5vw;
+}
