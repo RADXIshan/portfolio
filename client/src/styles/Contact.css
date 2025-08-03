@@ -1,0 +1,105 @@
+.contact {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6vw 6vw;
+    gap: 3.5vw;
+}
+
+.left-side, .right-side {
+    padding: 5vw 2.5vw;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    width: 50%;
+}
+.left-side:hover, .right-side:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 25px rgba(255,255,255,0.05) inset;
+}
+
+.left-side h2 {
+    font-size: 5.5vw;
+    font-weight: 600;
+    margin-bottom: 0.5vw;
+    letter-spacing: 1px;
+}
+
+.left-side p {
+    font-size: 1.5vw;
+    color: rgba(250, 249, 246, 0.7);
+    transition: all ease 0.3s;
+}
+.left-side p:hover{
+    color: white;
+}
+.contact-details {
+    display: flex;
+    gap: 1.5vw;
+    margin-top: 1.8vw;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-side form {
+    width: 100%;
+    max-width: 30vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vw;
+}
+
+.right-side label {
+    align-self: flex-start;
+    font-size: 1.3vw;
+    color: #FAF9F6;
+}
+
+.right-side input,
+.right-side textarea {
+    width: 100%;
+    padding: 1vw;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5vw;
+    background: rgba(255, 255, 255, 0.02);
+    color: #FAF9F6;
+    font-size: 1vw;
+    outline: none;
+    transition: 0.3s ease;
+}
+.right-side textarea::placeholder,
+.right-side input::placeholder {
+    font-family: "Outfit", sans-serif;
+}
+.right-side input:focus,
+.right-side textarea:focus {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 12px rgba(255,255,255,0.05), 0 0 5px #FAF9F6 inset;
+}
+
+.right-side button {
+    margin-top: 0.5rem;
+    padding: 1vw 2vw;
+    background: linear-gradient(90deg, #FAF9F6, #d6d6d6);
+    color: #131313;
+    border: none;
+    border-radius: 1.5vw;
+    font-size: 1.1vw;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-weight: 600;
+}
+
+.right-side button:hover {
+    background: linear-gradient(90deg, #ffffff, #e4e4e4);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+}
