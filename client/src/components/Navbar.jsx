@@ -87,6 +87,13 @@ const Navbar = () => {
         </a>
         <a
           className="nav-link nav-link-item"
+          href="#skills"
+          onClick={toggleMenu}
+        >
+          Skills
+        </a>
+        <a
+          className="nav-link nav-link-item"
           href="#projects"
           onClick={toggleMenu}
         >

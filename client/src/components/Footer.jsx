@@ -1,9 +1,12 @@
 import "../styles/Footer.css";
 
 const Footer = () => {
+
+  const date = new Date().getFullYear();
+
   return (
     <footer className="footer">
-      <p>© 2023 Ishan Roy. All rights reserved.</p>
+      <p>© {date} Ishan Roy. All rights reserved.</p>
     </footer>
   )
 }

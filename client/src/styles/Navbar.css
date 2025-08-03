@@ -71,7 +71,7 @@ nav {
     text-decoration: none;
     display: inline-block;
     position: relative;
-    font-size: 4.2vw;
+    font-size: 4vw;
     transform: scale(1); 
     transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
     text-decoration: none;
