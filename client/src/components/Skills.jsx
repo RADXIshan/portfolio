@@ -84,10 +84,10 @@ const Skills = () => {
 
     elems.forEach((elem) => {
       tl.from(elem, {
-        duration: 0.8,
-        y: 300,
+        duration: 0.4,
+        y: 100,
         opacity: 0,
-        ease: "power2.inOut",
+        ease: "power2.Out",
         stagger: 0.1
       })
     })
