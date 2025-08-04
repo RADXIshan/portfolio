@@ -2,6 +2,7 @@ import "../styles/Skills.css";
 import { useEffect, useRef } from "react";
 import {useGSAP} from '@gsap/react'
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -21,6 +22,8 @@ import next from "../assets/next.png";
 import vscode from "../assets/vscode.png";
 import gsapImg from "../assets/gsap.png";
 import github from "../assets/github.png";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Skills = () => {
   useEffect(() => {

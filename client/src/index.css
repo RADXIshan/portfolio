@@ -12,4 +12,5 @@ html, body{
   background-color: #131313;
   color: #FAF9F6;
   font-family: "Outfit", sans-serif;
+  overflow-x: hidden;
 }
