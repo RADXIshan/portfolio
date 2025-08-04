@@ -1,40 +1,44 @@
 import "../styles/About.css";
 import aboutImage from "../assets/ishan.jpg";
-import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
+import {useGSAP} from '@gsap/react'
+import gsap from 'gsap';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
+
   const aboutRef = useRef(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     const element = aboutRef.current;
     const leftSide = element.querySelector(".about-leftSide");
     const rightSide = element.querySelector(".about-rightSide");
 
-    // Timeline for staggered entrance
-    const tl = gsap.timeline({
+    var tl = gsap.timeline({
       scrollTrigger: {
         trigger: element,
         start: "top 50%",
-        end: "top 45%",
-        toggleActions: "play none none reverse",
-      },
+        end: "top 40%",
+        toggleActions: "play none none reverse"
+      }
     });
 
-    tl.fromTo(
-      leftSide,
-      { x: -100, opacity: 0 },
-      { x: 0, opacity: 1, duration: 1, delay: 0.1, ease: "power2.out" }
-    ).fromTo(
-      rightSide,
-      { x: 100, opacity: 0 },
-      { x: 0, opacity: 1, duration: 1, delay: 0.1, ease: "power2.out" },
-      "-=0.5"
-    );
-  }, []);
+    tl.from(leftSide, {
+      duration: 0.8,
+      x: -300,
+      opacity: 0,
+      ease: "power3.inOut",
+    })
+    .from(rightSide, {
+      duration: 0.8,
+      x: 300,
+      opacity: 0,
+      ease: "power3.inOut",
+    })
+    
+  }, {scope: aboutRef});
 
   return (
     <div id="about" className="about" ref={aboutRef}>

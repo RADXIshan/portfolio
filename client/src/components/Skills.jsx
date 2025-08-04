@@ -1,5 +1,7 @@
 import "../styles/Skills.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import {useGSAP} from '@gsap/react'
+import gsap from 'gsap';
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -17,7 +19,7 @@ import mongodb from "../assets/mongodb.png";
 import mysql from "../assets/mysql.png";
 import next from "../assets/next.png";
 import vscode from "../assets/vscode.png";
-import gsap from "../assets/gsap.png";
+import gsapImg from "../assets/gsap.png";
 import github from "../assets/github.png";
 
 const Skills = () => {
@@ -55,8 +57,41 @@ const Skills = () => {
     });
   }, []);
 
+  const skillsRef = useRef(null);
+
+  useGSAP(() => {
+    const skills = skillsRef.current;
+    const elems = skills.querySelectorAll(".elem");
+
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: skills,
+        start: "top 50%",
+        end: "bottom 50%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    tl.from(".skills h2", {
+      duration: 0.8,
+      y: 300,
+      opacity: 0,
+      ease: "power2.inOut",
+    })
+
+    elems.forEach((elem) => {
+      tl.from(elem, {
+        duration: 0.8,
+        y: 300,
+        opacity: 0,
+        ease: "power2.inOut",
+        stagger: 0.1
+      })
+    })
+  }, {scope: skillsRef});
+
   return (
-    <div id="skills" className="skills">
+    <div id="skills" className="skills" ref={skillsRef}>
       <h2>Skills</h2>
 
       {/* Languages */}
@@ -97,7 +132,7 @@ const Skills = () => {
           <p><img src={git} alt="git" /> Git</p>
           <p><img src={github} alt="github" /> GitHub</p>
           <p><img src={tailwind} alt="tailwind" /> Tailwind CSS</p>
-          <p><img src={gsap} alt="gsap" /> GSAP</p>
+          <p><img src={gsapImg} alt="gsap" /> GSAP</p>
           <p><img src={bootstrap} alt="bootstrap" />Bootstrap</p>
           <p><img src={vscode} alt="vscode" /> VS Code</p>
           <p><img src={postman} alt="postman" /> Postman</p>
