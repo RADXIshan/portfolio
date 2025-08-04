@@ -1,9 +1,11 @@
-import React from 'react'
+import "../styles/Projects.css"
 
-const Project = () => {
+const Projects = () => {
   return (
-    <div>Project</div>
+    <div className='projects' id='projects'>
+      <h2>Projects</h2>
+    </div>
   )
 }
 
-export default Project
+export default Projects
