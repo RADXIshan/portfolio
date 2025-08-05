@@ -88,7 +88,7 @@ const Skills = () => {
 
       elems.forEach((elem) => {
         tl.from(elem, {
-          duration: 0.6,
+          duration: 0.8,
           y: 100,
           opacity: 0,
           ease: "power2.out",
@@ -109,7 +109,7 @@ const Skills = () => {
 
       <div
         ref={skillsRef}
-        className="skills min-h-screen w-full px-[7.5vw] py-[2vw] mb-[200px] relative overflow-hidden"
+        className="skills min-h-screen w-full px-[7.5vw] py-[2vw] mb-[200px] relative"
       >
         {/* Languages */}
         <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
