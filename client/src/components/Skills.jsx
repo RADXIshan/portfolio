@@ -75,7 +75,6 @@ const Skills = () => {
           start: "top 70%",
           end: "top 60%",
           toggleActions: "play none none reverse",
-          markers: true,
         },
       });
 
@@ -96,7 +95,6 @@ const Skills = () => {
         });
       });
     },
-    { scope: skillsRef }
   );
 
   return (
