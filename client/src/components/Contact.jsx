@@ -32,6 +32,13 @@ const Contact = () => {
     }
   };
 
+  const socialLinks = [
+    { icon: faLinkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/ishanroy-radx/" },
+    { icon: faGithub, label: "GitHub", href: "https://github.com/RADXIshan" },
+    { icon: faEnvelope, label: "Email", href: "mailto:ishanroy3118107@gmail.com" },
+    { icon: faPhone, label: "Phone", href: "tel:+919007195462" },
+  ];
+
   return (
     <div
       id="contact"
@@ -46,38 +53,25 @@ const Contact = () => {
         </p>
 
         <div className="flex gap-[1.5vw] mt-[1.8vw] w-full items-center justify-center">
-          <a
-            href="https://www.linkedin.com/in/ishanroy-radx/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="text-3xl hover:text-white transition-colors"
-          >
-            <FontAwesomeIcon icon={faLinkedin} />
-          </a>
-          <a
-            href="https://github.com/RADXIshan"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="text-3xl hover:text-white transition-colors"
-          >
-            <FontAwesomeIcon icon={faGithub} />
-          </a>
-          <a
-            href="mailto:ishanroy3118107@gmail.com"
-            aria-label="Email"
-            className="text-3xl hover:text-white transition-colors"
-          >
-            <FontAwesomeIcon icon={faEnvelope} />
-          </a>
-          <a
-            href="tel:+919007195462"
-            aria-label="Phone"
-            className="text-3xl hover:text-white transition-colors"
-          >
-            <FontAwesomeIcon icon={faPhone} />
-          </a>
+          {socialLinks.map((link, index) => (
+            <a
+              key={index}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+              data-label={link.label}
+              className="relative w-14 h-14 sm:w-16 sm:h-16 text-[#c7c7c7] rounded-full flex items-center justify-center 
+                         text-[clamp(1.5rem,4vw,2.2rem)] transition-all duration-300 ease-in-out
+                         hover:text-white hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)]
+                         after:content-[attr(data-label)] after:absolute after:-bottom-[2.5vw] after:left-1/2 after:-translate-x-1/2 
+                         after:text-white after:text-[1vw] after:opacity-0 after:pointer-events-none after:whitespace-nowrap 
+                         after:transition-all after:duration-300 after:ease-in-out
+                         hover:after:opacity-100 hover:after:-translate-y-[5px]"
+            >
+              <FontAwesomeIcon icon={link.icon} />
+            </a>
+          ))}
         </div>
       </div>
 

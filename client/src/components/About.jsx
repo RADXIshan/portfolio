@@ -24,15 +24,15 @@ const About = () => {
     });
 
     tl.from(leftSide, {
-      duration: 0.6,
+      duration: 0.8,
+      opacity: 0,
       x: -300,
-      opacity: 0,
-      ease: "power3.inOut",
+      ease: "power3.out",
     }).from(rightSide, {
-      duration: 0.6,
-      x: 300,
+      duration: 0.8,
       opacity: 0,
-      ease: "power3.inOut",
+      x: 300,
+      ease: "power3.out",
     });
   }, { scope: aboutRef });
 
@@ -40,14 +40,14 @@ const About = () => {
     <div
       id="about"
       ref={aboutRef}
-      className="relative h-screen w-full bg-[#131313] flex justify-center items-center px-[4vw] py-[3vw] overflow-hidden"
+      className="relative max-h-[screen] w-full bg-[#131313] flex justify-center items-center px-[4vw] py-[3vw] overflow-hidden"
     >
       {/* Left side (Image) */}
-      <div className="about-leftSide h-full w-[40%] flex items-center justify-center">
+      <div className="about-leftSide h-full w-[50%] flex items-center justify-center">
         <img
           src={aboutImage}
           alt="About"
-          className="w-[60%] h-[45%] object-cover rounded-full mt-[10%]"
+          className="w-[400px] h-[400px] object-cover rounded-full mt-[10%]"
         />
       </div>
 

@@ -10,9 +10,9 @@ const Projects = () => {
 
   const data = [
     { id: 1, name: "Multi.AI", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 2, name: "Project 2", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 3, name: "Project 3", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 4, name: "Project 4", description: "This is a project", image: "https://picsum.photos/200/300" },
+    { id: 2, name: "Langly", description: "This is a project", image: "https://picsum.photos/200/300" },
+    { id: 3, name: "Realtime Tracker", description: "This is a project", image: "https://picsum.photos/200/300" },
+    { id: 4, name: "My Pokedex", description: "This is a project", image: "https://picsum.photos/200/300" },
   ];
 
   useGSAP(() => {
@@ -22,7 +22,6 @@ const Projects = () => {
           trigger: ".projects",
           start: "top 60%",
           toggleActions: "play none none reverse",
-          markers: true,
         },
         duration: 0.8,
         y: 100,
@@ -30,7 +29,6 @@ const Projects = () => {
         ease: "power2.out",
       });
 
-      // Animate the cards with pinning
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".cards-wrapperContainer",

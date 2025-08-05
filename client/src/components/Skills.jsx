@@ -73,13 +73,14 @@ const Skills = () => {
         scrollTrigger: {
           trigger: skills,
           start: "top 70%",
-          end: "top 60%",
+          end: "top 10%",
           toggleActions: "play none none reverse",
+          scrub: 1
         },
       });
 
       tl.from(".skills-title", {
-        duration: 0.8,
+        duration: 1.2,
         y: 300,
         opacity: 0,
         ease: "power2.inOut",
@@ -87,7 +88,7 @@ const Skills = () => {
 
       elems.forEach((elem) => {
         tl.from(elem, {
-          duration: 0.4,
+          duration: 0.6,
           y: 100,
           opacity: 0,
           ease: "power2.out",
