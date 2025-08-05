@@ -94,9 +94,9 @@ const Skills = () => {
   }, {scope: skillsRef});
 
   return (
-    <div id="skills" className="skills" ref={skillsRef}>
-      <h2>Skills</h2>
-
+    <>
+      <h2 id="skills" className="text-[15vw] font-bold border-b border-white/25 px-[4vw]">Skills</h2>
+      <div className="skills" ref={skillsRef}>
       {/* Languages */}
       <div id="elem1" className="elem">
         <h3>Languages</h3>
@@ -144,6 +144,8 @@ const Skills = () => {
         </div>
       </div>
     </div>
+    </>
+    
   );
 };
 

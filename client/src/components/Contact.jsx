@@ -16,25 +16,6 @@ const Contact = () => {
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
-  useEffect(() => {
-    const element = contactRef.current;
-    gsap.fromTo(
-      element,
-      { y: 100, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1.5,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: element,
-          start: "top 40%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-  }, []);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
