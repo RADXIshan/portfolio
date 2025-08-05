@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import "../styles/Navbar.css";
 import logo from "../assets/logo.png";
 import { Menu, X } from "lucide-react";
 import { gsap } from "gsap";
@@ -13,7 +12,7 @@ const Navbar = () => {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from([".logo img", ".menu-icon-container"], {
+      gsap.from([".logo img", ".menu-icon"], {
         delay: 0.8,
         duration: 1,
         ease: "power2.out",
@@ -21,6 +20,7 @@ const Navbar = () => {
         opacity: 0,
         stagger: 0.1,
       });
+
       tl.current = gsap.timeline({ paused: true });
 
       tl.current.to(navLinksRef.current, {
@@ -46,8 +46,8 @@ const Navbar = () => {
 
       tl.current.fromTo(
         ".close-icon",
-        { y:0 ,opacity: 0 },
-        { y: -300 , opacity: 1, duration: 0.3 },
+        { y: 0, opacity: 0 },
+        { y: -300, opacity: 1, duration: 0.3 },
         "-=0.5"
       );
     }, navContainerRef);
@@ -66,46 +66,48 @@ const Navbar = () => {
 
   return (
     <>
-      <nav ref={navContainerRef}>
+      <nav
+        ref={navContainerRef}
+        className="fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold"
+      >
         <div className="logo">
           <a className="nav-link" href="#hero">
-            <img src={logo} alt="logo" />
+            <img
+              src={logo}
+              alt="logo"
+              className="w-[4.2vw] h-[4.2vw] rounded-full flex items-center justify-center"
+            />
           </a>
         </div>
-        <div className="menu-icon-container" onClick={toggleMenu}>
+
+        <div
+          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-[4.8vw] h-[4.8vw] rounded-full cursor-pointer p-[1vw] transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
+          onClick={toggleMenu}
+        >
           <Menu className="menu-icon" size={36} />
         </div>
       </nav>
 
-      <div className="nav-links" ref={navLinksRef}>
-        <X className="close-icon" onClick={toggleMenu} />
-        <a className="nav-link nav-link-item" href="#hero" onClick={toggleMenu}>
-          Home
-        </a>
-        <a className="nav-link nav-link-item" href="#about" onClick={toggleMenu}>
-          About
-        </a>
-        <a
-          className="nav-link nav-link-item"
-          href="#skills"
+      {/* Fullscreen menu */}
+      <div
+        ref={navLinksRef}
+        className="nav-links fixed top-0 left-0 w-full h-0 overflow-hidden flex flex-col items-center justify-center gap-[2vw] bg-[#131313] z-[101]"
+      >
+        <X
+          className="close-icon absolute top-[2vw] right-[7.5vw] w-[4.8vw] h-[4.8vw] rounded-full cursor-pointer text-[#FAF9F6] p-[1vw] transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
           onClick={toggleMenu}
-        >
-          Skills
-        </a>
-        <a
-          className="nav-link nav-link-item"
-          href="#projects"
-          onClick={toggleMenu}
-        >
-          Projects
-        </a>
-        <a
-          className="nav-link nav-link-item"
-          href="#contact"
-          onClick={toggleMenu}
-        >
-          Contact
-        </a>
+        />
+
+        {["Home", "About", "Skills", "Projects", "Contact"].map((item) => (
+          <a
+            key={item}
+            className="nav-link nav-link-item relative text-[4vw] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
+            href={`#${item.toLowerCase()}`}
+            onClick={toggleMenu}
+          >
+            {item}
+          </a>
+        ))}
       </div>
     </>
   );

@@ -1,8 +1,8 @@
-import "../styles/Skills.css";
 import { useEffect, useRef } from "react";
-import {useGSAP} from '@gsap/react'
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -26,6 +26,9 @@ import github from "../assets/github.png";
 gsap.registerPlugin(ScrollTrigger);
 
 const Skills = () => {
+  const skillsRef = useRef(null);
+
+  // Floating info on hover
   useEffect(() => {
     const elems = document.querySelectorAll(".elem");
 
@@ -60,92 +63,129 @@ const Skills = () => {
     });
   }, []);
 
-  const skillsRef = useRef(null);
+  // GSAP Scroll Animations
+  useGSAP(
+    () => {
+      const skills = skillsRef.current;
+      const elems = skills.querySelectorAll(".elem");
 
-  useGSAP(() => {
-    const skills = skillsRef.current;
-    const elems = skills.querySelectorAll(".elem");
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: skills,
+          start: "top 70%",
+          end: "top 60%",
+          toggleActions: "play none none reverse",
+          markers: true,
+        },
+      });
 
-    var tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: skills,
-        start: "top 50%",
-        end: "bottom 50%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    tl.from(".skills h2", {
-      duration: 0.8,
-      y: 300,
-      opacity: 0,
-      ease: "power2.inOut",
-    })
-
-    elems.forEach((elem) => {
-      tl.from(elem, {
-        duration: 0.4,
-        y: 100,
+      tl.from(".skills-title", {
+        duration: 0.8,
+        y: 300,
         opacity: 0,
-        ease: "power2.Out",
-        stagger: 0.1
-      })
-    })
-  }, {scope: skillsRef});
+        ease: "power2.inOut",
+      });
+
+      elems.forEach((elem) => {
+        tl.from(elem, {
+          duration: 0.4,
+          y: 100,
+          opacity: 0,
+          ease: "power2.out",
+          stagger: 0.1,
+        });
+      });
+    },
+    { scope: skillsRef }
+  );
 
   return (
     <>
-      <h2 id="skills" className="text-[15vw] font-bold border-b border-white/25 px-[4vw]">Skills</h2>
-      <div className="skills" ref={skillsRef}>
-      {/* Languages */}
-      <div id="elem1" className="elem">
-        <h3>Languages</h3>
-        <div className="info">
-          <p><img src={javascript} alt="javascript" /> JavaScript</p>
-          <p><img src={java} alt="java" /> Java</p>
-          <p><img src={python} alt="python" /> Python</p>
-        </div>
-      </div>
+      <h2
+        id="skills"
+        className="skills-title text-[15vw] font-bold border-b border-white/25 px-[4vw] py-0 mb-0"
+      >
+        Skills
+      </h2>
 
-      {/* Frameworks */}
-      <div id="elem2" className="elem">
-        <h3>Frameworks</h3>
-        <div className="info">
-          <p><img src={react} alt="react" /> React</p>
-          <p><img src={node} alt="node" /> Node.js</p>
-          <p><img src={express} alt="express" /> Express.js</p>
-          <p><img src={next} alt="next" /> Next.js</p>
+      <div
+        ref={skillsRef}
+        className="skills min-h-screen w-full px-[7.5vw] py-[2vw] mb-[200px] relative overflow-hidden"
+      >
+        {/* Languages */}
+        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
+          <h3 className="relative text-[4.5vw] z-[2]">Languages</h3>
+          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={javascript} alt="javascript" className="h-[2.5vw] w-[2.5vw]" /> JavaScript
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={java} alt="java" className="h-[2.5vw] w-[2.5vw]" /> Java
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={python} alt="python" className="h-[2.5vw] w-[2.5vw]" /> Python
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Databases */}
-      <div id="elem3" className="elem">
-        <h3>Databases</h3>
-        <div className="info">
-          <p><img src={postgres} alt="postgres" /> PostgreSQL</p>
-          <p><img src={mongodb} alt="mongodb" /> MongoDB</p>
-          <p><img src={mysql} alt="mysql" /> MySQL</p>
+        {/* Frameworks */}
+        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
+          <h3 className="relative text-[4.5vw] z-[2]">Frameworks</h3>
+          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={react} alt="react" className="h-[2.5vw] w-[2.5vw]" /> React
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={node} alt="node" className="h-[2.5vw] w-[2.5vw]" /> Node.js
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={express} alt="express" className="h-[2.5vw] w-[2.5vw]" /> Express.js
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={next} alt="next" className="h-[2.5vw] w-[2.5vw]" /> Next.js
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Tools & Technologies */}
-      <div id="elem4" className="elem">
-        <h3>Tools & Technologies</h3>
-        <div className="info">
-          <p><img src={git} alt="git" /> Git</p>
-          <p><img src={github} alt="github" /> GitHub</p>
-          <p><img src={tailwind} alt="tailwind" /> Tailwind CSS</p>
-          <p><img src={gsapImg} alt="gsap" /> GSAP</p>
-          <p><img src={bootstrap} alt="bootstrap" />Bootstrap</p>
-          <p><img src={vscode} alt="vscode" /> VS Code</p>
-          <p><img src={postman} alt="postman" /> Postman</p>
-          <p><img src={xampp} alt="xampp" /> XAMPP</p>
-          <p><img src={restapi} alt="restapi" /> RESTful API</p>
+        {/* Databases */}
+        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
+          <h3 className="relative text-[4.5vw] z-[2]">Databases</h3>
+          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={postgres} alt="postgres" className="h-[2.5vw] w-[2.5vw]" /> PostgreSQL
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={mongodb} alt="mongodb" className="h-[2.5vw] w-[2.5vw]" /> MongoDB
+            </p>
+            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+              <img src={mysql} alt="mysql" className="h-[2.5vw] w-[2.5vw]" /> MySQL
+            </p>
+          </div>
+        </div>
+
+        {/* Tools & Technologies */}
+        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
+          <h3 className="relative text-[4.5vw] z-[2]">Tools & Technologies</h3>
+          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
+            {[
+              [git, "Git"],
+              [github, "GitHub"],
+              [tailwind, "Tailwind CSS"],
+              [gsapImg, "GSAP"],
+              [bootstrap, "Bootstrap"],
+              [vscode, "VS Code"],
+              [postman, "Postman"],
+              [xampp, "XAMPP"],
+              [restapi, "RESTful API"],
+            ].map(([img, name]) => (
+              <p key={name} className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
+                <img src={img} alt={name} className="h-[2.5vw] w-[2.5vw]" /> {name}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
     </>
-    
   );
 };
 
