@@ -33,7 +33,7 @@ const Hero = () => {
 
   return (
     <div
-      id="hero"
+      id="home"
       ref={heroRef}
       className="flex flex-col items-center justify-center relative h-screen gap-[1vw] p-8 text-center overflow-hidden"
     >

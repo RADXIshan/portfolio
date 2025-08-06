@@ -71,7 +71,7 @@ const Navbar = () => {
         className="fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold"
       >
         <div className="logo">
-          <a className="nav-link" href="#hero">
+          <a className="nav-link" href="#home">
             <img
               src={logo}
               alt="logo"
