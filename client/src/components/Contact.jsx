@@ -43,7 +43,7 @@ const Contact = () => {
     <div
       id="contact"
       ref={contactRef}
-      className="min-h-[85vh] flex items-center justify-center px-[6vw] py-[6vw] gap-[3.5vw]"
+      className="min-h-screen flex items-center justify-center px-[6vw] gap-[3.5vw]"
     >
       {/* Left Side */}
       <div className="w-1/2 h-full flex flex-col items-center justify-center p-[5vw_2.5vw] rounded-xl backdrop-blur-md transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,0,0,0.6),0_0_25px_rgba(255,255,255,0.05)_inset]">

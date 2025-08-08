@@ -2,6 +2,10 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
+import multiai from "../assets/multiai.png";
+import langly from "../assets/langly.png";
+import realtime_tracker from "../assets/realtime_tracker.png";
+import pokedex from "../assets/pokedex.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,10 +13,10 @@ const Projects = () => {
   const projectsRef = useRef(null);
 
   const data = [
-    { id: 1, name: "Multi.AI", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 2, name: "Langly", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 3, name: "Realtime Tracker", description: "This is a project", image: "https://picsum.photos/200/300" },
-    { id: 4, name: "My Pokedex", description: "This is a project", image: "https://picsum.photos/200/300" },
+    { id: 1, name: "Multi.AI", description: "This is a project demonstrating AI capabilities in a modern web interface, focusing on user interaction and data processing.", image: multiai },
+    { id: 2, name: "Langly", description: "A language learning platform with interactive exercises and real-time feedback to enhance user fluency and retention.", image: langly },
+    { id: 3, name: "Realtime Tracker", description: "A full-stack application for live tracking, utilizing WebSockets and modern backend technologies for instant updates.", image: realtime_tracker },
+    { id: 4, name: "My Pokedex", description: "A classic Pokedex application built to showcase API integration and state management within a client-side framework.", image: pokedex },
   ];
 
   useGSAP(() => {
@@ -32,17 +36,20 @@ const Projects = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".cards-wrapperContainer",
-          start: "top 10%",
-          end: "bottom 10%",
           pin: true,
           scrub: 1,
+          start: "top top",
+          end: "+=200%",
         },
       });
-
-      tl.to(".stack-card", {
-        height: 140,
+      tl.to(".stack-card .card-body", {
+        height: 0,
+        paddingTop: -10,
+        paddingBottom: 0,
+        opacity: 0,
         stagger: 0.5,
       });
+      
     }, projectsRef);
 
     return () => ctx.revert();
@@ -50,22 +57,37 @@ const Projects = () => {
 
   return (
     <div ref={projectsRef}>
-      <div className="projects px-16 flex justify-end mb-10 border-b border-white/25" id="projects">
+      <div className="projects px-16 flex justify-end border-b border-white/25" id="projects">
         <h2 className="projects-title text-[15vw] font-bold">Projects</h2>
       </div>
 
-      <div className="cards-wrapperContainer max-h-screen px-10 py-0 overflow-hidden mb-0">
-        {data.map((card) => (
-          <div key={card.id} className="stack-card p-4 border-b border-white/25 overflow-hidden">
-            <div className="flex gap-4 items-center h-32">
-              <h3 className="text-2xl -translate-y-4 opacity-80">{card.id}</h3>
-              <h3 className="text-6xl font-semibold">{card.name}</h3>
+      <div className="cards-wrapperContainer h-screen overflow-hidden">
+        {data.map(({ id, name, description, image }) => (
+          <div key={id} className="stack-card border-b border-white/25 overflow-hidden">
+            
+            <div className="card-header p-8 pb-0">
+              <div className="flex items-baseline gap-4">
+                <h3 className="text-2xl opacity-80">{id.toString().padStart(2, '0')}</h3>
+                <h3 className="text-6xl font-semibold tracking-tighter mix-blend-difference">{name}</h3>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <p className="w-[450px] opacity-70">{card.description}</p>
-              <div className="w-56 h-56">
-                <img src={card.image} alt="card-image" className="h-full w-full object-cover" />
+            <div className="card-body p-8 mb-8 h-[45vh]">
+              <div className="flex w-full items-start">
+
+                <div className="w-1/2 pr-10">
+                  <p className="text-lg opacity-70 leading-relaxed pt-2">{description}</p>
+                </div>
+
+                <div className="w-1/2 p-4">
+                  <div className="h-80 rounded-lg overflow-hidden">
+                    <img
+                      src={image}
+                      alt={`${name} project screenshot`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

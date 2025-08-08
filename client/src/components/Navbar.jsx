@@ -75,7 +75,7 @@ const Navbar = () => {
             <img
               src={logo}
               alt="logo"
-              className="w-[4.2vw] h-[4.2vw] rounded-full flex items-center justify-center"
+              className="w-[4.2vw] h-[4.2vw] rounded-full flex items-center justify-center mix-blend-difference"
             />
           </a>
         </div>
