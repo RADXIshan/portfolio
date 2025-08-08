@@ -149,7 +149,6 @@ const Skills = () => {
           end: "top 0%",
           toggleActions: "play none none reverse",
           scrub: 1,
-          markers: true,
         },
       });
 
