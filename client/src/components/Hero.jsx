@@ -7,13 +7,12 @@ import { useEffect, useRef } from "react";
 const Hero = () => {
   const heroRef = useRef(null);
 
-  // GSAP animation for hero elements
   useEffect(() => {
-    // Ensure the component is mounted before running the animation
+    
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animate elements into view
+    
       gsap.from('.animate-in', {
         y: 50,
         opacity: 0,
@@ -24,7 +23,6 @@ const Hero = () => {
       });
     }, heroRef);
 
-    // Cleanup function to revert animations
     return () => ctx.revert();
   }, []);
 
