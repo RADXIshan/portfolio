@@ -102,7 +102,7 @@ const Skills = () => {
     <>
       <h2
         id="skills"
-        className="skills-title text-[15vw] font-bold border-b border-white/25 px-[4vw] py-0 mb-0"
+        className="skills-title text-[15vw] font-extrabold border-b border-white/25 px-[4vw] py-0 mb-0"
       >
         Skills
       </h2>
@@ -113,7 +113,7 @@ const Skills = () => {
       >
         {/* Languages */}
         <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-[4.5vw] z-[2]">Languages</h3>
+          <h3 className="relative text-7xl font-semibold z-[2]">Languages</h3>
           <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
             <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
               <img src={javascript} alt="javascript" className="h-[2.5vw] w-[2.5vw]" /> JavaScript
@@ -129,7 +129,7 @@ const Skills = () => {
 
         {/* Frameworks */}
         <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-[4.5vw] z-[2]">Frameworks</h3>
+          <h3 className="relative text-7xl font-semibold z-[2]">Frameworks</h3>
           <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
             <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
               <img src={react} alt="react" className="h-[2.5vw] w-[2.5vw]" /> React
@@ -148,7 +148,7 @@ const Skills = () => {
 
         {/* Databases */}
         <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-[4.5vw] z-[2]">Databases</h3>
+          <h3 className="relative text-7xl font-semibold z-[2]">Databases</h3>
           <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
             <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
               <img src={postgres} alt="postgres" className="h-[2.5vw] w-[2.5vw]" /> PostgreSQL
@@ -164,7 +164,7 @@ const Skills = () => {
 
         {/* Tools & Technologies */}
         <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-[4.5vw] z-[2]">Tools & Technologies</h3>
+          <h3 className="relative text-7xl font-semibold z-[2]">Tools & Technologies</h3>
           <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
             {[
               [git, "Git"],
