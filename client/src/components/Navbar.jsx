@@ -68,7 +68,7 @@ const Navbar = () => {
     <>
       <nav
         ref={navContainerRef}
-        className="fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold"
+        className="fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen"
       >
         <div className="logo">
           <a className="nav-link" href="#home">

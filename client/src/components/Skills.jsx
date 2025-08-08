@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Import your images as before
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -25,166 +26,209 @@ import github from "../assets/github.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Data array for skills to keep the JSX clean (DRY principle)
+const skillsData = [
+  {
+    category: "Languages",
+    items: [
+      { name: "JavaScript", img: javascript },
+      { name: "Java", img: java },
+      { name: "Python", img: python },
+    ],
+  },
+  {
+    category: "Frameworks",
+    items: [
+      { name: "React", img: react },
+      { name: "Node.js", img: node },
+      { name: "Express.js", img: express },
+      { name: "Next.js", img: next },
+    ],
+  },
+  {
+    category: "Databases",
+    items: [
+      { name: "PostgreSQL", img: postgres },
+      { name: "MongoDB", img: mongodb },
+      { name: "MySQL", img: mysql },
+    ],
+  },
+  {
+    category: "Tools & Technologies",
+    items: [
+      { name: "Git", img: git },
+      { name: "GitHub", img: github },
+      { name: "Tailwind CSS", img: tailwind },
+      { name: "GSAP", img: gsapImg },
+      { name: "Bootstrap", img: bootstrap },
+      { name: "VS Code", img: vscode },
+      { name: "Postman", img: postman },
+      { name: "XAMPP", img: xampp },
+      { name: "RESTful API", img: restapi },
+    ],
+  },
+];
+
 const Skills = () => {
-  const skillsRef = useRef(null);
+  const containerRef = useRef(null);
+  
+  // State to manage which accordion item is open on mobile
+  const [openAccordion, setOpenAccordion] = useState(null);
 
-  // Floating info on hover
+  // State to track if the screen is desktop-sized
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+
+  // Toggle accordion item
+  const handleAccordionToggle = (index) => {
+    // If the clicked item is already open, close it. Otherwise, open it.
+    setOpenAccordion(openAccordion === index ? null : index);
+  };
+
+  // Effect to check screen size for responsiveness
   useEffect(() => {
-    const elems = document.querySelectorAll(".elem");
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener("resize", checkScreenSize);
+    
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
+  // Floating info on hover (ONLY FOR DESKTOP)
+  useEffect(() => {
+    // If it's not desktop, don't attach hover listeners
+    if (!isDesktop) return;
+
+    const elems = containerRef.current.querySelectorAll(".elem");
+    
     elems.forEach((elem) => {
-      const info = elem.querySelector(".info");
+      const info = elem.querySelector(".info-desktop");
+      if (!info) return; // Guard against element not found
 
       const handleMouseMove = (e) => {
         const rect = elem.getBoundingClientRect();
-        info.style.left = `${e.clientX - rect.left}px`;
-        info.style.top = `${e.clientY - rect.top}px`;
+        gsap.to(info, {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          duration: 0.5,
+          ease: "power3.out",
+        });
       };
-
+      
       const handleMouseEnter = () => {
-        info.style.opacity = 1;
-        info.style.transform = "translate(-50%, -50%) scale(1)";
+        gsap.to(info, { autoAlpha: 1, scale: 1, duration: 0.3 });
       };
-
+      
       const handleMouseLeave = () => {
-        info.style.opacity = 0;
-        info.style.transform = "translate(-50%, -50%) scale(0.8)";
+        gsap.to(info, { autoAlpha: 0, scale: 0.8, duration: 0.2 });
       };
 
       elem.addEventListener("mousemove", handleMouseMove);
       elem.addEventListener("mouseenter", handleMouseEnter);
       elem.addEventListener("mouseleave", handleMouseLeave);
 
+      // Cleanup function to remove listeners
       return () => {
         elem.removeEventListener("mousemove", handleMouseMove);
         elem.removeEventListener("mouseenter", handleMouseEnter);
         elem.removeEventListener("mouseleave", handleMouseLeave);
       };
     });
-  }, []);
+  }, [isDesktop]); // Re-run this effect if screen size changes across the breakpoint
 
-  // GSAP Scroll Animations
+  // GSAP Scroll Animations (no changes needed here)
   useGSAP(
     () => {
-      const skills = skillsRef.current;
-      const elems = skills.querySelectorAll(".elem");
+      const elems = containerRef.current.querySelectorAll(".elem");
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: skills,
+          trigger: containerRef.current,
           start: "top 70%",
           end: "top 10%",
           toggleActions: "play none none reverse",
-          scrub: 1
+          scrub: 1,
         },
       });
 
-      tl.from(".skills-title", {
-        duration: 1.2,
-        y: 300,
+      tl.from(".skills-title", { y: 150, opacity: 0, ease: "power2.inOut" });
+      
+      tl.from(elems, {
+        y: 100,
         opacity: 0,
-        ease: "power2.inOut",
-      });
-
-      elems.forEach((elem) => {
-        tl.from(elem, {
-          duration: 0.8,
-          y: 100,
-          opacity: 0,
-          ease: "power2.out",
-          stagger: 0.1,
-        });
+        ease: "power2.out",
+        stagger: 0.1,
       });
     },
+    { scope: containerRef }
   );
 
   return (
-    <>
+    <div ref={containerRef}>
       <h2
         id="skills"
-        className="skills-title text-[15vw] font-extrabold border-b border-white/25 px-[4vw] py-0 mb-0"
+        className="skills-title text-[15vw] md:text-[10vw] lg:text-[15vw] font-extrabold border-b border-white/25 px-6 md:px-10 lg:px-[4vw] mb-0"
       >
         Skills
       </h2>
 
-      <div
-        ref={skillsRef}
-        className="skills min-h-screen w-full px-[7.5vw] py-[2vw] mb-[200px] relative"
-      >
-        {/* Languages */}
-        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-7xl font-semibold z-[2]">Languages</h3>
-          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={javascript} alt="javascript" className="h-[2.5vw] w-[2.5vw]" /> JavaScript
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={java} alt="java" className="h-[2.5vw] w-[2.5vw]" /> Java
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={python} alt="python" className="h-[2.5vw] w-[2.5vw]" /> Python
-            </p>
-          </div>
-        </div>
+      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-[2vw] mb-24 md:mb-48 relative">
+        {skillsData.map((skill, index) => (
+          <div
+            key={skill.category}
+            className="elem-wrapper border-b-2 lg:border-b-4 border-white"
+          >
+            <div
+              className="elem relative h-32 md:h-40 lg:h-[200px] w-full flex items-center justify-between cursor-pointer group"
+              onClick={() => !isDesktop && handleAccordionToggle(index)}
+            >
+              <h3 className="relative text-4xl md:text-6xl lg:text-8xl font-semibold z-[2]">
+                {skill.category}
+              </h3>
+              
+              {/* Accordion Icon for Mobile */}
+              {!isDesktop && (
+                 <svg
+                  className={`w-8 h-8 transition-transform duration-300 ${openAccordion === index ? 'rotate-180' : ''}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              )}
 
-        {/* Frameworks */}
-        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-7xl font-semibold z-[2]">Frameworks</h3>
-          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={react} alt="react" className="h-[2.5vw] w-[2.5vw]" /> React
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={node} alt="node" className="h-[2.5vw] w-[2.5vw]" /> Node.js
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={express} alt="express" className="h-[2.5vw] w-[2.5vw]" /> Express.js
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={next} alt="next" className="h-[2.5vw] w-[2.5vw]" /> Next.js
-            </p>
+              {/* DESKTOP: Floating info box */}
+              {isDesktop && (
+                <div className="info-desktop absolute bg-white/10 backdrop-blur-md text-white px-8 py-6 rounded-2xl pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-80 flex flex-wrap justify-center gap-x-8 gap-y-4 items-center whitespace-nowrap">
+                  {skill.items.map((item) => (
+                    <p key={item.name} className="text-xl flex items-center gap-2">
+                      <img src={item.img} alt={item.name} className="h-7 w-7" /> {item.name}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* MOBILE: Accordion content panel */}
+            {!isDesktop && (
+              <div
+                className={`info-mobile overflow-hidden transition-all duration-500 ease-in-out ${
+                  openAccordion === index ? "max-h-[500px] py-6" : "max-h-0"
+                }`}
+              >
+                <div className="flex flex-wrap justify-start gap-x-6 gap-y-4 items-center">
+                  {skill.items.map((item) => (
+                    <p key={item.name} className="text-lg flex items-center gap-2 bg-white/10 px-3 py-1 rounded-lg">
+                      <img src={item.img} alt={item.name} className="h-6 w-6" /> {item.name}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-
-        {/* Databases */}
-        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-7xl font-semibold z-[2]">Databases</h3>
-          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={postgres} alt="postgres" className="h-[2.5vw] w-[2.5vw]" /> PostgreSQL
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={mongodb} alt="mongodb" className="h-[2.5vw] w-[2.5vw]" /> MongoDB
-            </p>
-            <p className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-              <img src={mysql} alt="mysql" className="h-[2.5vw] w-[2.5vw]" /> MySQL
-            </p>
-          </div>
-        </div>
-
-        {/* Tools & Technologies */}
-        <div className="elem relative h-[200px] w-full border-b-4 border-white flex items-center justify-start cursor-pointer">
-          <h3 className="relative text-7xl font-semibold z-[2]">Tools & Technologies</h3>
-          <div className="info absolute bg-[rgba(255,255,255,0.12)] backdrop-blur-md text-white px-[2.5vw] py-[2vw] rounded-[2vw] pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-[0.8] transition-all duration-200 ease-in-out min-w-[60%] max-w-[85%] flex flex-wrap justify-center gap-[2vw] items-center whitespace-normal">
-            {[
-              [git, "Git"],
-              [github, "GitHub"],
-              [tailwind, "Tailwind CSS"],
-              [gsapImg, "GSAP"],
-              [bootstrap, "Bootstrap"],
-              [vscode, "VS Code"],
-              [postman, "Postman"],
-              [xampp, "XAMPP"],
-              [restapi, "RESTful API"],
-            ].map(([img, name]) => (
-              <p key={name} className="m-[0.4rem_0] text-[2vw] flex items-center gap-[0.5vw]">
-                <img src={img} alt={name} className="h-[2.5vw] w-[2.5vw]" /> {name}
-              </p>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 
