@@ -75,16 +75,16 @@ const Navbar = () => {
             <img
               src={logo}
               alt="logo"
-              className="w-[4.2vw] h-[4.2vw] rounded-full flex items-center justify-center mix-blend-difference"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mix-blend-difference"
             />
           </a>
         </div>
 
         <div
-          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-[4.8vw] h-[4.8vw] rounded-full cursor-pointer p-[1vw] transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
+          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-11 h-11 md:w-14 md:h-14 rounded-full cursor-pointer p-2 transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
           onClick={toggleMenu}
         >
-          <Menu className="menu-icon" size={36} />
+          <Menu className="menu-icon h-8 w-8" />
         </div>
       </nav>
 
@@ -94,14 +94,22 @@ const Navbar = () => {
         className="nav-links fixed top-0 left-0 w-full h-0 overflow-hidden flex flex-col items-center justify-center gap-[2vw] bg-[#131313] z-[101]"
       >
         <X
-          className="close-icon absolute top-[2vw] right-[7.5vw] w-[4.8vw] h-[4.8vw] rounded-full cursor-pointer text-[#FAF9F6] p-[1vw] transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
+          className="
+            absolute flex h-12 w-12 cursor-pointer items-center justify-center 
+            rounded-full p-2 text-[#FAF9F6]                                 
+            transition-all duration-300 ease-in-out                         
+            hover:bg-amber-200/10                                         
+            top-2.5 right-7                                                                               
+            lg:top-[2.2rem] lg:right-[7rem]                             
+          "
           onClick={toggleMenu}
+          aria-label="Close"
         />
 
         {["Home", "About", "Skills", "Projects", "Contact"].map((item) => (
           <a
             key={item}
-            className="nav-link nav-link-item relative text-[4vw] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
+            className="nav-link nav-link-item relative text-[3.5rem] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
             href={`#${item.toLowerCase()}`}
             onClick={toggleMenu}
           >
