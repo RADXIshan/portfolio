@@ -189,9 +189,9 @@ const Skills = () => {
 
               {/* DESKTOP: Floating info box */}
               {isDesktop && (
-                <div className="info-desktop absolute bg-white/10 backdrop-blur-md text-white px-8 py-6 rounded-2xl pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-80 flex flex-wrap justify-center gap-x-8 gap-y-4 items-center whitespace-nowrap">
+                <div className="info-desktop absolute z-30 bg-secondary/90 text-primary px-8 py-6 rounded-2xl pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-80 flex flex-wrap justify-center gap-x-8 gap-y-4 items-center whitespace-nowrap">
                   {skill.items.map((item) => (
-                    <p key={item.name} className="text-xl flex items-center gap-2">
+                    <p key={item.name} className="text-2xl font-medium flex items-center gap-2">
                       <img src={item.img} alt={item.name} className="h-7 w-7" /> {item.name}
                     </p>
                   ))}
@@ -208,8 +208,8 @@ const Skills = () => {
               >
                 <div className="flex flex-wrap justify-start gap-x-6 gap-y-4 items-center">
                   {skill.items.map((item) => (
-                    <p key={item.name} className="text-lg flex items-center gap-2 bg-white/10 px-3 py-1 rounded-lg">
-                      <img src={item.img} alt={item.name} className="h-6 w-6" /> {item.name}
+                    <p key={item.name} className="text-2xl font-medium flex items-center gap-2 bg-secondary/90 text-primary px-3 py-1 rounded-lg">
+                      <img src={item.img} alt={item.name} className="h-6 w-6 "/> {item.name}
                     </p>
                   ))}
                 </div>
