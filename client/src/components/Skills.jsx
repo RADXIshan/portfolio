@@ -3,7 +3,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Import your images as before
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -23,10 +22,10 @@ import next from "../assets/next.png";
 import vscode from "../assets/vscode.png";
 import gsapImg from "../assets/gsap.png";
 import github from "../assets/github.png";
+import cursor from "../assets/cursor.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Data array for skills to keep the JSX clean (DRY principle)
 const skillsData = [
   {
     category: "Languages",
@@ -62,6 +61,7 @@ const skillsData = [
       { name: "GSAP", img: gsapImg },
       { name: "Bootstrap", img: bootstrap },
       { name: "VS Code", img: vscode },
+      { name: "Cursor", img: cursor },
       { name: "Postman", img: postman },
       { name: "XAMPP", img: xampp },
       { name: "RESTful API", img: restapi },
@@ -72,39 +72,31 @@ const skillsData = [
 const Skills = () => {
   const containerRef = useRef(null);
   
-  // State to manage which accordion item is open on mobile
   const [openAccordion, setOpenAccordion] = useState(null);
 
-  // State to track if the screen is desktop-sized
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
 
-  // Toggle accordion item
   const handleAccordionToggle = (index) => {
-    // If the clicked item is already open, close it. Otherwise, open it.
     setOpenAccordion(openAccordion === index ? null : index);
   };
 
-  // Effect to check screen size for responsiveness
   useEffect(() => {
     const checkScreenSize = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };
     window.addEventListener("resize", checkScreenSize);
-    
-    // Cleanup the event listener on component unmount
+
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Floating info on hover (ONLY FOR DESKTOP)
   useEffect(() => {
-    // If it's not desktop, don't attach hover listeners
     if (!isDesktop) return;
 
     const elems = containerRef.current.querySelectorAll(".elem");
     
     elems.forEach((elem) => {
       const info = elem.querySelector(".info-desktop");
-      if (!info) return; // Guard against element not found
+      if (!info) return;
 
       const handleMouseMove = (e) => {
         const rect = elem.getBoundingClientRect();
@@ -128,16 +120,14 @@ const Skills = () => {
       elem.addEventListener("mouseenter", handleMouseEnter);
       elem.addEventListener("mouseleave", handleMouseLeave);
 
-      // Cleanup function to remove listeners
       return () => {
         elem.removeEventListener("mousemove", handleMouseMove);
         elem.removeEventListener("mouseenter", handleMouseEnter);
         elem.removeEventListener("mouseleave", handleMouseLeave);
       };
     });
-  }, [isDesktop]); // Re-run this effect if screen size changes across the breakpoint
+  }, [isDesktop]); 
 
-  // GSAP Scroll Animations (no changes needed here)
   useGSAP(
     () => {
       const elems = containerRef.current.querySelectorAll(".elem");
