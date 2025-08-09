@@ -158,12 +158,12 @@ const Skills = () => {
     <div ref={containerRef}>
       <h2
         id="skills"
-        className="skills-title text-[15vw] md:text-[10vw] lg:text-[15vw] font-extrabold border-b border-white/25 px-6 md:px-10 lg:px-[4vw] mb-0"
+        className="skills-title text-[15vw] md:text-[10vw] lg:text-[15vw] font-extrabold border-b border-white/25 px-6 md:px-10 lg:px-[4vw] mb-0 mix-blend-difference"
       >
         Skills
       </h2>
 
-      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-[2vw] mb-24 md:mb-48 relative">
+      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-[2vw] mb-24 md:mb-48 relative mix-blend-difference">
         {skillsData.map((skill, index) => (
           <div
             key={skill.category}

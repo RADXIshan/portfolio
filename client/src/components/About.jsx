@@ -46,7 +46,7 @@ const About = () => {
       id="about"
       ref={aboutRef}
     
-      className="relative w-full min-h-screen bg-[#131313] flex flex-col md:flex-row justify-center items-center px-6 py-16 sm:px-8 md:px-[4vw] md:py-[3vw] overflow-hidden"
+      className="relative w-full min-h-screen flex flex-col md:flex-row justify-center items-center px-6 py-16 sm:px-8 md:px-[4vw] md:py-[3vw] overflow-hidden mix-blend-difference"
     >
 
       <div className="about-leftSide w-full md:w-1/2 flex items-center justify-center p-4">

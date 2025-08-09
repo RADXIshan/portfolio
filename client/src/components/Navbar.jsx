@@ -68,20 +68,20 @@ const Navbar = () => {
     <>
       <nav
         ref={navContainerRef}
-        className="fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen"
+        className="fixed top-0 left-0 flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen"
       >
-        <div className="logo">
-          <a className="nav-link" href="#home">
+        <div className="logo active:scale-90 mix-blend-difference">
+          <a className="nav-link active:scale-90" href="#home">
             <img
               src={logo}
               alt="logo"
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mix-blend-difference"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center"
             />
           </a>
         </div>
 
         <div
-          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-11 h-11 md:w-14 md:h-14 rounded-full cursor-pointer p-2 transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)]"
+          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-11 h-11 md:w-14 md:h-14 rounded-full cursor-pointer p-2 transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)] active:bg-[rgba(251,211,161,0.2)] active:scale-75"
           onClick={toggleMenu}
         >
           <Menu className="menu-icon h-8 w-8" />
@@ -100,7 +100,7 @@ const Navbar = () => {
             transition-all duration-300 ease-in-out                         
             hover:bg-amber-200/10                                         
             top-2.5 right-7                                                                               
-            lg:top-[2.2rem] lg:right-[7rem]                             
+            lg:top-[2.2rem] lg:right-[7rem]  active:bg-[rgba(251,211,161,0.2)] active:scale-75                           
           "
           onClick={toggleMenu}
           aria-label="Close"
@@ -109,7 +109,7 @@ const Navbar = () => {
         {["Home", "About", "Skills", "Projects", "Contact"].map((item) => (
           <a
             key={item}
-            className="nav-link nav-link-item relative text-[3.5rem] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
+            className="nav-link nav-link-item relative text-[3.5rem] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100 active:scale-90"
             href={`#${item.toLowerCase()}`}
             onClick={toggleMenu}
           >
