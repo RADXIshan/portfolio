@@ -68,7 +68,7 @@ const Navbar = () => {
     <>
       <nav
         ref={navContainerRef}
-        className="fixed top-0 left-0 flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen"
+        className="fixed top-0 left-0 flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen z-[100]"
       >
         <div className="logo active:scale-90 mix-blend-difference">
           <a className="nav-link active:scale-90" href="#home">
