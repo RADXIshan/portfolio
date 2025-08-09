@@ -48,7 +48,7 @@ const Contact = () => {
     <div
       id="contact"
       ref={contactRef}
-      className="min-h-screen w-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="min-h-screen w-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 overflow-hidden mb-2"
     >
       <div className="flex flex-col h-[80vh] md:flex-row items-center justify-center gap-12 w-full max-w-6xl">
         <div className="w-full md:w-1/2 h-full flex flex-col items-center justify-center text-center p-8 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,0,0,0.6),0_0_25px_rgba(255,255,255,0.05)_inset]">
