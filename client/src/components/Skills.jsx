@@ -23,6 +23,10 @@ import vscode from "../assets/vscode.png";
 import gsapImg from "../assets/gsap.png";
 import github from "../assets/github.png";
 import cursor from "../assets/cursor.png";
+import fastapi from "../assets/fastapi.png";
+import numpy from "../assets/numpy.png";
+import pandas from "../assets/pandas.png";
+import matplotlib from "../assets/matplotlib.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,12 +40,16 @@ const skillsData = [
     ],
   },
   {
-    category: "Frameworks",
+    category: "Frameworks & Libraries",
     items: [
       { name: "React", img: react },
       { name: "Node.js", img: node },
       { name: "Express.js", img: express },
+      { name: "FastAPI", img: fastapi },
       { name: "Next.js", img: next },
+      { name: "NumPy", img: numpy },
+      { name: "Pandas", img: pandas },
+      { name: "Matplotlib", img: matplotlib },
     ],
   },
   {

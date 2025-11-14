@@ -70,10 +70,7 @@ const About = () => {
         <p
           className="text-base sm:text-lg lg:text-[1.5vw] text-center md:text-left text-white max-w-md md:max-w-none tracking-normal"
         >
-          Hi, I’m Ishan Roy, a FullStack Developer passionate about turning
-          ideas into impactful, user-friendly web applications. I focus on
-          building scalable solutions while constantly exploring new
-          technologies to make a real difference.
+          Hey, I’m Ishan Roy, a software developer passionate about creating modern, high-performance experiences that merge great design with smart tech. I love building fullstack apps and AI systems that feel ahead of their time. I am fueled by curiosity and the thrill of turning ideas into reality.
         </p>
       </div>
     </div>

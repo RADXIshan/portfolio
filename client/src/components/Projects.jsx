@@ -4,9 +4,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import multiai from "../assets/multiai.png";
 import langly from "../assets/langly.png";
-import realtime_tracker from "../assets/realtime_tracker.png";
-import pokedex from "../assets/pokedex.png";
 import { ArrowRight } from "lucide-react";
+import syncspace from "../assets/syncspace.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,10 +13,9 @@ const Projects = () => {
   const projectsRef = useRef(null);
 
   const data = [
-    { id: 1, name: "Multi.AI", description: "An all-in-one AI platform to generate images, remove backgrounds, write content, and review resumes.", image: multiai, link: "https://github.com/RADXIshan/pern-multiai" },
-    { id: 2, name: "Langly", description: "A language learning app connecting users from all over the world to learn languages together.", image: langly, link: "https://github.com/RADXIshan/mern-langly" },
-    { id: 3, name: "Realtime Tracker", description: "Track movement in real-time with an interactive map, built for live location sharing.", image: realtime_tracker, link: "https://github.com/RADXIshan/Real-Time-Tracker" },
-    { id: 4, name: "My Pokedex", description: "A sleek Pokémon explorer to search, filter, and view detailed stats of your favorite Pokémon.", image: pokedex, link: "https://github.com/RADXIshan/My-Pokedex" },
+    { id: 1, name: "SyncSpace", description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.", image: syncspace, link: "https://github.com/RADXIshan/SyncSpace" },
+    { id: 2, name: "Multi.AI", description: "An all-in-one AI platform to generate images, remove backgrounds, write content, and review resumes.", image: multiai, link: "https://github.com/RADXIshan/pern-multiai" },
+    { id: 3, name: "Langly", description: "A language learning app connecting users from all over the world to learn languages together.", image: langly, link: "https://github.com/RADXIshan/mern-langly" },
   ];
 
   useGSAP(() => {
