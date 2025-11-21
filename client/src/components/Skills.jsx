@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -18,7 +17,6 @@ import xampp from "../assets/xampp.png";
 import postgres from "../assets/postgres.png";
 import mongodb from "../assets/mongodb.png";
 import mysql from "../assets/mysql.png";
-import next from "../assets/next.png";
 import vscode from "../assets/vscode.png";
 import gsapImg from "../assets/gsap.png";
 import github from "../assets/github.png";
@@ -27,6 +25,9 @@ import fastapi from "../assets/fastapi.png";
 import numpy from "../assets/numpy.png";
 import pandas from "../assets/pandas.png";
 import matplotlib from "../assets/matplotlib.png";
+import langchain from "../assets/langchain.png";
+import socketio from "../assets/socketio.png";
+import webrtc from "../assets/webrtc.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,8 +36,8 @@ const skillsData = [
     category: "Languages",
     items: [
       { name: "JavaScript", img: javascript },
-      { name: "Java", img: java },
       { name: "Python", img: python },
+      { name: "Java", img: java },
     ],
   },
   {
@@ -46,7 +47,7 @@ const skillsData = [
       { name: "Node.js", img: node },
       { name: "Express.js", img: express },
       { name: "FastAPI", img: fastapi },
-      { name: "Next.js", img: next },
+      { name: "LangChain", img: langchain },
       { name: "NumPy", img: numpy },
       { name: "Pandas", img: pandas },
       { name: "Matplotlib", img: matplotlib },
@@ -67,12 +68,14 @@ const skillsData = [
       { name: "GitHub", img: github },
       { name: "Tailwind CSS", img: tailwind },
       { name: "GSAP", img: gsapImg },
+      { name: "RESTful API", img: restapi },
+      { name: "Socket.io", img: socketio },
+      { name: "WebRTC", img: webrtc },
       { name: "Bootstrap", img: bootstrap },
       { name: "VS Code", img: vscode },
       { name: "Cursor", img: cursor },
       { name: "Postman", img: postman },
       { name: "XAMPP", img: xampp },
-      { name: "RESTful API", img: restapi },
     ],
   },
 ];

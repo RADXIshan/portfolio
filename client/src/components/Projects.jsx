@@ -2,10 +2,10 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import multiai from "../assets/multiai.png";
-import langly from "../assets/langly.png";
 import { ArrowRight } from "lucide-react";
 import syncspace from "../assets/syncspace.png";
+import ainews from "../assets/ainews.png";
+import echelon from "../assets/echelon.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,8 +14,8 @@ const Projects = () => {
 
   const data = [
     { id: 1, name: "SyncSpace", description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.", image: syncspace, link: "https://github.com/RADXIshan/SyncSpace" },
-    { id: 2, name: "Multi.AI", description: "An all-in-one AI platform to generate images, remove backgrounds, write content, and review resumes.", image: multiai, link: "https://github.com/RADXIshan/pern-multiai" },
-    { id: 3, name: "Langly", description: "A language learning app connecting users from all over the world to learn languages together.", image: langly, link: "https://github.com/RADXIshan/mern-langly" },
+    { id: 2, name: "AI News Aggregator", description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources, then delivers personalized daily digests via email.", image: ainews, link: "https://github.com/RADXIshan/AI-News-Aggregator" },
+    { id: 3, name: "Echelon", description: "A modern, full-stack RAG (Retrieval-Augmented Generation) chatbot that indexes websites and answers questions based on the indexed content.", image: echelon, link: "https://github.com/RADXIshan/Echelon" },
   ];
 
   useGSAP(() => {
