@@ -26,12 +26,11 @@ const Hero = () => {
     return () => ctx.revert();
   }, []);
 
-  // Social links data
   const socialLinks = [
     { icon: faLinkedin, label: "Linkedin", href: "https://www.linkedin.com/in/ishanroy-radx/" },
     { icon: faGithub, label: "Github", href: "https://github.com/RADXIshan" },
     { icon: faEnvelope, label: "Gmail", href: "mailto:ishanroy3118107@gmail.com" },
-    { icon: faFileArrowDown, label: "Resume", href: "https://drive.google.com/file/d/1mqn6AcbSjis-wamGuqnu8XA0cfDX7lcS/view?usp=sharing" },
+    { icon: faFileArrowDown, label: "Resume", href: "https://drive.google.com/file/d/1uHDVQ8lRLJ-4SQAhuipD2LPOaP7MvBHg/view" },
   ];
 
   return (
