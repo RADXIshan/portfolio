@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import syncspace from "../assets/syncspace.png";
 import ainews from "../assets/ainews.png";
 import echelon from "../assets/echelon.png";
@@ -18,7 +18,8 @@ const Projects = () => {
       name: "SyncSpace",
       description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.",
       image: syncspace,
-      link: "https://github.com/RADXIshan/SyncSpace",
+      githublink: "https://github.com/RADXIshan/SyncSpace",
+      liveLink: "https://syncspace-client.vercel.app",
       technologies: ["React.js", "Node.js", "Express.js", "Socket.io", "WebRTC", "Tailwind CSS", "PostgreSQL", "Gemini API", "GMAIL SMTP"]
     },
     {
@@ -26,7 +27,8 @@ const Projects = () => {
       name: "AI News Aggregator",
       description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources, then delivers personalized daily digests via email.",
       image: ainews,
-      link: "https://github.com/RADXIshan/AI-News-Aggregator",
+      githublink: "https://github.com/RADXIshan/AI-News-Aggregator",
+      liveLink: "https://ai-news-aggregator-digest.vercel.app",
       technologies: ["React.js", "Python", "FastAPI", "BeautifulSoup", "Gemini API", "PostgreSQL", "Tailwind CSS", "GMAIL SMTP"]
     },
     {
@@ -34,7 +36,8 @@ const Projects = () => {
       name: "Echelon",
       description: "A modern, full-stack RAG (Retrieval-Augmented Generation) chatbot that indexes websites and answers questions based on the indexed content.",
       image: echelon,
-      link: "https://github.com/RADXIshan/Echelon",
+      githublink: "https://github.com/RADXIshan/Echelon",
+      liveLink: "https://ragchatbot-client.vercel.app",
       technologies: ["React.js", "FastAPI", "LangChain", "Qdrant", "Tailwind CSS"]
     },
   ];
@@ -85,7 +88,7 @@ const Projects = () => {
       </div>
 
       <div className="cards-wrapperContainer relative flex flex-col items-center w-full">
-        {projects.map(({ id, name, description, image, link, technologies }, index) => (
+        {projects.map(({ id, name, description, image, githublink, liveLink, technologies }, index) => (
           <div 
             key={id} 
             className="stack-card sticky top-0 w-full min-h-screen flex flex-col justify-center py-10"
@@ -95,12 +98,18 @@ const Projects = () => {
               <div className="card-header p-6 md:p-12 pb-0 flex justify-between items-start">
                 <div className="flex items-baseline gap-4">
                   <h3 className="text-xl sm:text-2xl opacity-50 font-mono">{id.toString().padStart(2, '0')}</h3>
-                  <a href={link} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tighter hover:text-purple-400 transition-colors duration-300">{name}</a>
+                  <a href={githublink} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tighter hover:text-purple-400 transition-colors duration-300">{name}</a>
                 </div>
-                <a href={link} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                  <span className="text-sm font-medium uppercase tracking-wider">View Project</span>
-                  <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
-                </a>
+                <div className="hidden md:flex items-center gap-3">
+                  <a href={liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                    <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
+                    <ExternalLink className="h-4 w-4 transform rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                  </a>
+                  <a href={githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                    <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
+                    <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
+                  </a>
+                </div>
               </div>
 
               <div className="card-body p-6 md:p-12">
@@ -114,16 +123,22 @@ const Projects = () => {
                        ))}
                     </div>
 
-                    <a href={link} target="_blank" rel="noopener noreferrer" className="md:hidden mt-8 inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                      <span className="text-sm font-medium uppercase tracking-wider">View Project</span>
-                      <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
-                    </a>
+                    <div className="md:hidden mt-8 flex flex-col gap-3">
+                      <a href={liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                        <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
+                        <ExternalLink className="h-4 w-4 transform -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                      </a>
+                      <a href={githublink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                        <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
+                        <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
+                      </a>
+                    </div>
                   </div>
 
                   <div className="w-full lg:w-2/3">
                     <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 group">
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                      <a href={link} target="_blank" rel="noopener noreferrer">
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
+                      <a href={liveLink} target="_blank" rel="noopener noreferrer">
                         <img
                           src={image}
                           alt={`${name} project screenshot`}
