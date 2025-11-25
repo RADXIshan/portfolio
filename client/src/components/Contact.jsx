@@ -9,6 +9,7 @@ const Contact = () => {
   const contactRef = useRef(null);
   const API_URL = import.meta.env.VITE_APP_API_URL || "";
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,6 +21,7 @@ const Contact = () => {
       toast.error("API endpoint is not configured.");
       return;
     }
+    setLoading(true);
     const toastId = toast.loading("Sending message...");
     try {
       const response = await axios.post(`${API_URL}/api/contact`, formData, {
@@ -30,6 +32,8 @@ const Contact = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(error.response?.data?.error || "An unexpected error occurred", { id: toastId });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,8 +81,8 @@ const Contact = () => {
         </div>
         
         {/* Right Card: Form */}
-        <div className="w-full lg:w-1/2 p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8 h-full justify-center">
+        <div className={`w-full lg:w-1/2 p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm transition-all duration-500 ${loading ? "border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)]" : ""}`}>
+          <form onSubmit={handleSubmit} className={`flex flex-col gap-8 h-full justify-center transition-opacity duration-300 ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
             <div className="group">
               <label htmlFor="name" className="block text-sm font-medium text-white/40 mb-2 uppercase tracking-widest group-focus-within:text-white transition-colors">Name</label>
               <input 
@@ -89,7 +93,8 @@ const Contact = () => {
                 onChange={handleChange} 
                 placeholder="Ishan Roy" 
                 required 
-                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+                disabled={loading}
+                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 disabled:cursor-not-allowed" 
               />
             </div>
             <div className="group">
@@ -102,7 +107,8 @@ const Contact = () => {
                 onChange={handleChange} 
                 placeholder="ishan@example.com" 
                 required 
-                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+                disabled={loading}
+                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 disabled:cursor-not-allowed" 
               />
             </div>
             <div className="group">
@@ -115,14 +121,26 @@ const Contact = () => {
                 rows="4" 
                 placeholder="Send me a message..." 
                 required 
-                className="w-full bg-transparent border-b border-white/20 px-2 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 resize-none" 
+                disabled={loading}
+                className="w-full bg-transparent border-b border-white/20 px-2 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 resize-none disabled:cursor-not-allowed" 
               />
             </div>
             <button 
               type="submit" 
-              className="mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start"
+              disabled={loading}
+              className={`mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start flex items-center gap-2 ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
             >
-              Send Message
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Sending...
+                </>
+              ) : (
+                "Send Message"
+              )}
             </button>
           </form>
         </div>
