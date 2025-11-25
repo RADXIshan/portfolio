@@ -27,6 +27,7 @@ import pandas from "../assets/pandas.png";
 import matplotlib from "../assets/matplotlib.png";
 import langchain from "../assets/langchain.png";
 import socketio from "../assets/socketio.png";
+import { ChevronDown } from "lucide-react";
 import webrtc from "../assets/webrtc.png";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -43,7 +44,7 @@ const skillsData = [
   {
     category: "Frameworks & Libraries",
     items: [
-      { name: "React", img: react },
+      { name: "React.js", img: react },
       { name: "Node.js", img: node },
       { name: "Express.js", img: express },
       { name: "FastAPI", img: fastapi },
@@ -82,9 +83,7 @@ const skillsData = [
 
 const Skills = () => {
   const containerRef = useRef(null);
-  
   const [openAccordion, setOpenAccordion] = useState(null);
-
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
 
   const handleAccordionToggle = (index) => {
@@ -96,7 +95,6 @@ const Skills = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };
     window.addEventListener("resize", checkScreenSize);
-
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
@@ -111,20 +109,25 @@ const Skills = () => {
 
       const handleMouseMove = (e) => {
         const rect = elem.getBoundingClientRect();
+        // Calculate position relative to the element, but offset it slightly
+        // so it doesn't overlap the cursor exactly
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
         gsap.to(info, {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-          duration: 0.5,
+          x: x,
+          y: y,
+          duration: 0.6,
           ease: "power3.out",
         });
       };
       
       const handleMouseEnter = () => {
-        gsap.to(info, { autoAlpha: 1, scale: 1, duration: 0.3 });
+        gsap.to(info, { autoAlpha: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
       };
       
       const handleMouseLeave = () => {
-        gsap.to(info, { autoAlpha: 0, scale: 0.8, duration: 0.2 });
+        gsap.to(info, { autoAlpha: 0, scale: 0.8, duration: 0.3, ease: "power2.in" });
       };
 
       elem.addEventListener("mousemove", handleMouseMove);
@@ -141,71 +144,76 @@ const Skills = () => {
 
   useGSAP(
     () => {
-      const elems = containerRef.current.querySelectorAll(".elem");
+      const elems = containerRef.current.querySelectorAll(".elem-wrapper");
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 30%",
-          end: "top 0%",
+          start: "top 20%",
+          end: "bottom 80%",
           toggleActions: "play none none reverse",
-          scrub: 1,
         },
       });
 
-      tl.from(".skills-title", { y: 150, opacity: 0, ease: "power2.inOut" });
+      tl.from(".skills-title", { 
+        y: 100, 
+        opacity: 0, 
+        duration: 1,
+        ease: "power4.out" 
+      });
       
       tl.from(elems, {
-        y: 100,
+        y: 50,
         opacity: 0,
-        ease: "power2.out",
+        duration: 0.8,
+        ease: "power3.out",
         stagger: 0.1,
-      });
+      }, "-=0.5");
     },
     { scope: containerRef }
   );
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="relative w-full py-20 lg:py-32">
       <h2
         id="skills"
-        className="skills-title text-[15vw] md:text-[10vw] lg:text-[15vw] font-extrabold border-b border-white/25 px-6 md:px-10 lg:px-[4vw] mb-0 mix-blend-difference"
+        className="skills-title text-[12vw] md:text-[10vw] lg:text-[12vw] font-bold border-b border-white/10 px-6 md:px-10 lg:px-[4vw] mb-0 leading-none tracking-tight text-white/90"
       >
         Skills
       </h2>
 
-      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-[2vw] mb-24 md:mb-48 relative mix-blend-difference">
+      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-12 mb-24 md:mb-48 relative">
         {skillsData.map((skill, index) => (
           <div
             key={skill.category}
-            className="elem-wrapper border-b-2 lg:border-b-4 border-white"
+            className="elem-wrapper border-b border-white/10 group/row"
           >
             <div
-              className="elem relative h-32 md:h-40 lg:h-[200px] w-full flex items-center justify-between cursor-pointer group"
+              className="elem relative py-12 md:py-16 lg:py-20 w-full flex items-center justify-between cursor-pointer transition-colors duration-300 hover:bg-white/[0.02]"
               onClick={() => !isDesktop && handleAccordionToggle(index)}
             >
-              <h3 className="relative text-4xl md:text-6xl lg:text-8xl font-semibold z-[2]">
+              <h3 className="relative text-3xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-white/80 group-hover/row:text-white group-hover/row:translate-x-4 transition-all duration-500 ease-out z-[2]">
                 {skill.category}
               </h3>
               
               {/* Accordion Icon for Mobile */}
               {!isDesktop && (
-                 <svg
-                  className={`w-8 h-8 transition-transform duration-300 ${openAccordion === index ? 'rotate-180' : ''}`}
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                 <ChevronDown
+                  className={`w-6 h-6 text-white/50 transition-transform duration-300 mr-4 ${openAccordion === index ? 'rotate-180 text-white' : ''}`}
+                />
               )}
 
-              {/* DESKTOP: Floating info box */}
+              {/* DESKTOP: Floating Glass Card */}
               {isDesktop && (
-                <div className="info-desktop absolute z-30 bg-secondary/90 text-primary px-8 py-6 rounded-2xl pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-80 flex flex-wrap justify-center gap-x-8 gap-y-4 items-center whitespace-nowrap">
-                  {skill.items.map((item) => (
-                    <p key={item.name} className="text-2xl font-medium flex items-center gap-2">
-                      <img src={item.img} alt={item.name} className="h-7 w-7" /> {item.name}
-                    </p>
-                  ))}
+                <div className="info-desktop absolute z-50 pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-90 w-[400px]">
+                  <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-wrap gap-3">
+                    {skill.items.map((item) => (
+                      <div key={item.name} className="flex items-center gap-2 bg-white/5 border border-white/5 px-4 py-2 rounded-full">
+                        <img src={item.img} alt={item.name} className="h-5 w-5 object-contain" /> 
+                        <span className="text-md font-medium text-white/90">{item.name}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -213,15 +221,16 @@ const Skills = () => {
             {/* MOBILE: Accordion content panel */}
             {!isDesktop && (
               <div
-                className={`info-mobile overflow-hidden transition-all duration-500 ease-in-out ${
-                  openAccordion === index ? "max-h-[500px] py-6" : "max-h-0"
+                className={`info-mobile overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+                  openAccordion === index ? "max-h-[500px] opacity-100 pb-8" : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="flex flex-wrap justify-start gap-x-6 gap-y-4 items-center">
+                <div className="flex flex-wrap gap-3 pt-2">
                   {skill.items.map((item) => (
-                    <p key={item.name} className="text-2xl font-medium flex items-center gap-2 bg-secondary/90 text-primary px-3 py-1 rounded-lg">
-                      <img src={item.img} alt={item.name} className="h-6 w-6 "/> {item.name}
-                    </p>
+                    <div key={item.name} className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2.5 rounded-full">
+                      <img src={item.img} alt={item.name} className="h-5 w-5 object-contain" /> 
+                      <span className="text-sm font-medium text-white/90">{item.name}</span>
+                    </div>
                   ))}
                 </div>
               </div>
