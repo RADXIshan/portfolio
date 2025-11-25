@@ -59,8 +59,8 @@ const Projects = () => {
 
   return (
     <div ref={projectsRef} className="projects-container relative w-full">
-      <div className="projects px-4 sm:px-8 md:px-16 flex justify-center md:justify-end border-b border-white/10 pb-10 mb-10" id="projects">
-        <h2 className="projects-title text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] font-bold mb-7 text-white/90">Projects</h2>
+      <div className="projects px-8 sm:px-8 md:px-16 flex justify-center md:justify-end border-b border-white/10 pb-10 mb-10" id="projects">
+        <h2 className="projects-title text-[12vw] font-bold mb-7 text-white/90">Projects</h2>
       </div>
 
       <div className="cards-wrapperContainer relative flex flex-col items-center w-full">

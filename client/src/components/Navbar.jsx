@@ -108,11 +108,11 @@ const Navbar = () => {
     <>
       <nav
         ref={navContainerRef}
-        className="fixed top-0 left-0 w-full px-10 py-6 flex justify-between items-center z-[100] mix-blend-difference text-white"
+        className="fixed top-0 left-0 w-full px-6 py-4 md:px-10 md:py-6 flex justify-between items-center z-[100] mix-blend-difference text-white"
       >
         <div ref={logoRef} className="cursor-pointer">
           <a href="#home" className="block">
-            <img src={logo} alt="Logo" className="w-16 h-16 rounded-full object-cover" />
+            <img src={logo} alt="Logo" className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover" />
           </a>
         </div>
 
@@ -121,8 +121,8 @@ const Navbar = () => {
           onClick={toggleMenu}
           className="cursor-pointer flex items-center gap-3 group"
         >
-          <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-            <Menu className="w-8 h-8" />
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
+            <Menu className="w-6 h-6 md:w-8 md:h-8" />
           </div>
         </div>
       </nav>
@@ -137,9 +137,9 @@ const Navbar = () => {
         <div 
           ref={closeBtnRef}
           onClick={toggleMenu}
-          className="absolute top-6 right-10 cursor-pointer w-16 h-16 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 z-20"
+          className="absolute top-4 right-6 md:top-6 md:right-10 cursor-pointer w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 z-20"
         >
-          <X className="w-8 h-8" />
+          <X className="w-6 h-6 md:w-8 md:h-8" />
         </div>
 
         <div className="flex w-full max-w-7xl px-8 justify-center items-center h-full">
@@ -152,7 +152,7 @@ const Navbar = () => {
                 onClick={toggleMenu}
                 onMouseEnter={() => handleLinkHover(index)}
                 onMouseLeave={handleLinkLeave}
-                className="menu-link-item text-6xl md:text-9xl font-bold text-white/30 hover:text-white transition-colors duration-300 tracking-tighter"
+                className="menu-link-item text-4xl sm:text-6xl md:text-9xl font-bold text-white/30 hover:text-white transition-colors duration-300"
               >
                 {item.label}
               </a>

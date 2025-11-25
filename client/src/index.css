@@ -18,6 +18,7 @@
 
 html.lenis, html.lenis body {
   height: auto;
+  overflow-x: clip;
 }
 
 .lenis.lenis-smooth {
@@ -40,7 +41,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: "Outfit", sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);

@@ -40,7 +40,7 @@ const About = () => {
     <div
       id="about"
       ref={aboutRef}
-      className="relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center px-6 py-20 sm:px-12 md:px-20 lg:px-[5vw] gap-12 lg:gap-24 overflow-hidden"
+      className="relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center px-8 py-20 sm:px-12 md:px-20 lg:px-[5vw] gap-12 lg:gap-24 overflow-hidden"
     >
       {/* Image Section */}
       <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
@@ -88,7 +88,7 @@ const About = () => {
         </div>
         
         <div className="overflow-hidden">
-            <h1 className="about-text-item text-5xl sm:text-6xl lg:text-7xl font-bold leading-[0.9] tracking-tighter">
+            <h1 className="about-text-item text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.9] tracking-tighter">
             Crafting digital <br />
             <span className="text-white/60">experiences.</span>
             </h1>

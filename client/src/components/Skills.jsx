@@ -177,7 +177,7 @@ const Skills = () => {
     <div ref={containerRef} className="relative w-full py-20 lg:py-32">
       <h2
         id="skills"
-        className="skills-title text-[12vw] md:text-[10vw] lg:text-[12vw] font-bold border-b border-white/10 px-6 md:px-10 lg:px-[4vw] mb-0 leading-none tracking-tight text-white/90"
+        className="skills-title text-[15vw] md:text-[10vw] lg:text-[12vw] font-bold border-b border-white/10 px-6 md:px-10 lg:px-[4vw] mb-0 leading-none tracking-tight text-white/90"
       >
         Skills
       </h2>
@@ -192,7 +192,7 @@ const Skills = () => {
               className="elem relative py-12 md:py-16 lg:py-20 w-full flex items-center justify-between cursor-pointer transition-colors duration-300 hover:bg-white/[0.02]"
               onClick={() => !isDesktop && handleAccordionToggle(index)}
             >
-              <h3 className="relative text-3xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-white/80 group-hover/row:text-white group-hover/row:translate-x-4 transition-all duration-500 ease-out z-[2]">
+              <h3 className="relative text-4xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-white/80 group-hover/row:text-white group-hover/row:translate-x-4 transition-all duration-500 ease-out z-[2]">
                 {skill.category}
               </h3>
               

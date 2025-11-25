@@ -65,14 +65,14 @@ const Hero = () => {
     <div
       id="home"
       ref={heroRef}
-      className="flex flex-col items-center justify-center min-h-screen gap-6 p-4 text-center overflow-hidden relative"
+      className="flex flex-col items-center justify-center min-h-screen gap-6 px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gray-600/20 rounded-full blur-[120px] pointer-events-none" />
 
       <h1 
         ref={textRef}
-        className="hero-title text-[clamp(4rem,15vw,12rem)] font-bold tracking-tighter leading-none mb-2 mix-blend-difference z-10"
+        className="hero-title text-[clamp(3rem,12vw,12rem)] font-bold tracking-tighter leading-none mb-2 mix-blend-difference z-10"
         aria-label={title}
       >
         <div className="overflow-hidden flex p-2">
@@ -90,7 +90,7 @@ const Hero = () => {
         Software Developer
       </p>
 
-      <div className="social-links flex gap-8 mt-4 z-10">
+      <div className="social-links flex gap-4 sm:gap-8 mt-4 z-10">
         {socialLinks.map((link, index) => (
           <a
             key={index}
