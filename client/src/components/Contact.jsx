@@ -89,7 +89,7 @@ const Contact = () => {
                 onChange={handleChange} 
                 placeholder="Ishan Roy" 
                 required 
-                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
               />
             </div>
             <div className="group">
@@ -102,7 +102,7 @@ const Contact = () => {
                 onChange={handleChange} 
                 placeholder="ishan@example.com" 
                 required 
-                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+                className="w-full px-2 bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
               />
             </div>
             <div className="group">
@@ -115,12 +115,12 @@ const Contact = () => {
                 rows="4" 
                 placeholder="Send me a message..." 
                 required 
-                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 resize-none" 
+                className="w-full bg-transparent border-b border-white/20 px-2 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 resize-none" 
               />
             </div>
             <button 
               type="submit" 
-              className="mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg cursor-pointer transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start"
+              className="mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start"
             >
               Send Message
             </button>
