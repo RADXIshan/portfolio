@@ -75,7 +75,7 @@ const Hero = () => {
         className="hero-title text-[clamp(4rem,15vw,12rem)] font-bold tracking-tighter leading-none mb-2 mix-blend-difference z-10"
         aria-label={title}
       >
-        <div className="overflow-hidden flex">
+        <div className="overflow-hidden flex p-2">
           {title.split("").map((char, index) => (
             <span key={index} className="hero-title-char inline-block origin-bottom">
               {char === " " ? "\u00A0" : char}
@@ -90,7 +90,7 @@ const Hero = () => {
         Software Developer
       </p>
 
-      <div className="social-links flex gap-8 mt-8 z-10">
+      <div className="social-links flex gap-8 mt-4 z-10">
         {socialLinks.map((link, index) => (
           <a
             key={index}
