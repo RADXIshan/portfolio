@@ -12,10 +12,31 @@ gsap.registerPlugin(ScrollTrigger);
 const Projects = () => {
   const projectsRef = useRef(null);
 
-  const data = [
-    { id: 1, name: "SyncSpace", description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.", image: syncspace, link: "https://github.com/RADXIshan/SyncSpace" },
-    { id: 2, name: "AI News Aggregator", description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources, then delivers personalized daily digests via email.", image: ainews, link: "https://github.com/RADXIshan/AI-News-Aggregator" },
-    { id: 3, name: "Echelon", description: "A modern, full-stack RAG (Retrieval-Augmented Generation) chatbot that indexes websites and answers questions based on the indexed content.", image: echelon, link: "https://github.com/RADXIshan/Echelon" },
+  const projects = [
+    {
+      id: 1,
+      name: "SyncSpace",
+      description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.",
+      image: syncspace,
+      link: "https://github.com/RADXIshan/SyncSpace",
+      technologies: ["React.js", "Node.js", "Express.js", "Socket.io", "WebRTC", "Tailwind CSS", "PostgreSQL", "Gemini API", "GMAIL SMTP"]
+    },
+    {
+      id: 2,
+      name: "AI News Aggregator",
+      description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources, then delivers personalized daily digests via email.",
+      image: ainews,
+      link: "https://github.com/RADXIshan/AI-News-Aggregator",
+      technologies: ["React.js", "Python", "FastAPI", "BeautifulSoup", "Gemini API", "PostgreSQL", "Tailwind CSS", "GMAIL SMTP"]
+    },
+    {
+      id: 3,
+      name: "Echelon",
+      description: "A modern, full-stack RAG (Retrieval-Augmented Generation) chatbot that indexes websites and answers questions based on the indexed content.",
+      image: echelon,
+      link: "https://github.com/RADXIshan/Echelon",
+      technologies: ["React.js", "FastAPI", "LangChain", "Qdrant", "Tailwind CSS"]
+    },
   ];
 
   useGSAP(() => {
@@ -64,7 +85,7 @@ const Projects = () => {
       </div>
 
       <div className="cards-wrapperContainer relative flex flex-col items-center w-full">
-        {data.map(({ id, name, description, image, link }, index) => (
+        {projects.map(({ id, name, description, image, link, technologies }, index) => (
           <div 
             key={id} 
             className="stack-card sticky top-0 w-full min-h-screen flex flex-col justify-center py-10"
@@ -88,10 +109,9 @@ const Projects = () => {
                     <p className="text-lg md:text-xl text-white/70 leading-relaxed font-light">{description}</p>
                     
                     <div className="mt-8 flex flex-wrap gap-3">
-                       {/* Placeholder tags - ideally these would come from data */}
-                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">React</span>
-                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">Tailwind</span>
-                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">GSAP</span>
+                       {technologies.map((tech, i) => (
+                         <span key={i} className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">{tech}</span>
+                       ))}
                     </div>
 
                     <a href={link} target="_blank" rel="noopener noreferrer" className="md:hidden mt-8 inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
