@@ -23,13 +23,13 @@ const Projects = () => {
       gsap.from(".projects-title", {
         scrollTrigger: {
           trigger: ".projects",
-          start: "top 60%",
+          start: "top 80%",
           toggleActions: "play none none reverse",
         },
-        duration: 0.8,
+        duration: 1,
         y: 100,
         opacity: 0,
-        ease: "power2.out",
+        ease: "power3.out",
       });
 
       const cards = gsap.utils.toArray(".stack-card");
@@ -41,7 +41,8 @@ const Projects = () => {
 
         gsap.to(card, {
           scale: 0.9,
-          opacity: 0,
+          opacity: 0.5,
+          filter: "blur(5px)",
           ease: "none",
           scrollTrigger: {
             trigger: nextCard,
@@ -57,44 +58,57 @@ const Projects = () => {
   }, []);
 
   return (
-    <div ref={projectsRef} className="projects-container relative">
-      <div className="projects px-4 sm:px-8 md:px-16 flex justify-center md:justify-end border-b border-white/25 pb-10" id="projects">
-        <h2 className="projects-title text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] font-bold mb-7">Projects</h2>
+    <div ref={projectsRef} className="projects-container relative w-full">
+      <div className="projects px-4 sm:px-8 md:px-16 flex justify-center md:justify-end border-b border-white/10 pb-10 mb-10" id="projects">
+        <h2 className="projects-title text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] font-bold mb-7 text-white/90">Projects</h2>
       </div>
 
-      <div className="cards-wrapperContainer relative flex flex-col">
+      <div className="cards-wrapperContainer relative flex flex-col items-center w-full">
         {data.map(({ id, name, description, image, link }, index) => (
           <div 
             key={id} 
-            className="stack-card sticky top-0 w-full min-h-screen bg-[#131313] border-t border-white/25 flex flex-col justify-center"
+            className="stack-card sticky top-0 w-full min-h-screen flex flex-col justify-center py-10"
             style={{ zIndex: index + 1 }}
           >
-            <div className="px-4 sm:px-8 md:px-12 lg:px-[6rem] overflow-hidden">
-              <div className="card-header p-4 md:p-8 pb-0">
+            <div className="w-[95%] md:w-[90%] mx-auto bg-[#1a1a1a] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
+              <div className="card-header p-6 md:p-12 pb-0 flex justify-between items-start">
                 <div className="flex items-baseline gap-4">
-                  <h3 className="text-xl sm:text-2xl opacity-80">{id.toString().padStart(2, '0')}</h3>
-                  <a href={link} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-4xl md:text-6xl font-semibold tracking-tighter mix-blend-difference cursor-pointer hover:opacity-80 transition-opacity">{name}</a>
+                  <h3 className="text-xl sm:text-2xl opacity-50 font-mono">{id.toString().padStart(2, '0')}</h3>
+                  <a href={link} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tighter hover:text-purple-400 transition-colors duration-300">{name}</a>
                 </div>
+                <a href={link} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                  <span className="text-sm font-medium uppercase tracking-wider">View Project</span>
+                  <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
+                </a>
               </div>
 
-              <div className="card-body p-4 md:p-8 mb-8">
-                <div className="flex flex-col md:flex-row w-full items-start gap-8 md:gap-0">
-                  <div className="w-full md:w-1/2 md:pr-10">
-                    <p className="text-base md:text-lg opacity-70 leading-relaxed pt-2 mb-8">{description}</p>
-                    <a href={link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-base md:text-lg p-3 md:p-4 border border-white/25 rounded-full cursor-pointer hover:bg-white/25 hover:opacity-100 opacity-70 transition-all duration-300">
-                      <span>View Project</span>
-                      <ArrowRight className="h-5 w-5" />
+              <div className="card-body p-6 md:p-12">
+                <div className="flex flex-col lg:flex-row w-full items-start gap-12">
+                  <div className="w-full lg:w-1/3">
+                    <p className="text-lg md:text-xl text-white/70 leading-relaxed font-light">{description}</p>
+                    
+                    <div className="mt-8 flex flex-wrap gap-3">
+                       {/* Placeholder tags - ideally these would come from data */}
+                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">React</span>
+                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">Tailwind</span>
+                       <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">GSAP</span>
+                    </div>
+
+                    <a href={link} target="_blank" rel="noopener noreferrer" className="md:hidden mt-8 inline-flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
+                      <span className="text-sm font-medium uppercase tracking-wider">View Project</span>
+                      <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
                     </a>
                   </div>
 
-                  <div className="w-full md:w-1/2 p-0 md:p-4">
-                    <div className="h-60 sm:h-72 md:h-80 rounded-lg overflow-hidden border border-white/10">
+                  <div className="w-full lg:w-2/3">
+                    <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 group">
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                       <a href={link} target="_blank" rel="noopener noreferrer">
                         <img
                           src={image}
                           alt={`${name} project screenshot`}
-                          className="h-full w-full object-cover transition-all duration-300 hover:scale-105"
-                          onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/131313/FFFFFF?text=${name}`; }}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
                         />
                       </a>
                     </div>

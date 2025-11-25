@@ -6,21 +6,47 @@ import { useEffect, useRef } from "react";
 
 const Hero = () => {
   const heroRef = useRef(null);
+  const textRef = useRef(null);
 
   useEffect(() => {
-    
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-    
-      gsap.from('.animate-in', {
-        y: 50,
+      // Mask Reveal Animation for Title
+      gsap.fromTo(".hero-title-char", 
+        { 
+          y: 100, 
+          opacity: 0,
+          rotateX: -90,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          stagger: 0.05,
+          duration: 1,
+          ease: "power4.out",
+          delay: 0.5,
+        }
+      );
+
+      gsap.from(".hero-subtitle", {
+        y: 20,
         opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        stagger: 0.2,
+        duration: 1,
+        delay: 1.2,
         ease: "power3.out",
       });
+
+      gsap.from(".social-link-item", {
+        y: 20,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        delay: 1.5,
+        ease: "back.out(1.7)",
+      });
+
     }, heroRef);
 
     return () => ctx.revert();
@@ -33,24 +59,38 @@ const Hero = () => {
     { icon: faFileArrowDown, label: "Resume", href: "https://drive.google.com/file/d/1uHDVQ8lRLJ-4SQAhuipD2LPOaP7MvBHg/view" },
   ];
 
+  const title = "Ishan Roy";
+
   return (
     <div
       id="home"
       ref={heroRef}
-      className="flex flex-col items-center justify-center h-screen gap-4 p-4 text-center overflow-hidden"
+      className="flex flex-col items-center justify-center min-h-screen gap-6 p-4 text-center overflow-hidden relative"
     >
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gray-600/20 rounded-full blur-[120px] pointer-events-none" />
+
       <h1 
-        className="animate-in hero-title text-[clamp(3.5rem,10vw,8rem)] font-bold tracking-tight mb-[-0.5rem] md:mb-[-1rem]"
+        ref={textRef}
+        className="hero-title text-[clamp(4rem,15vw,12rem)] font-bold tracking-tighter leading-none mb-2 mix-blend-difference z-10"
+        aria-label={title}
       >
-        Ishan Roy
+        <div className="overflow-hidden flex">
+          {title.split("").map((char, index) => (
+            <span key={index} className="hero-title-char inline-block origin-bottom">
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </div>
       </h1>
+      
       <p 
-        className="animate-in hero-subtitle text-[clamp(1rem,2.5vw,1.5rem)] tracking-wider text-slate-400 transition-colors duration-300 hover:text-white"
+        className="hero-subtitle text-[clamp(1.2rem,3vw,1.8rem)] font-light tracking-widest text-white/60 uppercase z-10"
       >
-        I am a Software Developer
+        Software Developer
       </p>
 
-      <div className="animate-in social-links flex gap-6 mt-6">
+      <div className="social-links flex gap-8 mt-8 z-10">
         {socialLinks.map((link, index) => (
           <a
             key={index}
@@ -58,28 +98,10 @@ const Hero = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={link.label}
-            data-label={link.label}
-            className="
-              relative 
-              w-14 h-14 sm:w-16 sm:h-16 
-              text-slate-400 rounded-full 
-              flex items-center justify-center
-              text-[clamp(1.5rem,4vw,2rem)]
-              transition-all duration-300 ease-in-out
-              hover:text-white hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]
-              
-              /* Tooltip styles */
-              after:content-[attr(data-label)] 
-              after:absolute after:-bottom-10 after:left-1/2 after:-translate-x-1/2
-              after:px-3 after:py-1 after:rounded-md
-              after:bg-slate-800/80 after:backdrop-blur-sm
-              after:text-white after:text-sm after:font-medium
-              after:opacity-0 after:pointer-events-none after:whitespace-nowrap
-              after:transition-all after:duration-300 after:ease-in-out
-              hover:after:opacity-100 hover:after:-translate-y-1
-            "
+            className="social-link-item group relative flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 text-white/50 hover:text-white transition-colors duration-300"
           >
-            <FontAwesomeIcon icon={link.icon} />
+            <div className="absolute inset-0 bg-white/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 ease-out" />
+            <FontAwesomeIcon icon={link.icon} className="text-2xl sm:text-4xl relative z-10 transform group-hover:scale-110 transition-transform duration-300" />
           </a>
         ))}
       </div>

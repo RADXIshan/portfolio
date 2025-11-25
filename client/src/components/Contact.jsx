@@ -44,27 +44,23 @@ const Contact = () => {
     <div
       id="contact"
       ref={contactRef}
-      // The parent ensures vertical centering for the content inside
-      className="min-h-screen w-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="min-h-screen w-full flex items-center justify-center py-24 px-4 sm:px-6 lg:px-8 overflow-hidden relative"
     >
-      {/* KEY CHANGES HERE:
-        - Removed h-[40vh] to allow height to be determined by content.
-        - The container is now h-auto by default.
-        - Gap is now responsive: smaller on mobile (gap-8), larger on desktop (md:gap-12).
-      */}
-      <div className="flex flex-col md:flex-row items-stretch justify-center gap-8 md:gap-12 w-full max-w-6xl">
-        
-        {/* Left Card: "Get in Touch"
-          - Removed h-full. The height will now adapt to its content.
-          - items-stretch on the parent div above makes this card match the height of the form card on desktop.
-        */}
-        <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center p-8 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,0,0,0.6),0_0_25px_rgba(255,255,255,0.05)_inset]">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-2 tracking-wider">Get In Touch</h2>
-          <p className="text-lg text-[rgba(250,249,246,0.7)] transition-colors duration-300 hover:text-white">
-            I would love to hear from you!
-          </p>
+      {/* Background Gradient */}
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
 
-          <div className="flex flex-wrap gap-6 mt-8 w-full items-center justify-center">
+      <div className="flex flex-col lg:flex-row items-stretch justify-center gap-12 w-full max-w-7xl relative z-10">
+        
+        {/* Left Card: "Get in Touch" */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-between p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm transition-all duration-500 hover:bg-white/10">
+          <div>
+            <h2 className="text-5xl sm:text-7xl font-bold mb-6 tracking-tighter">Let's Talk</h2>
+            <p className="text-xl text-white/60 font-light max-w-md leading-relaxed">
+              Have a project in mind or just want to say hi? I'm always open to discussing new ideas and opportunities.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-4 mt-12">
             {socialLinks.map((link, index) => (
               <a
                 key={index}
@@ -72,43 +68,61 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                data-label={link.label}
-                className="relative w-16 h-16 text-[#c7c7c7] rounded-full flex items-center justify-center 
-                           text-[clamp(1.8rem,5vw,2.5rem)] transition-all duration-300 ease-in-out
-                           hover:text-white hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)]
-                           after:content-[attr(data-label)] after:absolute after:-bottom-10 after:left-1/2 after:-translate-x-1/2 
-                           after:text-white after:text-sm after:opacity-0 after:pointer-events-none after:whitespace-nowrap 
-                           after:transition-all after:duration-300 after:ease-in-out
-                           hover:after:opacity-100 hover:after:-translate-y-1"
+                className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
               >
-                <FontAwesomeIcon icon={link.icon} />
+                <FontAwesomeIcon icon={link.icon} className="text-xl" />
               </a>
             ))}
           </div>
         </div>
         
-        {/* Right Card: Form
-          - Removed h-full. The form now dictates its own height, preventing overflow.
-        */}
-        <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,0,0,0.6),0_0_25px_rgba(255,255,255,0.05)_inset]">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-md flex flex-col gap-5"
-          >
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-[#FAF9F6] mb-1">Name</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your name" required className="w-full p-3 border border-[rgba(255,255,255,0.1)] rounded-lg bg-[rgba(255,255,255,0.02)] text-[#FAF9F6] text-base outline-none transition duration-300 focus:border-[rgba(255,255,255,0.25)] focus:bg-[rgba(255,255,255,0.06)] focus:ring-1 focus:ring-white/20" />
+        {/* Right Card: Form */}
+        <div className="w-full lg:w-1/2 p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8 h-full justify-center">
+            <div className="group">
+              <label htmlFor="name" className="block text-sm font-medium text-white/40 mb-2 uppercase tracking-widest group-focus-within:text-white transition-colors">Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                value={formData.name} 
+                onChange={handleChange} 
+                placeholder="John Doe" 
+                required 
+                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+              />
             </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#FAF9F6] mb-1">Email</label>
-              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required className="w-full p-3 border border-[rgba(255,255,255,0.1)] rounded-lg bg-[rgba(255,255,255,0.02)] text-[#FAF9F6] text-base outline-none transition duration-300 focus:border-[rgba(255,255,255,0.25)] focus:bg-[rgba(255,255,255,0.06)] focus:ring-1 focus:ring-white/20" />
+            <div className="group">
+              <label htmlFor="email" className="block text-sm font-medium text-white/40 mb-2 uppercase tracking-widest group-focus-within:text-white transition-colors">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleChange} 
+                placeholder="john@example.com" 
+                required 
+                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300" 
+              />
             </div>
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-[#FAF9F6] mb-1">Message</label>
-              <textarea id="message" name="message" value={formData.message} onChange={handleChange} rows="4" placeholder="Type your message here..." required className="w-full p-3 border border-[rgba(255,255,255,0.1)] rounded-lg bg-[rgba(255,255,255,0.02)] text-[#FAF9F6] text-base outline-none transition duration-300 focus:border-[rgba(255,255,255,0.25)] focus:bg-[rgba(255,255,255,0.06)] focus:ring-1 focus:ring-white/20" />
+            <div className="group">
+              <label htmlFor="message" className="block text-sm font-medium text-white/40 mb-2 uppercase tracking-widest group-focus-within:text-white transition-colors">Message</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                value={formData.message} 
+                onChange={handleChange} 
+                rows="4" 
+                placeholder="Tell me about your project..." 
+                required 
+                className="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white placeholder-white/20 outline-none focus:border-white transition-colors duration-300 resize-none" 
+              />
             </div>
-            <button type="submit" className="mt-2 py-3 px-6 bg-gradient-to-r from-[#FAF9F6] to-[#d6d6d6] text-[#131313] font-semibold border-none rounded-lg text-base cursor-pointer transition duration-300 hover:from-white hover:to-[#e4e4e4] hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_5px_15px_rgba(255,255,255,0.1)] active:scale-100 active:translate-y-0">
-              Submit
+            <button 
+              type="submit" 
+              className="mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg cursor-pointer transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start"
+            >
+              Send Message
             </button>
           </form>
         </div>

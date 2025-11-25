@@ -2,54 +2,84 @@ import { useLayoutEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
 import { Menu, X } from "lucide-react";
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState(null);
 
   const navContainerRef = useRef(null);
-  const navLinksRef = useRef(null);
+  const menuOverlayRef = useRef(null);
+  const menuLinksRef = useRef(null);
   const tl = useRef(null);
+
+  const menuItems = [
+    { label: "Home", href: "#home" },
+    { label: "About", href: "#about" },
+    { label: "Skills", href: "#skills" },
+    { label: "Projects", href: "#projects" },
+    { label: "Contact", href: "#contact" },
+  ];
+
+  // Magnetic Effect Helper
+  const useMagnetic = (ref) => {
+    useGSAP(() => {
+      const element = ref.current;
+      if (!element) return;
+
+      const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+      const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+      const handleMouseMove = (e) => {
+        const { clientX, clientY } = e;
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const x = clientX - (left + width / 2);
+        const y = clientY - (top + height / 2);
+        xTo(x * 0.35);
+        yTo(y * 0.35);
+      };
+
+      const handleMouseLeave = () => {
+        xTo(0);
+        yTo(0);
+      };
+
+      element.addEventListener("mousemove", handleMouseMove);
+      element.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        element.removeEventListener("mousemove", handleMouseMove);
+        element.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }, { scope: ref });
+  };
+
+  const logoRef = useRef(null);
+  const menuBtnRef = useRef(null);
+  const closeBtnRef = useRef(null);
+
+  useMagnetic(logoRef);
+  useMagnetic(menuBtnRef);
+  useMagnetic(closeBtnRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from([".logo img", ".menu-icon"], {
-        delay: 0.8,
-        duration: 1,
-        ease: "power2.out",
-        y: -50,
-        opacity: 0,
-        stagger: 0.1,
-      });
-
       tl.current = gsap.timeline({ paused: true });
 
-      tl.current.to(navLinksRef.current, {
-        duration: 0.6,
-        delay: 0.2,
-        height: "100vh",
-        ease: "power3.out",
+      tl.current.to(menuOverlayRef.current, {
+        duration: 1,
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        ease: "power4.inOut",
       });
 
-      tl.current.fromTo(
-        ".nav-link-item",
-        { y: -300, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          delay: 0.1,
-          ease: "power2.out",
-          stagger: 0.1,
-        },
-        "-=0.4"
-      );
+      tl.current.from(".menu-link-item", {
+        y: 100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+      }, "-=0.5");
 
-      tl.current.fromTo(
-        ".close-icon",
-        { y: 0, opacity: 0 },
-        { y: -300, opacity: 1, duration: 0.3 },
-        "-=0.5"
-      );
     }, navContainerRef);
 
     return () => ctx.revert();
@@ -64,58 +94,71 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLinkHover = (index) => {
+    setHoveredLink(index);
+  };
+
+  const handleLinkLeave = () => {
+    setHoveredLink(null);
+  };
+
+
+
   return (
     <>
       <nav
         ref={navContainerRef}
-        className="fixed top-0 left-0 flex w-full items-center justify-between px-[7.5vw] py-[2vw] font-semibold max-w-screen z-[100]"
+        className="fixed top-0 left-0 w-full px-10 py-6 flex justify-between items-center z-[100] mix-blend-difference text-white"
       >
-        <div className="logo active:scale-90 mix-blend-difference">
-          <a className="nav-link active:scale-90" href="#home">
-            <img
-              src={logo}
-              alt="logo"
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center"
-            />
+        <div ref={logoRef} className="cursor-pointer">
+          <a href="#home" className="block">
+            <img src={logo} alt="Logo" className="w-16 h-16 rounded-full object-cover" />
           </a>
         </div>
 
-        <div
-          className="menu-icon-container flex items-center justify-center text-[#FAF9F6] w-11 h-11 md:w-14 md:h-14 rounded-full cursor-pointer p-2 transition-all duration-300 ease-in-out hover:bg-[rgba(251,211,161,0.1)] active:bg-[rgba(251,211,161,0.2)] active:scale-75"
+        <div 
+          ref={menuBtnRef} 
           onClick={toggleMenu}
+          className="cursor-pointer flex items-center gap-3 group"
         >
-          <Menu className="menu-icon h-8 w-8" />
+          <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
+            <Menu className="w-8 h-8" />
+          </div>
         </div>
       </nav>
 
-      {/* Fullscreen menu */}
-      <div
-        ref={navLinksRef}
-        className="nav-links fixed top-0 left-0 w-full h-0 overflow-hidden flex flex-col items-center justify-center gap-[2vw] bg-[#131313] z-[101]"
+      {/* Fullscreen Menu Overlay */}
+      <div 
+        ref={menuOverlayRef}
+        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex items-center justify-center clip-path-polygon-[0%_0%,_100%_0%,_100%_0%,_0%_0%]"
+        style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
       >
-        <X
-          className="
-            absolute flex h-12 w-12 cursor-pointer items-center justify-center 
-            rounded-full p-2 text-[#FAF9F6]                                 
-            transition-all duration-300 ease-in-out                         
-            hover:bg-amber-200/10                                         
-            top-2.5 right-7                                                                               
-            lg:top-[2.2rem] lg:right-[7rem]  active:bg-[rgba(251,211,161,0.2)] active:scale-75                           
-          "
+        {/* Close Button */}
+        <div 
+          ref={closeBtnRef}
           onClick={toggleMenu}
-          aria-label="Close"
-        />
+          className="absolute top-6 right-10 cursor-pointer w-16 h-16 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 z-20"
+        >
+          <X className="w-8 h-8" />
+        </div>
 
-        {["Home", "About", "Skills", "Projects", "Contact"].map((item) => (
-          <a
-            key={item}
-            className="nav-link nav-link-item relative text-[3.5rem] text-[#FAF9F6] transition-all duration-300 ease-in-out transform hover:text-[rgb(251,211,161)] hover:scale-115 after:content-[''] after:absolute after:w-full after:h-[2px] after:bottom-0 after:left-0 after:bg-[rgb(251,211,161)] after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100 active:scale-90"
-            href={`#${item.toLowerCase()}`}
-            onClick={toggleMenu}
-          >
-            {item}
-          </a>
-        ))}
+        <div className="flex w-full max-w-7xl px-8 justify-center items-center h-full">
+          {/* Links Column */}
+          <div className="w-full flex flex-col justify-center items-center gap-6" ref={menuLinksRef}>
+            {menuItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.href}
+                onClick={toggleMenu}
+                onMouseEnter={() => handleLinkHover(index)}
+                onMouseLeave={handleLinkLeave}
+                className="menu-link-item text-6xl md:text-9xl font-bold text-white/30 hover:text-white transition-colors duration-300 tracking-tighter"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
