@@ -178,22 +178,24 @@ const Navbar = () => {
           className="flex-1 flex flex-col justify-center items-start pl-6 md:pl-40 pt-16 md:pt-10"
           ref={menuLinksRef}
         >
-          {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              onClick={toggleMenu}
-              className="menu-link-item group relative flex items-center gap-4 cursor-pointer mb-4 md:mb-2"
-            >
-              <span className="text-sm md:text-xl font-mono text-white/30 group-hover:text-white transition-colors duration-300">
-                {`0${index + 1}`}
-              </span>
+          <div className="flex flex-col group/menu">
+            {menuItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.href}
+                onClick={toggleMenu}
+                className="menu-link-item group relative flex items-center gap-4 cursor-pointer mb-4 md:mb-2 transition-all duration-300 md:group-hover/menu:opacity-30 md:hover:!opacity-100"
+              >
+                <span className="text-sm md:text-xl font-mono text-white/30 group-hover:text-white transition-colors duration-300">
+                  {`0${index + 1}`}
+                </span>
 
-              <span className="text-5xl md:text-8xl font-bold text-white/70 group-hover:text-white leading-none tracking-tight transition-all duration-300 group-hover:translate-x-2">
-                {item.label}
-              </span>
-            </a>
-          ))}
+                <span className="text-5xl md:text-8xl font-bold text-white/70 group-hover:text-white leading-none tracking-tight transition-all duration-300 group-hover:translate-x-2">
+                  {item.label}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Bottom Bar: Socials & Info (lifted up) */}
