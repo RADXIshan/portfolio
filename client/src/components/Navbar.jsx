@@ -1,17 +1,22 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [hoveredLink, setHoveredLink] = useState(null);
 
   const navContainerRef = useRef(null);
   const menuOverlayRef = useRef(null);
   const menuLinksRef = useRef(null);
+  const socialLinksRef = useRef(null);
+  const overlayLogoRef = useRef(null);
   const tl = useRef(null);
+
+  const logoRef = useRef(null);
+  const menuBtnRef = useRef(null);
+  const closeBtnRef = useRef(null);
 
   const menuItems = [
     { label: "Home", href: "#home" },
@@ -19,6 +24,12 @@ const Navbar = () => {
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
     { label: "Contact", href: "#contact" },
+  ];
+
+  const socialLinks = [
+    { icon: Linkedin, href: "https://www.linkedin.com/in/ishanroy-radx/", label: "LinkedIn" },
+    { icon: Github, href: "https://github.com/RADXIshan", label: "GitHub" },
+    { icon: Mail, href: "mailto:ishanroy3118107@gmail.com", label: "Email" },
   ];
 
   // Magnetic Effect Helper
@@ -54,10 +65,6 @@ const Navbar = () => {
     }, { scope: ref });
   };
 
-  const logoRef = useRef(null);
-  const menuBtnRef = useRef(null);
-  const closeBtnRef = useRef(null);
-
   useMagnetic(logoRef);
   useMagnetic(menuBtnRef);
   useMagnetic(closeBtnRef);
@@ -67,7 +74,7 @@ const Navbar = () => {
       tl.current = gsap.timeline({ paused: true });
 
       tl.current.to(menuOverlayRef.current, {
-        duration: 1,
+        duration: 1.2,
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         ease: "power4.inOut",
       });
@@ -75,11 +82,31 @@ const Navbar = () => {
       tl.current.from(".menu-link-item", {
         y: 100,
         opacity: 0,
-        duration: 0.8,
+        filter: "blur(10px)",
+        duration: 1,
         stagger: 0.1,
         ease: "power3.out",
-      }, "-=0.5");
+      }, "-=0.8");
 
+      if (socialLinksRef.current) {
+        tl.current.from(socialLinksRef.current.children, {
+          y: 20,
+          opacity: 0,
+          filter: "blur(10px)",
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+        }, "-=0.8");
+      }
+
+      if (overlayLogoRef.current) {
+        tl.current.from(overlayLogoRef.current, {
+          opacity: 0,
+          scale: 0.8,
+          duration: 1,
+          ease: "power3.out",
+        }, "-=1");
+      }
     }, navContainerRef);
 
     return () => ctx.revert();
@@ -87,22 +114,12 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     if (isMenuOpen) {
-      tl.current.reverse();
+      tl.current && tl.current.reverse();
     } else {
-      tl.current.play();
+      tl.current && tl.current.play();
     }
     setIsMenuOpen(!isMenuOpen);
   };
-
-  const handleLinkHover = (index) => {
-    setHoveredLink(index);
-  };
-
-  const handleLinkLeave = () => {
-    setHoveredLink(null);
-  };
-
-
 
   return (
     <>
@@ -112,12 +129,16 @@ const Navbar = () => {
       >
         <div ref={logoRef} className="cursor-pointer">
           <a href="#home" className="block">
-            <img src={logo} alt="Logo" className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover" />
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+            />
           </a>
         </div>
 
-        <div 
-          ref={menuBtnRef} 
+        <div
+          ref={menuBtnRef}
           onClick={toggleMenu}
           className="cursor-pointer flex items-center gap-3 group"
         >
@@ -128,33 +149,73 @@ const Navbar = () => {
       </nav>
 
       {/* Fullscreen Menu Overlay */}
-      <div 
+      <div
         ref={menuOverlayRef}
-        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex items-center justify-center clip-path-polygon-[0%_0%,_100%_0%,_100%_0%,_0%_0%]"
+        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex flex-col justify-between px-6 pt-4 pb-10 md:px-10 md:pt-6 md:pb-14 clip-path-polygon-[0%_0%,_100%_0%,_100%_0%,_0%_0%]"
         style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
       >
-        {/* Close Button */}
-        <div 
-          ref={closeBtnRef}
-          onClick={toggleMenu}
-          className="absolute top-4 right-6 md:top-6 md:right-10 cursor-pointer w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 z-20"
-        >
-          <X className="w-6 h-6 md:w-8 md:h-8" />
+        {/* Top Bar: Logo & Close Button */}
+        <div className="flex justify-between items-center w-full">
+          <div ref={overlayLogoRef}>
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+            />
+          </div>
+
+          <div
+            ref={closeBtnRef}
+            onClick={toggleMenu}
+            className="cursor-pointer w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 ml-auto"
+          >
+            <X className="w-6 h-6 md:w-8 md:h-8" />
+          </div>
         </div>
 
-        <div className="flex w-full max-w-7xl px-8 justify-center items-center h-full">
-          {/* Links Column */}
-          <div className="w-full flex flex-col justify-center items-center gap-6" ref={menuLinksRef}>
-            {menuItems.map((item, index) => (
+        {/* Main Content: Links (closer to logo) */}
+        <div
+          className="flex-1 flex flex-col justify-center items-start pl-6 md:pl-40 pt-16 md:pt-10"
+          ref={menuLinksRef}
+        >
+          {menuItems.map((item, index) => (
+            <a
+              key={index}
+              href={item.href}
+              onClick={toggleMenu}
+              className="menu-link-item group relative flex items-center gap-4 cursor-pointer mb-4 md:mb-2"
+            >
+              <span className="text-sm md:text-xl font-mono text-white/30 group-hover:text-white transition-colors duration-300">
+                {`0${index + 1}`}
+              </span>
+
+              <span className="text-5xl md:text-8xl font-bold text-white/70 group-hover:text-white leading-none tracking-tight transition-all duration-300 group-hover:translate-x-2">
+                {item.label}
+              </span>
+            </a>
+          ))}
+        </div>
+
+        {/* Bottom Bar: Socials & Info (lifted up) */}
+        <div className="flex flex-col md:flex-row justify-between items-end w-full gap-8">
+          <div className="text-white/40 text-sm font-mono hidden md:block pl-10">
+            <p>BASED IN INDIA</p>
+            <p>AVAILABLE FOR WORK</p>
+          </div>
+
+          <div ref={socialLinksRef} className="flex gap-6">
+            {socialLinks.map((link, index) => (
               <a
                 key={index}
-                href={item.href}
-                onClick={toggleMenu}
-                onMouseEnter={() => handleLinkHover(index)}
-                onMouseLeave={handleLinkLeave}
-                className="menu-link-item text-4xl sm:text-6xl md:text-9xl font-bold text-white/30 hover:text-white transition-colors duration-300"
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 text-white/60 hover:text-white transition-colors duration-300"
               >
-                {item.label}
+                <link.icon className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform duration-300" />
+                <span className="hidden md:block text-sm font-medium uppercase tracking-wider opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  {link.label}
+                </span>
               </a>
             ))}
           </div>
