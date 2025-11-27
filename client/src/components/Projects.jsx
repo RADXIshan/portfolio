@@ -133,7 +133,7 @@ const Projects = () => {
                     <div className="md:hidden mt-8 flex flex-col gap-3">
                       <a href={liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
-                        <ExternalLink className="h-4 w-4 transform rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                        <ExternalLink className="h-4 w-4 transform rotate-0 group-hover:rotate-0 transition-transform duration-300" />
                       </a>
                       <a href={githublink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
