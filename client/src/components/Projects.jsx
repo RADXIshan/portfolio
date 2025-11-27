@@ -43,43 +43,50 @@ const Projects = () => {
   ];
 
   useGSAP(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".projects-title", {
-        scrollTrigger: {
-          trigger: ".projects",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-        duration: 1,
-        y: 100,
-        opacity: 0,
-        ease: "power3.out",
-      });
+    gsap.from(".projects-title", {
+      scrollTrigger: {
+        trigger: ".projects",
+        start: "top 80%",
+        toggleActions: "play none none reverse",
+      },
+      duration: 1,
+      y: 100,
+      opacity: 0,
+      ease: "power3.out",
+    });
 
-      const cards = gsap.utils.toArray(".stack-card");
+    const mm = gsap.matchMedia();
 
-      cards.forEach((card, index) => {
-        if (index === cards.length - 1) return;
+    mm.add(
+      {
+        isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)",
+      },
+      (context) => {
+        const { isMobile } = context.conditions;
+        const cards = gsap.utils.toArray(".stack-card");
 
-        const nextCard = cards[index + 1];
+        cards.forEach((card, index) => {
+          if (index === cards.length - 1) return;
 
-        gsap.to(card, {
-          scale: 0.9,
-          opacity: 0.5,
-          filter: "blur(5px)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: nextCard,
-            start: "top bottom",
-            end: "top top",
-            scrub: true,
-          },
+          const nextCard = cards[index + 1];
+
+          gsap.to(card, {
+            scale: 0.9,
+            opacity: 0.5,
+            filter: "blur(5px)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: nextCard,
+              start: isMobile ? "top 50%" : "top bottom",
+              end: "top top",
+              scrub: true,
+            },
+          });
         });
-      });
-    }, projectsRef);
-
-    return () => ctx.revert();
-  }, []);
+      }
+    );
+  }, { scope: projectsRef });
 
   return (
     <div ref={projectsRef} className="projects-container relative w-full">
@@ -91,7 +98,7 @@ const Projects = () => {
         {projects.map(({ id, name, description, image, githublink, liveLink, technologies }, index) => (
           <div 
             key={id} 
-            className="stack-card sticky top-0 w-full min-h-screen flex flex-col justify-center py-10"
+            className="stack-card sticky top-[-10vh] md:top-0 w-full h-[100dvh] md:min-h-screen flex flex-col justify-center pt-[calc(10vh+2.5rem)] pb-10 md:py-10"
             style={{ zIndex: index + 1 }}
           >
             <div className="w-[95%] md:w-[90%] mx-auto bg-[#1a1a1a] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
@@ -126,7 +133,7 @@ const Projects = () => {
                     <div className="md:hidden mt-8 flex flex-col gap-3">
                       <a href={liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
-                        <ExternalLink className="h-4 w-4 transform -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                        <ExternalLink className="h-4 w-4 transform rotate-45 group-hover:rotate-0 transition-transform duration-300" />
                       </a>
                       <a href={githublink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
