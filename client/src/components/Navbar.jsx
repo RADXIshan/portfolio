@@ -151,7 +151,7 @@ const Navbar = () => {
       {/* Fullscreen Menu Overlay */}
       <div
         ref={menuOverlayRef}
-        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex flex-col justify-between px-6 pb-10 md:px-10 md:pb-14 clip-path-polygon-[0%_0%,_100%_0%,_100%_0%,_0%_0%]"
+        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex flex-col justify-between px-6 pt-4 pb-10 md:px-10 md:pt-6 md:pb-14 clip-path-polygon-[0%_0%,_100%_0%,_100%_0%,_0%_0%]"
         style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
       >
         {/* Top Bar: Logo & Close Button */}
@@ -175,7 +175,7 @@ const Navbar = () => {
 
         {/* Main Content: Links (closer to logo) */}
         <div
-          className="flex-1 flex flex-col justify-center items-start pl-6 md:pl-40 pt-16 md:pt-10"
+          className="flex-1 flex flex-col justify-center items-start pl-6 md:pl-40"
           ref={menuLinksRef}
         >
           <div className="flex flex-col group/menu">
