@@ -128,7 +128,7 @@ const Contact = () => {
             <button 
               type="submit" 
               disabled={loading}
-              className={`mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02] active:scale-95 self-start flex items-center gap-2 ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
+              className={`mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.05] active:scale-95 self-start flex items-center gap-2 cursor-none ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
             >
               {loading ? (
                 <>
