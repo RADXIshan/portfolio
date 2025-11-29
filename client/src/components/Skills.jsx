@@ -189,7 +189,7 @@ const Skills = () => {
             className="elem-wrapper border-b border-white/10 group/row"
           >
             <div
-              className="elem relative py-12 md:py-16 lg:py-20 w-full flex items-center justify-between cursor-pointer transition-colors duration-300 hover:bg-white/[0.02]"
+              className="elem relative py-12 md:py-16 lg:py-20 w-full flex items-center justify-between transition-colors duration-300 hover:bg-white/[0.02]"
               onClick={() => !isDesktop && handleAccordionToggle(index)}
             >
               <h3 className="relative text-4xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-white/80 group-hover/row:text-white group-hover/row:translate-x-4 transition-all duration-500 ease-out z-[2]">
