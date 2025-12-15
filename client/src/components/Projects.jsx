@@ -15,12 +15,11 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      name: "SyncSpace",
-      description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.",
+      name: "MindTrace",
+      description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition, live speech transcription, and context-aware support to help users—especially those with memory challenges—navigate social interactions confidently.",
       image: syncspace,
-      githublink: "https://github.com/RADXIshan/SyncSpace",
-      liveLink: "https://syncspace-client.vercel.app",
-      technologies: ["React.js", "Node.js", "Express.js", "Socket.io", "WebRTC", "Tailwind CSS", "PostgreSQL", "Gemini API", "GMAIL SMTP"]
+      githublink: "https://github.com/RADXIshan/mindtrace",
+      technologies: ["React.js", "Python", "FastAPI", "OpenCV", "PyTorch", "InsightFace", "Faster Whisper", "Gemini 2.5 Flash", "ChromaDB", "Tailwind CSS", "PostgreSQL"]
     },
     {
       id: 2,
@@ -33,12 +32,12 @@ const Projects = () => {
     },
     {
       id: 3,
-      name: "Echelon",
-      description: "A modern, full-stack RAG (Retrieval-Augmented Generation) chatbot that indexes websites and answers questions based on the indexed content.",
-      image: echelon,
-      githublink: "https://github.com/RADXIshan/Echelon",
-      liveLink: "https://ragchatbot-client.vercel.app",
-      technologies: ["React.js", "FastAPI", "LangChain", "Qdrant", "Tailwind CSS"]
+      name: "SyncSpace",
+      description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.",
+      image: syncspace,
+      githublink: "https://github.com/RADXIshan/SyncSpace",
+      liveLink: "https://syncspace-client.vercel.app",
+      technologies: ["React.js", "Node.js", "Express.js", "Socket.io", "WebRTC", "Tailwind CSS", "PostgreSQL", "Gemini API", "GMAIL SMTP"]
     },
   ];
 
@@ -108,10 +107,12 @@ const Projects = () => {
                   <a href={githublink} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tighter hover:text-purple-400 transition-colors duration-300">{name}</a>
                 </div>
                 <div className="hidden md:flex items-center gap-3">
+{liveLink && (
                   <a href={liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                     <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
                     <ExternalLink className="h-4 w-4 transform rotate-45 group-hover:rotate-0 transition-transform duration-300" />
                   </a>
+                  )}
                   <a href={githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                     <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
                     <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
@@ -131,10 +132,12 @@ const Projects = () => {
                     </div>
 
                     <div className="md:hidden mt-8 flex flex-col gap-3">
+                      {liveLink && (
                       <a href={liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
                         <ExternalLink className="h-4 w-4 transform rotate-0 group-hover:rotate-0 transition-transform duration-300" />
                       </a>
+                      )}
                       <a href={githublink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
                         <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
                         <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
@@ -145,14 +148,23 @@ const Projects = () => {
                   <div className="w-full lg:w-2/3">
                     <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 group">
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
-                      <a href={liveLink} target="_blank" rel="noopener noreferrer">
+                      {liveLink ? (
+                        <a href={liveLink} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={image}
+                            alt={`${name} project screenshot`}
+                            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                            onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
+                          />
+                        </a>
+                      ) : (
                         <img
                           src={image}
                           alt={`${name} project screenshot`}
                           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                           onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
                         />
-                      </a>
+                      )}
                     </div>
                   </div>
                 </div>

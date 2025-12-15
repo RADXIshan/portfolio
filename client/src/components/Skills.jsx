@@ -29,6 +29,10 @@ import langchain from "../assets/langchain.png";
 import socketio from "../assets/socketio.png";
 import { ChevronDown } from "lucide-react";
 import webrtc from "../assets/webrtc.png";
+import opencv from "../assets/opencv.png";
+import pytorch from "../assets/pytorch.png";
+import chromadb from "../assets/chromadb.png";
+import beautifulsoup from "../assets/beautifulsoup.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,6 +56,9 @@ const skillsData = [
       { name: "NumPy", img: numpy },
       { name: "Pandas", img: pandas },
       { name: "Matplotlib", img: matplotlib },
+      { name: "OpenCV", img: opencv },
+      { name: "PyTorch", img: pytorch },
+      { name: "BeautifulSoup", img: beautifulsoup },
     ],
   },
   {
@@ -60,8 +67,10 @@ const skillsData = [
       { name: "PostgreSQL", img: postgres },
       { name: "MongoDB", img: mongodb },
       { name: "MySQL", img: mysql },
+      { name: "ChromaDB", img: chromadb },
     ],
   },
+
   {
     category: "Tools & Technologies",
     items: [
