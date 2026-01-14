@@ -6,6 +6,7 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import syncspace from "../assets/syncspace.png";
 import ainews from "../assets/ainews.png";
 import echelon from "../assets/echelon.png";
+import mindtrace from "../assets/mindtrace.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +18,7 @@ const Projects = () => {
       id: 1,
       name: "MindTrace",
       description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition, live speech transcription, and context-aware support to help users—especially those with memory challenges—navigate social interactions confidently.",
-      image: syncspace,
+      image: mindtrace,
       githublink: "https://github.com/RADXIshan/mindtrace",
       technologies: ["React.js", "Python", "FastAPI", "OpenCV", "PyTorch", "InsightFace", "Faster Whisper", "Gemini 2.5 Flash", "ChromaDB", "Tailwind CSS", "PostgreSQL"]
     },
@@ -97,7 +98,7 @@ const Projects = () => {
         {projects.map(({ id, name, description, image, githublink, liveLink, technologies }, index) => (
           <div 
             key={id} 
-            className="stack-card sticky top-[-10vh] md:top-0 w-full h-[100dvh] md:min-h-screen flex flex-col justify-center pt-[calc(10vh+2.5rem)] pb-10 md:py-10"
+            className="stack-card sticky top-[-10vh] md:top-0 w-full min-h-[100dvh] md:min-h-screen flex flex-col justify-center pt-[calc(10vh+2.5rem)] pb-10 md:py-10"
             style={{ zIndex: index + 1 }}
           >
             <div className="w-[95%] md:w-[90%] mx-auto bg-[#1a1a1a] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
@@ -146,14 +147,14 @@ const Projects = () => {
                   </div>
 
                   <div className="w-full lg:w-2/3">
-                    <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 group">
+                    <div className="relative rounded-xl overflow-hidden border border-white/10 group">
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
                       {liveLink ? (
                         <a href={liveLink} target="_blank" rel="noopener noreferrer">
                           <img
                             src={image}
                             alt={`${name} project screenshot`}
-                            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                            className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-105"
                             onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
                           />
                         </a>
@@ -161,7 +162,7 @@ const Projects = () => {
                         <img
                           src={image}
                           alt={`${name} project screenshot`}
-                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-105"
                           onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
                         />
                       )}
