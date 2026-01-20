@@ -56,7 +56,7 @@ const Hero = () => {
     { icon: faLinkedin, label: "Linkedin", href: "https://www.linkedin.com/in/ishanroy-radx/" },
     { icon: faGithub, label: "Github", href: "https://github.com/RADXIshan" },
     { icon: faEnvelope, label: "Gmail", href: "mailto:ishanroy3118107@gmail.com" },
-    { icon: faFileArrowDown, label: "Resume", href: "https://drive.google.com/file/d/150zb-SoukYJ4ckX4RoPK_cDc9CcV--tb/view?usp=sharing" },
+    { icon: faFileArrowDown, label: "Resume", href: "https://drive.google.com/file/d/1susB6_hrsjwlGKANRnnsVmA24wLL2TzG/view?usp=sharing" },
   ];
 
   const title = "Ishan Roy";
