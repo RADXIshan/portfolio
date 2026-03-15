@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/all";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import syncspace from "../assets/syncspace.png";
 import ainews from "../assets/ainews.png";
-import echelon from "../assets/echelon.png";
 import mindtrace from "../assets/mindtrace.png";
 
 gsap.registerPlugin(ScrollTrigger);
