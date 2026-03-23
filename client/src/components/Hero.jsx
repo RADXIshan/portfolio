@@ -12,7 +12,6 @@ const Hero = () => {
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Mask Reveal Animation for Title
       gsap.fromTo(".hero-title-char", 
         { 
           y: 100, 
