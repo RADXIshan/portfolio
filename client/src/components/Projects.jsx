@@ -62,20 +62,6 @@ const Projects = () => {
             const innerImages = gsap.utils.toArray(".inner-img");
 
             cards.forEach((card, i) => {
-                // Text animation for each card
-                gsap.from(card.querySelectorAll("h3, p, .flex-wrap, .flex.gap-6"), {
-                    y: 100,
-                    opacity: 0,
-                    stagger: 0.1,
-                    duration: 1.2,
-                    ease: "power4.out",
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 90%",
-                        toggleActions: "play none none reverse"
-                    }
-                });
-
                 if (i === 0) {
                     // Initial parallax for first image
                     gsap.to(innerImages[0], {
@@ -138,6 +124,23 @@ const Projects = () => {
             });
         });
 
+        // Common Text animation for each card (Works on all screens)
+        const cards = gsap.utils.toArray(".project-text-block");
+        cards.forEach((card) => {
+            gsap.from(card.querySelectorAll("h3, p, .flex-wrap, .flex.gap-6"), {
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 90%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+
         return () => mm.revert();
     }, { scope: sectionRef });
 
@@ -152,7 +155,7 @@ const Projects = () => {
                         <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white">Selected Work.</h1>
                     </div>
 
-                    <div className="projects-list flex flex-col gap-[30vh] lg:gap-[60vh] pb-[20vh]">
+                    <div className="projects-list flex flex-col gap-[15vh] md:gap-[30vh] lg:gap-[60vh] pb-[10vh] lg:pb-[20vh]">
                         {projects.map((project, index) => (
                             <div key={project.id} className="project-text-block flex flex-col gap-8 group">
                                 <div className="flex items-center gap-4">

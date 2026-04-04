@@ -88,22 +88,14 @@ const About = () => {
            <div className="w-full h-full relative overflow-hidden">
              {/* Easter Egg Code */}
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-8 overflow-hidden">
-                <pre className="text-green-500/80 font-mono text-sm sm:text-base leading-relaxed">
-                  {`const ishan = {
-                  role: "Software Engineer",
-                  passion: "Building",
-                  skills: [
-                    "Full-Stack", 
-                    "Backend",
-                    "AI/ML",  
-                    "Python", 
-                    "JavaScript", 
-                    "Go",
-                    "Java"
-                  ],
-                  status: "Ready"
-                };`}
-                </pre>
+                 <pre className="text-green-500/80 font-mono text-[min(3vw,14px)] sm:text-base leading-relaxed">
+                   {`const ishan = {
+                   role: "Dev",
+                   passion: "Build",
+                   skills: ["JS", "Py", "Go"],
+                   status: "Ready"
+                 };`}
+                 </pre>
              </div>
 
             <img

@@ -64,26 +64,28 @@ const Hero = () => {
         ease: "sine.inOut"
     });
 
-    // Magnetic Effect for Social Links
-    const socialItems = gsap.utils.toArray(".social-link-item");
-    socialItems.forEach(item => {
-        const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-        const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    // Magnetic Effect for Social Links (Only if hover is supported)
+    if (window.matchMedia("(hover: hover)").matches) {
+        const socialItems = gsap.utils.toArray(".social-link-item");
+        socialItems.forEach(item => {
+            const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+            const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
 
-        item.addEventListener("mousemove", (e) => {
-            const { clientX, clientY } = e;
-            const { left, top, width, height } = item.getBoundingClientRect();
-            const x = clientX - (left + width / 2);
-            const y = clientY - (top + height / 2);
-            xTo(x * 0.3); // Reduced from 0.5 for a more subtle feel
-            yTo(y * 0.3); // Reduced from 0.5 for a more subtle feel
-        });
+            item.addEventListener("mousemove", (e) => {
+                const { clientX, clientY } = e;
+                const { left, top, width, height } = item.getBoundingClientRect();
+                const x = clientX - (left + width / 2);
+                const y = clientY - (top + height / 2);
+                xTo(x * 0.3);
+                yTo(y * 0.3);
+            });
 
-        item.addEventListener("mouseleave", () => {
-            xTo(0);
-            yTo(0);
+            item.addEventListener("mouseleave", () => {
+                xTo(0);
+                yTo(0);
+            });
         });
-    });
+    }
 
   }, { scope: heroRef });
 
@@ -103,8 +105,8 @@ const Hero = () => {
       className="flex flex-col items-center justify-center min-h-screen gap-6 px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow */}
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700" />
 
       <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
         <h1 

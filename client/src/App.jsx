@@ -88,7 +88,9 @@ const App = () => {
       }
     };
 
-    window.addEventListener("mousemove", moveCursor);
+    if (window.matchMedia("(hover: hover)").matches) {
+      window.addEventListener("mousemove", moveCursor);
+    }
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);

@@ -35,6 +35,7 @@ const Navbar = () => {
   // Magnetic Effect Helper
   const useMagnetic = (ref) => {
     useGSAP(() => {
+      if (!window.matchMedia("(hover: hover)").matches) return;
       const element = ref.current;
       if (!element) return;
 
@@ -190,7 +191,7 @@ const Navbar = () => {
                   {`0${index + 1}`}
                 </span>
 
-                <span className="text-5xl md:text-8xl font-bold text-white/70 group-hover:text-white leading-none tracking-tight transition-all duration-300 group-hover:translate-x-2">
+                <span className="text-4xl md:text-8xl font-bold text-white/70 group-hover:text-white leading-none tracking-tight transition-all duration-300 md:group-hover:translate-x-2">
                   {item.label}
                 </span>
               </a>

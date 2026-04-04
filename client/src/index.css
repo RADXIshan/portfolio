@@ -13,7 +13,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none; /* Hide default cursor */
+  -webkit-tap-highlight-color: transparent; /* Remove touch highlight on mobile */
+}
+
+@media (hover: hover) {
+  * {
+    cursor: none; /* Hide default cursor ONLY if hover is supported (mouse) */
+  }
 }
 
 html.lenis, html.lenis body {

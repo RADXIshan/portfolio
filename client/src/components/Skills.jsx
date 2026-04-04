@@ -97,7 +97,7 @@ const Skills = () => {
         const container = containerRef.current;
 
         const pin = gsap.to(container, {
-            x: () => -(container.scrollWidth - window.innerWidth / 2), // Changed calculation for better end-view
+            x: () => -(container.scrollWidth - window.innerWidth / 1.5), // Adjusted for better mobile end-view
             ease: "none",
             scrollTrigger: {
                 trigger: section,
@@ -133,7 +133,7 @@ const Skills = () => {
     <section ref={sectionRef} className="overflow-hidden bg-[#0a0a0a]" id="skills">
       <div className="flex items-center h-screen">
         <div className="flex items-center px-[10vw]">
-          <div className="mr-60 flex-shrink-0">
+          <div className="mr-20 md:mr-40 lg:mr-60 flex-shrink-0">
             <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-tighter leading-none text-white/5 uppercase select-none">
                 Skills
             </h2>
@@ -159,7 +159,7 @@ const Skills = () => {
                     {skill.items.map((item) => (
                       <div key={item.name} className="skill-item flex items-center gap-4 group/item">
                         <div className="w-10 h-10 md:w-14 md:h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
-                            <img src={item.img} alt={item.name} className="h-6 w-6 md:h-8 md:w-8 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
+                            <img src={item.img} alt={item.name} className="h-6 w-6 md:h-8 md:w-8 object-contain opacity-60 md:opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
                         </div>
                         <span className="text-sm md:text-lg font-light text-white/40 group-hover/item:text-white transition-colors duration-300">
                             {item.name}
