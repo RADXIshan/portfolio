@@ -121,6 +121,7 @@ const Skills = () => {
                     trigger: card,
                     start: "left 90%",
                     containerAnimation: pin,
+                    toggleActions: "play none none reset"
                 }
             });
         });

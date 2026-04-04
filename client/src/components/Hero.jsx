@@ -106,10 +106,10 @@ const Hero = () => {
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none delay-700" />
 
-      <div className="overflow-hidden">
+      <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
         <h1 
             ref={textRef}
-            className="hero-title text-[clamp(4rem,15vw,15rem)] font-bold tracking-tighter leading-none mb-2 mix-blend-difference z-10"
+            className="hero-title text-[clamp(3rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10"
         >
             {title}
         </h1>
