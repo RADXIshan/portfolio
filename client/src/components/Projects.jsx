@@ -78,11 +78,10 @@ const Projects = () => {
                     trigger: sectionRef.current,
                     start: "top top",
                     end: "bottom bottom",
-                    scrub: 1,
+                    scrub: 1.5, // Increased scrub for even smoother delay
                     pin: rightRef.current,
                     pinSpacing: false,
                     anticipatePin: 1,
-                    fastScrollEnd: true,
                     invalidateOnRefresh: true,
                 }
             });
@@ -92,52 +91,70 @@ const Projects = () => {
                 gsap.set(img, { zIndex: 10 + i });
             });
 
-            // Transition 1 -> 2 (MindTrace -> AI News)
+            // Project 1 -> 2 Transition (Progressive reveal over a 30% window)
+            // Starts blurring P1 slightly before P2 enters
             tl.to(images[0], {
-                filter: "blur(15px) brightness(0.7)",
-                scale: 1.25,
-                ease: "power2.inOut",
+                filter: "blur(20px) brightness(0.5)",
+                scale: 1.4,
+                opacity: 0.8,
+                ease: "power3.inOut",
                 force3D: true,
-            }, 0.3);
+            }, 1); // Starts at "time" 1
 
             tl.fromTo(images[1], 
-                { opacity: 0, scale: 1.1 },
-                { opacity: 1, scale: 1, ease: "power2.inOut", force3D: true },
-                0.3
+                { opacity: 0, scale: 1.2, filter: "blur(5px)" },
+                { 
+                    opacity: 1, 
+                    scale: 1, 
+                    filter: "blur(0px)",
+                    ease: "power3.out", 
+                    force3D: true,
+                    duration: 1.5 // Happens alongside and slightly into the exit
+                },
+                1.2 // Slight delay for the entrance to feel more natural
             );
 
             tl.fromTo(innerImages[1],
-                { scale: 1.2, y: 50 },
-                { scale: 1, y: 0, ease: "power2.out", force3D: true },
-                0.3
+                { scale: 1.3, y: 100 },
+                { scale: 1, y: 0, ease: "power3.out", force3D: true, duration: 1.5 },
+                1.2
             );
 
-            // Transition 2 -> 3 (AI News -> SyncSpace)
+            // Project 2 -> 3 Transition (Progressive reveal over a 30% window)
             tl.to(images[1], {
-                filter: "blur(15px) brightness(0.7)",
-                scale: 1.25,
-                ease: "power2.inOut",
+                filter: "blur(20px) brightness(0.5)",
+                scale: 1.4,
+                opacity: 0.8,
+                ease: "power3.inOut",
                 force3D: true,
-            }, 0.7);
+            }, 6); // Starts at "time" 6
 
             tl.fromTo(images[2], 
-                { opacity: 0, scale: 1.1 },
-                { opacity: 1, scale: 1, ease: "power2.inOut", force3D: true },
-                0.7
+                { opacity: 0, scale: 1.2, filter: "blur(5px)" },
+                { 
+                    opacity: 1, 
+                    scale: 1, 
+                    filter: "blur(0px)",
+                    ease: "power3.out", 
+                    force3D: true,
+                    duration: 1.5
+                },
+                6.2
             );
 
             tl.fromTo(innerImages[2],
-                { scale: 1.2, y: 50 },
-                { scale: 1, y: 0, ease: "power2.out", force3D: true },
-                0.7
+                { scale: 1.3, y: 100 },
+                { scale: 1, y: 0, ease: "power3.out", force3D: true, duration: 1.5 },
+                6.2
             );
 
-            // Simple parallax for the first project
+            // First project initial parallax
             tl.to(innerImages[0], {
-                y: -50,
-                scale: 1.1,
+                y: -100,
+                scale: 1.2,
                 ease: "none",
                 force3D: true,
+                duration: 2
             }, 0);
         });
 
