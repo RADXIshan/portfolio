@@ -45,16 +45,32 @@ const App = () => {
       gsap.to(cursorDot, {
         x: clientX,
         y: clientY,
-        duration: 0.1,
+        duration: 0.15,
         ease: "power2.out"
       });
 
       gsap.to(cursorOutline, {
         x: clientX,
         y: clientY,
-        duration: 0.5,
-        ease: "power2.out"
+        duration: 0.8,
+        ease: "power3.out"
       });
+
+      // Context Awareness
+      const target = e.target;
+      const isProject = target.closest('.project-card');
+      const isClickable = target.closest('a, button, .cursor-pointer, input, textarea');
+
+      if (isProject) {
+        cursorDot.classList.add('project-active');
+        cursorOutline.classList.add('hidden');
+      } else if (isClickable) {
+        cursorDot.classList.add('active');
+        cursorOutline.classList.add('active');
+      } else {
+        cursorDot.classList.remove('active', 'project-active');
+        cursorOutline.classList.remove('active', 'hidden');
+      }
     };
 
     window.addEventListener("mousemove", moveCursor);

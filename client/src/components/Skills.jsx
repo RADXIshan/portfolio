@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,7 +27,6 @@ import pandas from "../assets/pandas.png";
 import matplotlib from "../assets/matplotlib.png";
 import langchain from "../assets/langchain.png";
 import socketio from "../assets/socketio.png";
-import { ChevronDown } from "lucide-react";
 import webrtc from "../assets/webrtc.png";
 import opencv from "../assets/opencv.png";
 import pytorch from "../assets/pytorch.png";
@@ -70,7 +69,6 @@ const skillsData = [
       { name: "ChromaDB", img: chromadb },
     ],
   },
-
   {
     category: "Tools & Technologies",
     items: [
@@ -91,163 +89,91 @@ const skillsData = [
 ];
 
 const Skills = () => {
-  const containerRef = useRef(null);
-  const [openAccordion, setOpenAccordion] = useState(null);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+    const sectionRef = useRef(null);
+    const containerRef = useRef(null);
 
-  const handleAccordionToggle = (index) => {
-    setOpenAccordion(openAccordion === index ? null : index);
-  };
+    useGSAP(() => {
+        const section = sectionRef.current;
+        const container = containerRef.current;
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  useEffect(() => {
-    if (!isDesktop) return;
-
-    const elems = containerRef.current.querySelectorAll(".elem");
-    
-    elems.forEach((elem) => {
-      const info = elem.querySelector(".info-desktop");
-      if (!info) return;
-
-      const handleMouseMove = (e) => {
-        const rect = elem.getBoundingClientRect();
-        // Calculate position relative to the element, but offset it slightly
-        // so it doesn't overlap the cursor exactly
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        gsap.to(info, {
-          x: x,
-          y: y,
-          duration: 0.6,
-          ease: "power3.out",
+        const pin = gsap.to(container, {
+            x: () => -(container.scrollWidth - window.innerWidth / 2), // Changed calculation for better end-view
+            ease: "none",
+            scrollTrigger: {
+                trigger: section,
+                pin: true,
+                scrub: 1,
+                start: "top top",
+                end: () => `+=${container.scrollWidth}`, // Robust distance
+                invalidateOnRefresh: true,
+            },
         });
-      };
-      
-      const handleMouseEnter = () => {
-        gsap.to(info, { autoAlpha: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
-      };
-      
-      const handleMouseLeave = () => {
-        gsap.to(info, { autoAlpha: 0, scale: 0.8, duration: 0.3, ease: "power2.in" });
-      };
 
-      elem.addEventListener("mousemove", handleMouseMove);
-      elem.addEventListener("mouseenter", handleMouseEnter);
-      elem.addEventListener("mouseleave", handleMouseLeave);
+        const skillCards = gsap.utils.toArray(".skill-card");
+        skillCards.forEach((card) => {
+            gsap.from(card.querySelectorAll(".skill-item"), {
+                y: 30,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: card,
+                    start: "left 90%",
+                    containerAnimation: pin,
+                }
+            });
+        });
 
-      return () => {
-        elem.removeEventListener("mousemove", handleMouseMove);
-        elem.removeEventListener("mouseenter", handleMouseEnter);
-        elem.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    });
-  }, [isDesktop]); 
-
-  useGSAP(
-    () => {
-      const elems = containerRef.current.querySelectorAll(".elem-wrapper");
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 20%",
-          end: "bottom 80%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      tl.from(".skills-title", { 
-        y: 100, 
-        opacity: 0, 
-        duration: 1,
-        ease: "power4.out" 
-      });
-      
-      tl.from(elems, {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.1,
-      }, "-=0.5");
-    },
-    { scope: containerRef }
-  );
+        return () => pin.kill();
+    }, { scope: sectionRef });
 
   return (
-    <div ref={containerRef} className="relative w-full py-20 lg:py-32">
-      <h2
-        id="skills"
-        className="skills-title text-[15vw] md:text-[10vw] lg:text-[12vw] font-bold border-b border-white/10 px-6 md:px-10 lg:px-[4vw] mb-0 leading-none tracking-tight text-white/90"
-      >
-        Skills
-      </h2>
+    <section ref={sectionRef} className="overflow-hidden bg-[#0a0a0a]" id="skills">
+      <div className="flex items-center h-screen">
+        <div className="flex items-center px-[10vw]">
+          <div className="mr-60 flex-shrink-0">
+            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-tighter leading-none text-white/5 uppercase select-none">
+                Skills
+            </h2>
+          </div>
+          
+          {/* Added min-w-max to ensure correct width calculation Status */}
+          <div ref={containerRef} className="flex min-w-max gap-[15vw] pr-[30vw] md:pr-[40vw]"> 
+            {skillsData.map((skill, index) => (
+              <div 
+                key={skill.category} 
+                className="skill-card relative flex flex-col justify-center min-w-[70vw] md:min-w-[500px] flex-shrink-0 group"
+              >
+                <div className="flex flex-col gap-6 md:gap-10 mb-12">
+                    <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
+                        {`0${index + 1}`}
+                    </span>
+                    <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter leading-none whitespace-nowrap">
+                        {skill.category}
+                    </h3>
+                </div>
 
-      <div className="skills w-full px-6 md:px-10 lg:px-[7.5vw] py-8 lg:py-12 mb-24 md:mb-48 relative">
-        {skillsData.map((skill, index) => (
-          <div
-            key={skill.category}
-            className="elem-wrapper border-b border-white/10 group/row"
-          >
-            <div
-              className="elem relative py-12 md:py-16 lg:py-20 w-full flex items-center justify-between transition-colors duration-300 hover:bg-white/[0.02]"
-              onClick={() => !isDesktop && handleAccordionToggle(index)}
-            >
-              <h3 className="relative text-4xl md:text-5xl lg:text-7xl font-semibold tracking-wide text-white/80 group-hover/row:text-white group-hover/row:translate-x-4 transition-all duration-500 ease-out z-[2]">
-                {skill.category}
-              </h3>
-              
-              {/* Accordion Icon for Mobile */}
-              {!isDesktop && (
-                 <ChevronDown
-                  className={`w-6 h-6 text-white/50 transition-transform duration-300 mr-4 ${openAccordion === index ? 'rotate-180 text-white' : ''}`}
-                />
-              )}
-
-              {/* DESKTOP: Floating Glass Card */}
-              {isDesktop && (
-                <div className="info-desktop absolute z-50 pointer-events-none opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-90 w-[400px]">
-                  <div className="bg-neutral-900/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-x-4 gap-y-6 md:gap-x-6 md:gap-y-8 max-w-2xl">
                     {skill.items.map((item) => (
-                      <div key={item.name} className="flex items-center gap-2 bg-white/5 border border-white/5 px-4 py-2 rounded-full">
-                        <img src={item.img} alt={item.name} className="h-5 w-5 object-contain" /> 
-                        <span className="text-md font-medium text-white/90">{item.name}</span>
+                      <div key={item.name} className="skill-item flex items-center gap-4 group/item">
+                        <div className="w-10 h-10 md:w-14 md:h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
+                            <img src={item.img} alt={item.name} className="h-6 w-6 md:h-8 md:w-8 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
+                        </div>
+                        <span className="text-sm md:text-lg font-light text-white/40 group-hover/item:text-white transition-colors duration-300">
+                            {item.name}
+                        </span>
                       </div>
                     ))}
-                  </div>
                 </div>
-              )}
-            </div>
-            
-            {/* MOBILE: Accordion content panel */}
-            {!isDesktop && (
-              <div
-                className={`info-mobile overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-                  openAccordion === index ? "max-h-[500px] opacity-100 pb-8" : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="flex flex-wrap gap-3 pt-2">
-                  {skill.items.map((item) => (
-                    <div key={item.name} className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2.5 rounded-full">
-                      <img src={item.img} alt={item.name} className="h-5 w-5 object-contain" /> 
-                      <span className="text-sm font-medium text-white/90">{item.name}</span>
-                    </div>
-                  ))}
-                </div>
+
+                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/[0.03] rounded-full blur-[100px] pointer-events-none" />
               </div>
-            )}
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

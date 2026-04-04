@@ -46,8 +46,8 @@ const Navbar = () => {
         const { left, top, width, height } = element.getBoundingClientRect();
         const x = clientX - (left + width / 2);
         const y = clientY - (top + height / 2);
-        xTo(x * 0.35);
-        yTo(y * 0.35);
+        xTo(x * 0.3);
+        yTo(y * 0.3);
       };
 
       const handleMouseLeave = () => {

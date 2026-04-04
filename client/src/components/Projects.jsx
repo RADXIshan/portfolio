@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 import syncspace from "../assets/syncspace.png";
 import ainews from "../assets/ainews.png";
 import mindtrace from "../assets/mindtrace.png";
@@ -10,171 +10,195 @@ import mindtrace from "../assets/mindtrace.png";
 gsap.registerPlugin(ScrollTrigger);
 
 const Projects = () => {
-  const projectsRef = useRef(null);
+    const sectionRef = useRef(null);
+    const leftRef = useRef(null);
+    const rightRef = useRef(null);
 
-  const projects = [
-    {
-      id: 1,
-      name: "MindTrace",
-      description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition, live speech transcription, and context-aware support to help users—especially those with memory challenges—navigate social interactions confidently.",
-      image: mindtrace,
-      githublink: "https://github.com/RADXIshan/mindtrace",
-      technologies: ["React.js", "Python", "FastAPI", "OpenCV", "PyTorch", "InsightFace", "Faster Whisper", "Gemini 2.5 Flash", "ChromaDB", "Tailwind CSS", "PostgreSQL"]
-    },
-    {
-      id: 2,
-      name: "AI News Aggregator",
-      description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources, then delivers personalized daily digests via email.",
-      image: ainews,
-      githublink: "https://github.com/RADXIshan/AI-News-Aggregator",
-      liveLink: "https://ai-news-aggregator-digest.vercel.app",
-      technologies: ["React.js", "Python", "FastAPI", "BeautifulSoup", "Gemini API", "PostgreSQL", "Tailwind CSS", "GMAIL SMTP"]
-    },
-    {
-      id: 3,
-      name: "SyncSpace",
-      description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, polls, voice messages, AI assistance, and advanced productivity tools.",
-      image: syncspace,
-      githublink: "https://github.com/RADXIshan/SyncSpace",
-      liveLink: "https://syncspace-client.vercel.app",
-      technologies: ["React.js", "Node.js", "Express.js", "Socket.io", "WebRTC", "Tailwind CSS", "PostgreSQL", "Gemini API", "GMAIL SMTP"]
-    },
-  ];
+    const projects = [
+        {
+            id: 1,
+            name: "MindTrace",
+            description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition and context-aware support to navigate social interactions confidently.",
+            image: mindtrace,
+            githublink: "https://github.com/RADXIshan/mindtrace",
+            technologies: ["FastAPI", "OpenCV", "PyTorch", "Gemini 2.5"]
+        },
+        {
+            id: 2,
+            name: "AI News",
+            description: "An intelligent, automated news aggregation system that scrapes, processes, and curates AI-related content from multiple sources with daily personalized digests.",
+            image: ainews,
+            githublink: "https://github.com/RADXIshan/AI-News-Aggregator",
+            liveLink: "https://ai-news-aggregator-digest.vercel.app",
+            technologies: ["Python", "BS4", "Gemini API", "PostgreSQL"]
+        },
+        {
+            id: 3,
+            name: "SyncSpace",
+            description: "A comprehensive real-time team collaboration platform with video conferencing, messaging, and AI productivity tools built for modern teams.",
+            image: syncspace,
+            githublink: "https://github.com/RADXIshan/SyncSpace",
+            liveLink: "https://syncspace-client.vercel.app",
+            technologies: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL"]
+        }
+    ];
 
-  useGSAP(() => {
-    gsap.from(".projects-title", {
-      scrollTrigger: {
-        trigger: ".projects",
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      },
-      duration: 1,
-      y: 100,
-      opacity: 0,
-      ease: "power3.out",
-    });
+    useGSAP(() => {
+        const mm = gsap.matchMedia();
 
-    const mm = gsap.matchMedia();
+        mm.add("(min-width: 1024px)", () => {
+            // Pin the right side (images)
+            ScrollTrigger.create({
+                trigger: sectionRef.current,
+                start: "top top",
+                end: "bottom bottom",
+                pin: rightRef.current,
+                pinSpacing: false,
+            });
 
-    mm.add(
-      {
-        isDesktop: "(min-width: 768px)",
-        isMobile: "(max-width: 767px)",
-      },
-      (context) => {
-        const { isMobile } = context.conditions;
-        const cards = gsap.utils.toArray(".stack-card");
+            // Cross-fade and Parallax Scale images
+            const cards = gsap.utils.toArray(".project-text-block");
+            const images = gsap.utils.toArray(".sticky-image-item");
+            const innerImages = gsap.utils.toArray(".inner-img");
 
-        cards.forEach((card, index) => {
-          if (index === cards.length - 1) return;
+            cards.forEach((card, i) => {
+                if (i === 0) {
+                    // Initial parallax for first image
+                    gsap.to(innerImages[0], {
+                        y: -50,
+                        scale: 1.1,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true,
+                        }
+                    });
+                    return;
+                }
 
-          const nextCard = cards[index + 1];
+                gsap.fromTo(images[i], 
+                    { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
+                    { 
+                        clipPath: "inset(0% 0% 0% 0%)", 
+                        opacity: 1,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 80%",
+                            end: "top 20%",
+                            scrub: true,
+                        }
+                    }
+                );
 
-          gsap.to(card, {
-            scale: 0.9,
-            opacity: 0.5,
-            filter: "blur(5px)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: nextCard,
-              start: isMobile ? "top 50%" : "top bottom",
-              end: "top top",
-              scrub: true,
-            },
-          });
+                // Zoom Parallax for current image
+                gsap.fromTo(innerImages[i],
+                    { scale: 1.3, y: 50 },
+                    { 
+                        scale: 1, 
+                        y: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 80%",
+                            end: "top 20%",
+                            scrub: true,
+                        }
+                    }
+                );
+                
+                // Exit effect for previous image
+                gsap.to(images[i-1], {
+                    opacity: 0,
+                    filter: "blur(10px)",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        end: "top 20%",
+                        scrub: true,
+                    }
+                });
+            });
         });
-      }
-    );
-  }, { scope: projectsRef });
 
-  return (
-    <div ref={projectsRef} className="projects-container relative w-full">
-      <div className="projects px-8 sm:px-8 md:px-16 flex justify-center md:justify-end border-b border-white/10 pb-10 mb-10" id="projects">
-        <h2 className="projects-title text-[12vw] font-bold mb-7 text-white/90">Projects</h2>
-      </div>
+        return () => mm.revert();
+    }, { scope: sectionRef });
 
-      <div className="cards-wrapperContainer relative flex flex-col items-center w-full">
-        {projects.map(({ id, name, description, image, githublink, liveLink, technologies }, index) => (
-          <div 
-            key={id} 
-            className="stack-card sticky top-[-10vh] md:top-0 w-full min-h-[100dvh] md:min-h-screen flex flex-col justify-center pt-[calc(10vh+2.5rem)] pb-10 md:py-10"
-            style={{ zIndex: index + 1 }}
-          >
-            <div className="w-[95%] md:w-[90%] mx-auto bg-[#1a1a1a] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
-              <div className="card-header p-6 md:p-12 pb-0 flex justify-between items-start">
-                <div className="flex items-baseline gap-4">
-                  <h3 className="text-xl sm:text-2xl opacity-50 font-mono">{id.toString().padStart(2, '0')}</h3>
-                  <a href={githublink} target="_blank" rel="noopener noreferrer" className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tighter hover:text-purple-400 transition-colors duration-300">{name}</a>
-                </div>
-                <div className="hidden md:flex items-center gap-3">
-{liveLink && (
-                  <a href={liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                    <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
-                    <ExternalLink className="h-4 w-4 transform rotate-45 group-hover:rotate-0 transition-transform duration-300" />
-                  </a>
-                  )}
-                  <a href={githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                    <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
-                    <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="card-body p-6 md:p-12">
-                <div className="flex flex-col lg:flex-row w-full items-start gap-12">
-                  <div className="w-full lg:w-1/3">
-                    <p className="text-lg md:text-xl text-white/70 leading-relaxed font-light">{description}</p>
-                    
-                    <div className="mt-8 flex flex-wrap gap-3">
-                       {technologies.map((tech, i) => (
-                         <span key={i} className="px-3 py-1 bg-white/5 rounded-full text-xs text-white/50 border border-white/5">{tech}</span>
-                       ))}
+    return (
+        <section ref={sectionRef} className="relative w-full bg-[#0a0a0a]" id="projects">
+            <div className="flex flex-col lg:flex-row w-full min-h-screen">
+                
+                {/* LEFT COLUMN: Scrollable Content */}
+                <div ref={leftRef} className="w-full lg:w-1/2 px-8 py-24 md:px-16 lg:pl-24 lg:pr-12 md:py-32">
+                    <div className="mb-20 lg:mb-32">
+                        <h2 className="text-sm font-mono text-purple-400 uppercase tracking-widest mb-4">/ Projects</h2>
+                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white">Selected Work.</h1>
                     </div>
 
-                    <div className="md:hidden mt-8 flex flex-col gap-3">
-                      {liveLink && (
-                      <a href={liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                        <span className="text-sm font-medium uppercase tracking-wider">Live Link</span>
-                        <ExternalLink className="h-4 w-4 transform rotate-0 group-hover:rotate-0 transition-transform duration-300" />
-                      </a>
-                      )}
-                      <a href={githublink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group">
-                        <span className="text-sm font-medium uppercase tracking-wider">View Github</span>
-                        <ArrowRight className="h-4 w-4 transform group-hover:-rotate-45 transition-transform duration-300" />
-                      </a>
+                    <div className="projects-list flex flex-col gap-[30vh] lg:gap-[60vh] pb-[20vh]">
+                        {projects.map((project, index) => (
+                            <div key={project.id} className="project-text-block flex flex-col gap-8 group">
+                                <div className="flex items-center gap-4">
+                                    <span className="text-2xl font-mono text-white/20">{`0${index + 1}`}</span>
+                                    <div className="h-[1px] w-12 bg-white/10 group-hover:w-24 transition-all duration-500" />
+                                </div>
+                                <h3 className="text-5xl md:text-7xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500">
+                                    {project.name}
+                                </h3>
+                                <p className="text-xl text-white/50 leading-relaxed max-w-md font-light">
+                                    {project.description}
+                                </p>
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {project.technologies.map((tech, i) => (
+                                        <span key={i} className="px-3 py-1 bg-white/5 border border-white/5 rounded-full text-xs text-white/40">{tech}</span>
+                                    ))}
+                                </div>
+                                <div className="flex gap-6 mt-8">
+                                    <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
+                                        <Github size={24} />
+                                        <span className="text-sm font-mono uppercase tracking-widest hidden md:block">Source</span>
+                                    </a>
+                                    {project.liveLink && (
+                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
+                                            <ArrowUpRight size={24} className="group-hover/link:rotate-45 transition-transform duration-300" />
+                                            <span className="text-sm font-mono uppercase tracking-widest hidden md:block">Live Demo</span>
+                                        </a>
+                                    )}
+                                </div>
+                                
+                                {/* MOBILE ONLY IMAGE */}
+                                <div className="mt-12 lg:hidden w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/5">
+                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover" />
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                  </div>
-
-                  <div className="w-full lg:w-2/3">
-                    <div className="relative rounded-xl overflow-hidden border border-white/10 group">
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
-                      {liveLink ? (
-                        <a href={liveLink} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src={image}
-                            alt={`${name} project screenshot`}
-                            className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-105"
-                            onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
-                          />
-                        </a>
-                      ) : (
-                        <img
-                          src={image}
-                          alt={`${name} project screenshot`}
-                          className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-105"
-                          onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/1a1a1a/FFFFFF?text=${name}`; }}
-                        />
-                      )}
-                    </div>
-                  </div>
                 </div>
-              </div>
+
+                {/* RIGHT COLUMN: Sticky Images */}
+                <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen items-center justify-center pointer-events-none p-24 pl-12 pr-24">
+                    <div className="relative w-full h-[80%] max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-[#111111]">
+                        {projects.map((project, index) => (
+                            <div 
+                                key={project.id} 
+                                className={`sticky-image-item absolute inset-0 w-full h-full ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                            >
+                                <img 
+                                    src={project.image} 
+                                    alt={project.name} 
+                                    className="inner-img w-full h-full object-cover transition-all duration-300"
+                                    onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/800x1200/1a1a1a/FFFFFF?text=${project.name}`; }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </section>
+    );
 };
 
 export default Projects;
