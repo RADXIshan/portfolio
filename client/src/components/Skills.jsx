@@ -97,7 +97,7 @@ const Skills = () => {
         const container = containerRef.current;
 
         const pin = gsap.to(container, {
-            x: () => -(container.scrollWidth - window.innerWidth / 1.5), // Adjusted for better mobile end-view
+            x: () => -(container.scrollWidth - window.innerWidth + container.offsetLeft), 
             ease: "none",
             scrollTrigger: {
                 trigger: section,

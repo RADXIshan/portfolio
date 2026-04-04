@@ -111,14 +111,14 @@ const Hero = () => {
       <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
         <h1 
             ref={textRef}
-            className="hero-title text-[clamp(3rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10"
+            className="hero-title text-[clamp(2.5rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10 whitespace-nowrap"
         >
             {title}
         </h1>
       </div>
       
       <p 
-        className="hero-subtitle text-[clamp(1rem,2vw,1.4rem)] font-light tracking-[0.4em] text-white/50 uppercase z-10"
+        className="hero-subtitle text-[clamp(0.9rem,2vw,1.4rem)] font-light tracking-[0.2em] sm:tracking-[0.4em] text-white/50 uppercase z-10 whitespace-nowrap"
       >
         Software Developer
       </p>
