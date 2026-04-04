@@ -28,8 +28,23 @@ const App = () => {
 
     requestAnimationFrame(raf);
 
+    // Smooth scroll for anchor links
+    const handleAnchorClick = (e) => {
+      const link = e.target.closest('a');
+      if (link && link.hash && link.pathname === window.location.pathname) {
+        const target = document.querySelector(link.hash);
+        if (target) {
+          e.preventDefault();
+          lenis.scrollTo(target);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+
     return () => {
       lenis.destroy();
+      document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 
