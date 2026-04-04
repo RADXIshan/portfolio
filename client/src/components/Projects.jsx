@@ -46,8 +46,8 @@ const Projects = () => {
     useGSAP(() => {
         const mm = gsap.matchMedia();
 
+        // DESKTOP: Split pinning and cross-fade
         mm.add("(min-width: 1024px)", () => {
-            // Pin the right side (images)
             ScrollTrigger.create({
                 trigger: sectionRef.current,
                 start: "top top",
@@ -56,14 +56,12 @@ const Projects = () => {
                 pinSpacing: false,
             });
 
-            // Cross-fade and Parallax Scale images
             const cards = gsap.utils.toArray(".project-text-block");
             const images = gsap.utils.toArray(".sticky-image-item");
             const innerImages = gsap.utils.toArray(".inner-img");
 
             cards.forEach((card, i) => {
                 if (i === 0) {
-                    // Initial parallax for first image
                     gsap.to(innerImages[0], {
                         y: -50,
                         scale: 1.1,
@@ -78,7 +76,6 @@ const Projects = () => {
                     return;
                 }
 
-                // Smooth clipPath + opacity transition
                 gsap.fromTo(images[i], 
                     { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
                     { 
@@ -94,7 +91,6 @@ const Projects = () => {
                     }
                 );
 
-                // Zoom Parallax for current image
                 gsap.fromTo(innerImages[i],
                     { scale: 1.4, y: 80 },
                     { 
@@ -110,7 +106,6 @@ const Projects = () => {
                     }
                 );
                 
-                // Exit effect for previous image (soft blur and fade)
                 gsap.to(images[i-1], {
                     opacity: 0,
                     filter: "blur(20px)",
@@ -124,17 +119,38 @@ const Projects = () => {
             });
         });
 
-        // Common Text animation for each card (Works on all screens)
-        const cards = gsap.utils.toArray(".project-text-block");
-        cards.forEach((card) => {
-            gsap.from(card.querySelectorAll("h3, p, .flex-wrap, .flex.gap-6"), {
+        // MOBILE: Card stacking effect
+        mm.add("(max-width: 1023px)", () => {
+            const cards = gsap.utils.toArray(".project-card");
+            cards.forEach((card, i) => {
+                if (i === cards.length - 1) return;
+                
+                // Card underneath recedes as next one comes in
+                gsap.to(card, {
+                    scale: 0.9,
+                    opacity: 0.5,
+                    filter: "blur(4px)",
+                    scrollTrigger: {
+                        trigger: cards[i + 1],
+                        start: "top 95%",
+                        end: "top 30%",
+                        scrub: true,
+                    }
+                });
+            });
+        });
+
+        // Text reveal for all projects
+        const textBlocks = gsap.utils.toArray(".project-text-block");
+        textBlocks.forEach((block) => {
+            gsap.from(block.querySelectorAll("h3, p, .flex-wrap, .flex.gap-6"), {
                 y: 50,
                 opacity: 0,
                 stagger: 0.1,
                 duration: 1,
                 ease: "power3.out",
                 scrollTrigger: {
-                    trigger: card,
+                    trigger: block,
                     start: "top 90%",
                     toggleActions: "play none none reverse"
                 }
@@ -148,54 +164,65 @@ const Projects = () => {
         <section ref={sectionRef} className="relative w-full bg-[#0a0a0a]" id="projects">
             <div className="flex flex-col lg:flex-row w-full min-h-screen">
                 
-                {/* LEFT COLUMN: Scrollable Content */}
-                <div ref={leftRef} className="w-full lg:w-1/2 px-8 py-24 md:px-16 lg:pl-24 lg:pr-12 md:py-32">
+                {/* LEFT COLUMN: Scrollable Content / Mobile Cards */}
+                <div ref={leftRef} className="w-full lg:w-1/2 px-6 py-24 md:px-16 lg:pl-24 lg:pr-12 md:py-32">
                     <div className="mb-20 lg:mb-32">
                         <h2 className="text-sm font-mono text-purple-400 uppercase tracking-widest mb-4">/ Projects</h2>
                         <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-white">Selected Work.</h1>
                     </div>
 
-                    <div className="projects-list flex flex-col gap-[15vh] md:gap-[30vh] lg:gap-[60vh] pb-[10vh] lg:pb-[20vh]">
+                    <div className="projects-list flex flex-col gap-[80vh] lg:gap-[60vh] pb-[40vh] md:pb-[30vh] lg:pb-[20vh]">
                         {projects.map((project, index) => (
-                            <div key={project.id} className="project-text-block flex flex-col gap-8 group">
-                                <div className="flex items-center gap-4">
-                                    <span className="text-2xl font-mono text-white/20">{`0${index + 1}`}</span>
-                                    <div className="h-[1px] w-12 bg-white/10 group-hover:w-24 transition-all duration-500" />
-                                </div>
-                                <h3 className="text-5xl md:text-7xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500">
-                                    {project.name}
-                                </h3>
-                                <p className="text-xl text-white/50 leading-relaxed max-w-md font-light">
-                                    {project.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2 mt-4">
-                                    {project.technologies.map((tech, i) => (
-                                        <span key={i} className="px-3 py-1 bg-white/5 border border-white/5 rounded-full text-xs text-white/40">{tech}</span>
-                                    ))}
-                                </div>
-                                <div className="flex gap-6 mt-8">
-                                    <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
-                                        <Github size={24} />
-                                        <span className="text-sm font-mono uppercase tracking-widest hidden md:block">Source</span>
-                                    </a>
-                                    {project.liveLink && (
-                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
-                                            <ArrowUpRight size={24} className="group-hover/link:rotate-45 transition-transform duration-300" />
-                                            <span className="text-sm font-mono uppercase tracking-widest hidden md:block">Live Demo</span>
+                            <div 
+                                key={project.id} 
+                                className="project-card sticky top-[8vh] w-full bg-[#111111] border border-white/5 rounded-[2rem] p-6 md:p-12 shadow-2xl transition-all duration-500 hover:border-purple-500/20 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:rounded-none lg:shadow-none lg:top-auto"
+                                style={{ top: `calc(8vh + ${index * 15}px)`, zIndex: index + 1 }}
+                            >
+                                <div className="project-text-block flex flex-col gap-6 group">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xl font-mono text-white/20">{`0${index + 1}`}</span>
+                                        <div className="h-[1px] w-10 bg-white/10 group-hover:w-20 transition-all duration-500" />
+                                    </div>
+                                    <h3 className="text-4xl md:text-7xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500">
+                                        {project.name}
+                                    </h3>
+                                    <p className="text-lg text-white/50 leading-snug max-w-md font-light">
+                                        {project.description}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {project.technologies.map((tech, i) => (
+                                            <span key={i} className="px-2 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] text-white/40">{tech}</span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-6 mt-4">
+                                        <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
+                                            <Github size={20} />
+                                            <span className="text-xs font-mono uppercase tracking-widest hidden md:block">Source</span>
                                         </a>
-                                    )}
-                                </div>
-                                
-                                {/* MOBILE ONLY IMAGE */}
-                                <div className="mt-12 lg:hidden w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/5">
-                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover" />
+                                        {project.liveLink && (
+                                            <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
+                                                <ArrowUpRight size={20} className="group-hover/link:rotate-45 transition-transform duration-300" />
+                                                <span className="text-xs font-mono uppercase tracking-widest hidden md:block">Live Demo</span>
+                                            </a>
+                                        )}
+                                    </div>
+                                    
+                                    {/* MOBILE ONLY IMAGE */}
+                                    <div className="mt-8 lg:hidden w-full aspect-video rounded-xl overflow-hidden border border-white/5 bg-zinc-900/50">
+                                        <img 
+                                            src={project.image} 
+                                            alt={project.name} 
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                            onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/800x450/1a1a1a/FFFFFF?text=${project.name}`; }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: Sticky Images */}
+                {/* RIGHT COLUMN: Sticky Images (Desktop Only) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen items-center justify-center pointer-events-none p-24 pl-12 pr-24">
                     <div className="relative w-full h-[80%] max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-[#111111]">
                         {projects.map((project, index) => (

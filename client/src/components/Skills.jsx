@@ -134,7 +134,7 @@ const Skills = () => {
       <div className="flex items-center h-screen">
         <div className="flex items-center px-[10vw]">
           <div className="mr-20 md:mr-40 lg:mr-60 flex-shrink-0">
-            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-tighter leading-none text-white/5 uppercase select-none">
+            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-tight leading-none text-white/5 uppercase select-none">
                 Skills
             </h2>
           </div>
@@ -150,7 +150,7 @@ const Skills = () => {
                     <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
                         {`0${index + 1}`}
                     </span>
-                    <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter leading-none whitespace-nowrap">
+                    <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-none whitespace-nowrap">
                         {skill.category}
                     </h3>
                 </div>
