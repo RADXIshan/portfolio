@@ -126,9 +126,12 @@ const Skills = () => {
                     ease: "power4.out",
                     scrollTrigger: {
                         trigger: card,
-                        start: "left 80%",
-                        containerAnimation: pin,
-                        toggleActions: "play none none reset"
+                        start: "top-=[10vh] top",
+                        end: () => `+=${containerRef.current.offsetWidth}`,
+                        pin: true,
+                        scrub: 1,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true,
                     }
                 });
             }
@@ -168,11 +171,11 @@ const Skills = () => {
                 key={skill.category} 
                 className="skill-card relative flex flex-col justify-start pt-[15vh] min-w-[70vw] md:min-w-[500px] flex-shrink-0 group will-change-transform"
               >
-                <div className="flex flex-col gap-4 mb-12">
+                <div className="flex flex-col items-start gap-4 mb-12 will-change-transform">
                     <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
                         {`0${index + 1}`}
                     </span>
-                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-[1.1] whitespace-nowrap overflow-hidden py-4">
+                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-[1.1] whitespace-nowrap overflow-hidden py-4 will-change-transform">
                         {skill.category}
                     </h3>
                 </div>

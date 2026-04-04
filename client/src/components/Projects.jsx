@@ -66,88 +66,79 @@ const Projects = () => {
             });
         }
 
-        // DESKTOP: Split pinning and cross-fade
+        // DESKTOP: Unified pinned timeline for perfect transitions
         mm.add("(min-width: 1024px)", () => {
-            ScrollTrigger.create({
-                trigger: sectionRef.current,
-                start: "top top",
-                end: "bottom bottom",
-                pin: rightRef.current,
-                pinSpacing: false,
-            });
-
             const cards = gsap.utils.toArray(".project-text-block");
             const images = gsap.utils.toArray(".sticky-image-item");
             const innerImages = gsap.utils.toArray(".inner-img");
 
-            cards.forEach((card, i) => {
-                if (i === 0) {
-                    gsap.to(innerImages[0], {
-                        y: -50,
-                        scale: 1.1,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top top",
-                            end: "bottom top",
-                            scrub: true,
-                        }
-                    });
-                    return;
+            // Create a main timeline pinned to the section
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
+                    pin: rightRef.current,
+                    pinSpacing: false,
+                    anticipatePin: 1,
+                    fastScrollEnd: true,
+                    invalidateOnRefresh: true,
                 }
-
-                const startTime = "top 105%";
-                const endTime = "top 20%";
-
-                // Reveal Next Image (Starts slightly earlier to overlap)
-                gsap.fromTo(images[i], 
-                    { opacity: 0, scale: 1.1, zIndex: 10 + i },
-                    { 
-                        opacity: 1, 
-                        scale: 1,
-                        ease: "power2.inOut",
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 110%",
-                            end: "top 20%",
-                            scrub: 0.8,
-                        }
-                    }
-                );
-
-                gsap.fromTo(innerImages[i],
-                    { scale: 1.2, y: 50 },
-                    { 
-                        scale: 1, 
-                        y: 0,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 110%",
-                            end: "top 20%",
-                            scrub: 0.8,
-                        }
-                    }
-                );
-                
-                // Exit Previous Image (Explicit states for smooth color-rich blur)
-                gsap.fromTo(images[i-1], 
-                    { filter: "blur(0px) brightness(1)", scale: 1 },
-                    { 
-                        filter: "blur(12px) brightness(0.8)",
-                        scale: 1.2,
-                        opacity: 1,
-                        ease: "power2.inOut",
-                        immediateRender: false,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top bottom",
-                            end: "top 20%",
-                            scrub: 0.8,
-                        }
-                    }
-                );
             });
+
+            // Set initial z-indices
+            images.forEach((img, i) => {
+                gsap.set(img, { zIndex: 10 + i });
+            });
+
+            // Transition 1 -> 2 (MindTrace -> AI News)
+            tl.to(images[0], {
+                filter: "blur(15px) brightness(0.7)",
+                scale: 1.25,
+                ease: "power2.inOut",
+                force3D: true,
+            }, 0.3);
+
+            tl.fromTo(images[1], 
+                { opacity: 0, scale: 1.1 },
+                { opacity: 1, scale: 1, ease: "power2.inOut", force3D: true },
+                0.3
+            );
+
+            tl.fromTo(innerImages[1],
+                { scale: 1.2, y: 50 },
+                { scale: 1, y: 0, ease: "power2.out", force3D: true },
+                0.3
+            );
+
+            // Transition 2 -> 3 (AI News -> SyncSpace)
+            tl.to(images[1], {
+                filter: "blur(15px) brightness(0.7)",
+                scale: 1.25,
+                ease: "power2.inOut",
+                force3D: true,
+            }, 0.7);
+
+            tl.fromTo(images[2], 
+                { opacity: 0, scale: 1.1 },
+                { opacity: 1, scale: 1, ease: "power2.inOut", force3D: true },
+                0.7
+            );
+
+            tl.fromTo(innerImages[2],
+                { scale: 1.2, y: 50 },
+                { scale: 1, y: 0, ease: "power2.out", force3D: true },
+                0.7
+            );
+
+            // Simple parallax for the first project
+            tl.to(innerImages[0], {
+                y: -50,
+                scale: 1.1,
+                ease: "none",
+                force3D: true,
+            }, 0);
         });
 
         // MOBILE: Card stacking effect
@@ -273,13 +264,13 @@ const Projects = () => {
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
-                                className={`sticky-image-item absolute inset-0 w-full h-full ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                                className={`sticky-image-item absolute inset-0 w-full h-full will-change-[transform,filter] ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
                                 style={{ zIndex: 10 + index }}
                             >
                                 <img 
                                     src={project.image} 
                                     alt={project.name} 
-                                    className="inner-img w-full h-full object-cover transition-all duration-300"
+                                    className="inner-img w-full h-full object-cover transition-all duration-300 will-change-transform"
                                     onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/800x1200/1a1a1a/FFFFFF?text=${project.name}`; }}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
