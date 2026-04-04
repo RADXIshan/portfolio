@@ -62,6 +62,20 @@ const Projects = () => {
             const innerImages = gsap.utils.toArray(".inner-img");
 
             cards.forEach((card, i) => {
+                // Text animation for each card
+                gsap.from(card.querySelectorAll("h3, p, .flex-wrap, .flex.gap-6"), {
+                    y: 100,
+                    opacity: 0,
+                    stagger: 0.1,
+                    duration: 1.2,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+
                 if (i === 0) {
                     // Initial parallax for first image
                     gsap.to(innerImages[0], {
@@ -78,6 +92,7 @@ const Projects = () => {
                     return;
                 }
 
+                // Smooth clipPath + opacity transition
                 gsap.fromTo(images[i], 
                     { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
                     { 
@@ -86,38 +101,38 @@ const Projects = () => {
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top 80%",
-                            end: "top 20%",
-                            scrub: true,
+                            start: "top 95%",
+                            end: "top 15%",
+                            scrub: 1,
                         }
                     }
                 );
 
                 // Zoom Parallax for current image
                 gsap.fromTo(innerImages[i],
-                    { scale: 1.3, y: 50 },
+                    { scale: 1.4, y: 80 },
                     { 
                         scale: 1, 
                         y: 0,
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top 80%",
-                            end: "top 20%",
-                            scrub: true,
+                            start: "top 95%",
+                            end: "top 15%",
+                            scrub: 1,
                         }
                     }
                 );
                 
-                // Exit effect for previous image
+                // Exit effect for previous image (soft blur and fade)
                 gsap.to(images[i-1], {
                     opacity: 0,
-                    filter: "blur(10px)",
+                    filter: "blur(20px)",
                     scrollTrigger: {
                         trigger: card,
-                        start: "top 80%",
-                        end: "top 20%",
-                        scrub: true,
+                        start: "top 95%",
+                        end: "top 15%",
+                        scrub: 1,
                     }
                 });
             });
