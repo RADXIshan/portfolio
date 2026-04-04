@@ -96,6 +96,8 @@ const Projects = () => {
                     return;
                 }
 
+                const startTime = i === 2 ? "top 80%" : "top bottom";
+
                 gsap.fromTo(images[i], 
                     { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
                     { 
@@ -104,7 +106,7 @@ const Projects = () => {
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top bottom",
+                            start: startTime,
                             end: "top 15%",
                             scrub: 1,
                         }
@@ -119,7 +121,7 @@ const Projects = () => {
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top bottom",
+                            start: startTime,
                             end: "top 15%",
                             scrub: 1,
                         }
@@ -131,7 +133,7 @@ const Projects = () => {
                     filter: "blur(8px)",
                     scrollTrigger: {
                         trigger: card,
-                        start: "top bottom",
+                        start: startTime,
                         end: "top 15%",
                         scrub: 1,
                     }

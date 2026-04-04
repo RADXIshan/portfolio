@@ -172,7 +172,7 @@ const Skills = () => {
                     <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
                         {`0${index + 1}`}
                     </span>
-                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-none whitespace-nowrap overflow-hidden py-2">
+                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-[1.1] whitespace-nowrap overflow-hidden py-4">
                         {skill.category}
                     </h3>
                 </div>
