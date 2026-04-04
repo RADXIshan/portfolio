@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import express from "../assets/express.png";
 import react from "../assets/react.png";
 import node from "../assets/node.png";
@@ -106,11 +107,33 @@ const Skills = () => {
                 start: "top top",
                 end: () => `+=${container.scrollWidth}`, // Robust distance
                 invalidateOnRefresh: true,
+                anticipatePin: 1,
             },
+            force3D: true,
         });
 
         const skillCards = gsap.utils.toArray(".skill-card");
         skillCards.forEach((card) => {
+            // Heading Reveal
+            const heading = card.querySelector(".skill-category-heading");
+            if (heading) {
+                const split = new SplitType(heading, { types: 'chars' });
+                gsap.from(split.chars, {
+                    y: 50,
+                    opacity: 0,
+                    stagger: 0.02,
+                    duration: 1,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "left 80%",
+                        containerAnimation: pin,
+                        toggleActions: "play none none reset"
+                    }
+                });
+            }
+
+            // Items Reveal
             gsap.from(card.querySelectorAll(".skill-item"), {
                 y: 30,
                 opacity: 0,
@@ -134,23 +157,22 @@ const Skills = () => {
       <div className="flex items-center h-screen">
         <div className="flex items-center px-[10vw]">
           <div className="mr-20 md:mr-40 lg:mr-60 flex-shrink-0">
-            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-tight leading-none text-white/5 uppercase select-none">
+            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-wide leading-none text-white/5 uppercase select-none cursor-default will-change-transform">
                 Skills
             </h2>
           </div>
           
-          {/* Added min-w-max to ensure correct width calculation Status */}
           <div ref={containerRef} className="flex min-w-max gap-[15vw] pr-[30vw] md:pr-[40vw]"> 
             {skillsData.map((skill, index) => (
               <div 
                 key={skill.category} 
-                className="skill-card relative flex flex-col justify-center min-w-[70vw] md:min-w-[500px] flex-shrink-0 group"
+                className="skill-card relative flex flex-col justify-start pt-[15vh] min-w-[70vw] md:min-w-[500px] flex-shrink-0 group will-change-transform"
               >
-                <div className="flex flex-col gap-6 md:gap-10 mb-12">
+                <div className="flex flex-col gap-4 mb-12">
                     <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
                         {`0${index + 1}`}
                     </span>
-                    <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-none whitespace-nowrap">
+                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-none whitespace-nowrap overflow-hidden py-2">
                         {skill.category}
                     </h3>
                 </div>

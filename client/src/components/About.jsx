@@ -24,6 +24,7 @@ const About = () => {
         scale: 1, 
         duration: 1.8, 
         ease: "power4.inOut",
+        force3D: true,
         scrollTrigger: {
             trigger: aboutRef.current,
             start: "top 60%",
@@ -36,6 +37,7 @@ const About = () => {
     gsap.to(imageRef.current, {
         yPercent: 20,
         ease: "none",
+        force3D: true,
         scrollTrigger: {
             trigger: aboutRef.current,
             start: "top bottom",
@@ -102,7 +104,7 @@ const About = () => {
                 ref={imageRef}
                 src={aboutImage}
                 alt="Ishan Roy"
-                className="relative z-10 w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0 scale-110"
+                className="relative z-10 w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0 scale-110 will-change-transform"
                 onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x800/131313/FFFFFF?text=Ishan'; }}
             />
            </div>

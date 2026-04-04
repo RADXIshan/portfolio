@@ -30,7 +30,8 @@ const Hero = () => {
         stagger: 0.02,
         duration: 1.5,
         ease: "power4.out",
-        delay: 0.5
+        delay: 0.5,
+        force3D: true,
       }
     );
 
@@ -105,13 +106,13 @@ const Hero = () => {
       className="flex flex-col items-center justify-center min-h-screen gap-6 px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow */}
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700 will-change-transform" />
 
       <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
         <h1 
             ref={textRef}
-            className="hero-title text-[clamp(2.5rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10 whitespace-nowrap"
+            className="hero-title text-[clamp(2.5rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10 whitespace-nowrap will-change-transform"
         >
             {title}
         </h1>
