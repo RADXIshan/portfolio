@@ -96,48 +96,57 @@ const Projects = () => {
                     return;
                 }
 
-                const startTime = i === 2 ? "top 80%" : "top bottom";
+                const startTime = "top 105%";
+                const endTime = "top 20%";
 
+                // Reveal Next Image (Starts slightly earlier to overlap)
                 gsap.fromTo(images[i], 
-                    { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
+                    { opacity: 0, scale: 1.1, zIndex: 10 + i },
                     { 
-                        clipPath: "inset(0% 0% 0% 0%)", 
-                        opacity: 1,
-                        ease: "none",
+                        opacity: 1, 
+                        scale: 1,
+                        ease: "power2.inOut",
                         scrollTrigger: {
                             trigger: card,
-                            start: startTime,
-                            end: "top 15%",
-                            scrub: 1,
+                            start: "top 110%",
+                            end: "top 20%",
+                            scrub: 0.8,
                         }
                     }
                 );
 
                 gsap.fromTo(innerImages[i],
-                    { scale: 1.4, y: 80 },
+                    { scale: 1.2, y: 50 },
                     { 
                         scale: 1, 
                         y: 0,
-                        ease: "none",
+                        ease: "power2.out",
                         scrollTrigger: {
                             trigger: card,
-                            start: startTime,
-                            end: "top 15%",
-                            scrub: 1,
+                            start: "top 110%",
+                            end: "top 20%",
+                            scrub: 0.8,
                         }
                     }
                 );
                 
-                gsap.to(images[i-1], {
-                    opacity: 0,
-                    filter: "blur(8px)",
-                    scrollTrigger: {
-                        trigger: card,
-                        start: startTime,
-                        end: "top 15%",
-                        scrub: 1,
+                // Exit Previous Image (Explicit states for smooth color-rich blur)
+                gsap.fromTo(images[i-1], 
+                    { filter: "blur(0px) brightness(1)", scale: 1 },
+                    { 
+                        filter: "blur(12px) brightness(0.8)",
+                        scale: 1.2,
+                        opacity: 1,
+                        ease: "power2.inOut",
+                        immediateRender: false,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top bottom",
+                            end: "top 20%",
+                            scrub: 0.8,
+                        }
                     }
-                });
+                );
             });
         });
 
@@ -260,11 +269,12 @@ const Projects = () => {
                 </div>
 
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen items-center justify-center pointer-events-none p-24 pl-12 pr-24">
-                    <div className="relative w-full h-[80%] max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-[#111111]">
+                    <div className="relative w-full h-[80%] max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-[#0a0a0a]">
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
                                 className={`sticky-image-item absolute inset-0 w-full h-full ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                                style={{ zIndex: 10 + index }}
                             >
                                 <img 
                                     src={project.image} 
