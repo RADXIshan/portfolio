@@ -80,19 +80,15 @@ const App = () => {
       if (isProject) {
         cursorDot.classList.add('project-active');
         cursorOutline.classList.add('hidden');
-        cursorDot.setAttribute('data-content', 'VIEW');
       } else if (isHero && !isClickable) {
         cursorDot.classList.add('active');
         cursorOutline.classList.add('active');
-        cursorDot.setAttribute('data-content', 'SCROLL');
       } else if (isClickable) {
         cursorDot.classList.add('active');
         cursorOutline.classList.add('active');
-        cursorDot.removeAttribute('data-content');
       } else {
         cursorDot.classList.remove('active', 'project-active');
         cursorOutline.classList.remove('active', 'hidden');
-        cursorDot.removeAttribute('data-content');
       }
     };
 
@@ -107,7 +103,7 @@ const App = () => {
 
   return (
     <>
-      <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center text-[10px] font-bold text-black tracking-widest uppercase"></div>
+      <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
       <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
       
       <Routes location={location} key={location.pathname}>

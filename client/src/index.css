@@ -120,26 +120,9 @@ body::before {
   display: flex !important;
 }
 
-.cursor-dot::after {
-  content: attr(data-content);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
-  font-weight: 700;
-  color: black;
-  letter-spacing: 1px;
-  white-space: nowrap;
-}
-
 .cursor-dot.project-active {
   width: 100px;
   height: 100px;
-}
-
-.cursor-dot.project-active::after {
-  font-size: 14px;
 }
 
 

@@ -104,7 +104,7 @@ const Projects = () => {
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top 95%",
+                            start: "top bottom",
                             end: "top 15%",
                             scrub: 1,
                         }
@@ -119,7 +119,7 @@ const Projects = () => {
                         ease: "none",
                         scrollTrigger: {
                             trigger: card,
-                            start: "top 95%",
+                            start: "top bottom",
                             end: "top 15%",
                             scrub: 1,
                         }
@@ -128,10 +128,10 @@ const Projects = () => {
                 
                 gsap.to(images[i-1], {
                     opacity: 0,
-                    filter: "blur(20px)",
+                    filter: "blur(8px)",
                     scrollTrigger: {
                         trigger: card,
-                        start: "top 95%",
+                        start: "top bottom",
                         end: "top 15%",
                         scrub: 1,
                     }
