@@ -78,7 +78,7 @@ const Projects = () => {
                     trigger: sectionRef.current,
                     start: "top top",
                     end: "bottom bottom",
-                    scrub: 1.5, // Increased scrub for even smoother delay
+                    scrub: 2.5, // Ultra-silky momentum
                     pin: rightRef.current,
                     pinSpacing: false,
                     anticipatePin: 1,
@@ -91,70 +91,72 @@ const Projects = () => {
                 gsap.set(img, { zIndex: 10 + i });
             });
 
-            // Project 1 -> 2 Transition (Progressive reveal over a 30% window)
-            // Starts blurring P1 slightly before P2 enters
+            // Transition 1 -> 2 (MindTrace -> AI News)
+            // Progressive atmospheric reveal over a 40% window
             tl.to(images[0], {
-                filter: "blur(20px) brightness(0.5)",
-                scale: 1.4,
-                opacity: 0.8,
+                filter: "blur(40px) brightness(0.3) grayscale(1)",
+                scale: 1.6,
+                opacity: 0.5,
                 ease: "power3.inOut",
                 force3D: true,
-            }, 1); // Starts at "time" 1
+                duration: 5
+            }, 2); // Starts at "time" 2
 
             tl.fromTo(images[1], 
-                { opacity: 0, scale: 1.2, filter: "blur(5px)" },
+                { opacity: 0, scale: 1.5, filter: "blur(30px) brightness(0) grayscale(1)" },
                 { 
                     opacity: 1, 
                     scale: 1, 
-                    filter: "blur(0px)",
-                    ease: "power3.out", 
+                    filter: "blur(0px) brightness(1) grayscale(0)",
+                    ease: "expo.out", 
                     force3D: true,
-                    duration: 1.5 // Happens alongside and slightly into the exit
+                    duration: 6 
                 },
-                1.2 // Slight delay for the entrance to feel more natural
+                3 // Slight delay for the entrance to feel more natural
             );
 
             tl.fromTo(innerImages[1],
-                { scale: 1.3, y: 100 },
-                { scale: 1, y: 0, ease: "power3.out", force3D: true, duration: 1.5 },
-                1.2
+                { scale: 1.5, y: 150 },
+                { scale: 1, y: 0, ease: "expo.out", force3D: true, duration: 6 },
+                3
             );
 
-            // Project 2 -> 3 Transition (Progressive reveal over a 30% window)
+            // Transition 2 -> 3 (AI News -> SyncSpace)
             tl.to(images[1], {
-                filter: "blur(20px) brightness(0.5)",
-                scale: 1.4,
-                opacity: 0.8,
+                filter: "blur(40px) brightness(0.3) grayscale(1)",
+                scale: 1.6,
+                opacity: 0.5,
                 ease: "power3.inOut",
                 force3D: true,
-            }, 6); // Starts at "time" 6
+                duration: 5
+            }, 12); // Starts at "time" 12
 
             tl.fromTo(images[2], 
-                { opacity: 0, scale: 1.2, filter: "blur(5px)" },
+                { opacity: 0, scale: 1.5, filter: "blur(30px) brightness(0) grayscale(1)" },
                 { 
                     opacity: 1, 
                     scale: 1, 
-                    filter: "blur(0px)",
-                    ease: "power3.out", 
+                    filter: "blur(0px) brightness(1) grayscale(0)",
+                    ease: "expo.out", 
                     force3D: true,
-                    duration: 1.5
+                    duration: 6
                 },
-                6.2
+                13
             );
 
             tl.fromTo(innerImages[2],
-                { scale: 1.3, y: 100 },
-                { scale: 1, y: 0, ease: "power3.out", force3D: true, duration: 1.5 },
-                6.2
+                { scale: 1.5, y: 150 },
+                { scale: 1, y: 0, ease: "expo.out", force3D: true, duration: 6 },
+                13
             );
 
             // First project initial parallax
             tl.to(innerImages[0], {
-                y: -100,
-                scale: 1.2,
-                ease: "none",
+                y: -150,
+                scale: 1.3,
+                ease: "power2.out",
                 force3D: true,
-                duration: 2
+                duration: 4
             }, 0);
         });
 
