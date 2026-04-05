@@ -92,9 +92,9 @@ const About = () => {
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-8 overflow-hidden">
                  <pre className="text-green-500/80 font-mono text-[min(3vw,14px)] sm:text-base leading-relaxed">
                    {`const ishan = {
-                   role: "Dev",
-                   passion: "Build",
-                   skills: ["JS", "Py", "Go"],
+                   role: "Dev/AI-ML/Backend",
+                   passion: "Build, Innovate, Solve",
+                   skills: ["Py", "JS", "Java"],
                    status: "Ready"
                  };`}
                  </pre>
