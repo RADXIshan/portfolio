@@ -14,50 +14,53 @@ const Hero = ({ isLoading }) => {
   useGSAP(() => {
     if (isLoading || !textRef.current) return;
 
-    // Split text into characters
+    const tl = gsap.timeline({
+      defaults: { ease: "power4.out" }
+    });
+
+    // 1. Split text into characters
     const splitTitle = new SplitType(textRef.current, { types: 'chars,words' });
     
-    // Initial animation
-    gsap.fromTo(splitTitle.chars, 
+    // 2. Title Animation (Mask Reveal)
+    tl.fromTo(splitTitle.chars, 
       { 
-        y: 100, 
-        rotateX: -90,
-        opacity: 0
+        y: "110%", 
+        opacity: 0,
+        scaleY: 1.5,
+        transformOrigin: "bottom"
       },
       {
         y: 0,
-        rotateX: 0,
         opacity: 1,
-        stagger: 0.02,
-        duration: 1.5,
-        ease: "power4.out",
-        delay: 0.2, // Reduced delay as preloader exit already takes time
+        scaleY: 1,
+        stagger: 0.03,
+        duration: 1.2,
         force3D: true,
       }
     );
 
-    if (heroRef.current) {
-        const subtitle = new SplitType(heroRef.current.querySelector(".hero-subtitle"), { types: 'chars' });
-        gsap.from(subtitle.chars, {
-            opacity: 0,
-            y: 10,
-            stagger: 0.01,
-            duration: 1,
-            delay: 1.2,
-            ease: "power3.out",
-        });
-    }
+    // 3. Subtitle Animation
+    const subtitle = new SplitType(heroRef.current.querySelector(".hero-subtitle"), { types: 'chars' });
+    tl.from(subtitle.chars, {
+        opacity: 0,
+        y: 10,
+        scale: 0.8,
+        stagger: 0.01,
+        duration: 1,
+        ease: "power3.out",
+    }, "-=0.8");
 
-    gsap.from(".social-link-item", {
-      y: 20,
+    // 4. Social Links Animation
+    tl.from(".social-link-item", {
+      y: 30,
       opacity: 0,
-      stagger: 0.1,
-      duration: 0.8,
-      delay: 1.2,
-      ease: "back.out(1.7)",
-    });
+      scale: 0.5,
+      stagger: 0.08,
+      duration: 1,
+      ease: "elastic.out(1, 0.75)",
+    }, "-=0.6");
 
-    // Background Glow Animation
+    // 5. Background Glow Animation
     gsap.to(".bg-glow", {
         scale: 1.2,
         duration: 4,
@@ -107,8 +110,8 @@ const Hero = ({ isLoading }) => {
       className="flex flex-col items-center justify-center min-h-screen gap-6 px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow */}
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform" />
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700 will-change-transform" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform transform-gpu" />
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700 will-change-transform transform-gpu" />
 
       <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
         <h1 

@@ -127,7 +127,7 @@ const App = () => {
       {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       
       <div 
-        className={`app-content transition-all duration-700 ease-out z-10 ${isLoading ? 'blur-2xl scale-95 opacity-0 pointer-events-none' : 'blur-0 scale-100 opacity-100'}`}
+        className="app-content z-10"
       >
         <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
         <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
