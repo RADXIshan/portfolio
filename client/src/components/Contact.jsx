@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -41,7 +41,6 @@ const Contact = () => {
     { icon: faLinkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/ishanroy-radx/" },
     { icon: faGithub, label: "GitHub", href: "https://github.com/RADXIshan" },
     { icon: faEnvelope, label: "Email", href: "mailto:ishanroy3118107@gmail.com" },
-    { icon: faPhone, label: "Phone", href: "tel:+919007195462" },
   ];
 
   return (
