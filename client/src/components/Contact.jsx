@@ -49,6 +49,42 @@ const Contact = () => {
     { icon: faEnvelope, label: "Email", href: "mailto:ishanroy3118107@gmail.com" },
   ];
 
+  const useMagnetic = (ref) => {
+    useGSAP(() => {
+      if (!window.matchMedia("(hover: hover)").matches) return;
+      const element = ref.current;
+      if (!element) return;
+
+      const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+      const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+      const handleMouseMove = (e) => {
+        const { clientX, clientY } = e;
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const x = clientX - (left + width / 2);
+        const y = clientY - (top + height / 2);
+        xTo(x * 0.3);
+        yTo(y * 0.3);
+      };
+
+      const handleMouseLeave = () => {
+        xTo(0);
+        yTo(0);
+      };
+
+      element.addEventListener("mousemove", handleMouseMove);
+      element.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        element.removeEventListener("mousemove", handleMouseMove);
+        element.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }, { scope: ref });
+  };
+
+  const submitBtnRef = useRef(null);
+  useMagnetic(submitBtnRef);
+
   useGSAP(() => {
     // Optimized SplitType with cleanup
     const splitTitle = new SplitType(".contact-title", { types: "words" });
@@ -172,18 +208,23 @@ const Contact = () => {
           </div>
 
           <div className="social-links-container flex flex-wrap gap-4 mt-12">
-            {socialLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.label}
-                className="social-link-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
-              >
-                <FontAwesomeIcon icon={link.icon} className="text-xl" />
-              </a>
-            ))}
+            {socialLinks.map((link, index) => {
+              const iconRef = useRef(null);
+              useMagnetic(iconRef);
+              return (
+                <a
+                  key={index}
+                  ref={iconRef}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="social-link-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
+                >
+                  <FontAwesomeIcon icon={link.icon} className="text-xl" />
+                </a>
+              );
+            })}
           </div>
         </div>
         
@@ -234,8 +275,9 @@ const Contact = () => {
             </div>
             <button 
               type="submit" 
+              ref={submitBtnRef}
               disabled={loading}
-              className={`submit-btn mt-4 py-4 px-8 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-gray-200 hover:scale-[1.05] active:scale-95 self-start flex items-center gap-2 cursor-none ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
+              className={`submit-btn mt-4 py-4 px-10 bg-white text-black font-bold rounded-full text-lg transition-all duration-300 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] active:scale-95 self-start flex items-center gap-2 cursor-none ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
             >
               {loading ? (
                 <>

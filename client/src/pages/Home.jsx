@@ -20,10 +20,10 @@ const Home = () => {
   useGSAP(() => {
     const sections = [
       { id: "home", color: "#0a0a0a" },
-      { id: "about", color: "#1a1a1a" },
-      { id: "skills", color: "#0f0f0f" },
-      { id: "projects", color: "#131313" },
-      { id: "contact", color: "#050505" },
+      { id: "about", color: "#0a0a0a" },
+      { id: "skills", color: "#0a0a0a" },
+      { id: "projects", color: "#0a0a0a" },
+      { id: "contact", color: "#0a0a0a" },
     ];
 
     sections.forEach(({ id, color }) => {

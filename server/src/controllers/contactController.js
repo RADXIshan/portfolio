@@ -45,11 +45,11 @@ export const mailContact = async(req, res) => {
     const confirmationMail = {
         from: {
             name: "Ishan Roy",
-            address: "trickster10ishan@gmail.com"
+            address: process.env.EMAIL
         },
         to: req.body.email,
-        subject: "Portfolio Message Received",
-        text: `Hi ${req.body.name},\n\nThank you for reaching out to Ishan Roy. He will get back to you shortly.`,
+        subject: `Thanks for reaching out, ${req.body.name}!`,
+        text: `Hi ${req.body.name},\n\nI just received your message through my portfolio. Thank you so much for getting in touch!\n\nI really appreciate you taking the time to write to me. I've read your message and I'll make sure to get back to you personally as soon as I can (usually within 24 hours).\n\nIn the meantime, feel free to check out more of my work on GitHub or connect with me on LinkedIn.\n\nBest regards,\nIshan Roy`,
     };    
 
     try {
