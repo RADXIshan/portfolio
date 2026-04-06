@@ -23,7 +23,7 @@ const Preloader = ({ onComplete }) => {
       gsap.set(panelsRef.current, { yPercent: 0, willChange: 'transform' });
       gsap.set(logoRef.current, { opacity: 0, scale: 0.8, filter: 'invert(1)' });
       gsap.set([hundredRef.current, tensRef.current, onesRef.current], { y: 0 });
-      gsap.set(hundredRef.current, { opacity: 0 });
+      gsap.set(hundredRef.current, { opacity: 0, width: 0 });
       
       // 2. Entrance
       tl.to(logoRef.current, {
@@ -48,6 +48,7 @@ const Preloader = ({ onComplete }) => {
       
       .to(hundredRef.current, {
         opacity: 1,
+        width: window.innerWidth < 768 ? '2.4rem' : '4.2rem',
         duration: 0.4,
         ease: 'power2.out'
       }, "-=0.6")
@@ -119,7 +120,7 @@ const Preloader = ({ onComplete }) => {
         
         <div className="flex items-center justify-center h-[140px] md:h-[200px] select-none px-4 gap-0 overflow-hidden">
           {/* Hundreds Digit */}
-          <div ref={hundredRef} className="opacity-0 w-[3.6rem] md:w-[6.2rem] h-full flex flex-col items-center">
+          <div ref={hundredRef} className="opacity-0 w-0 h-full flex flex-col items-center overflow-hidden">
             <span className="h-full flex items-center justify-center text-7xl md:text-9xl font-black text-white leading-none text-center" style={{ fontFamily: '"Outfit", sans-serif' }}>
               1
             </span>
