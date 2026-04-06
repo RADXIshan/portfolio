@@ -89,15 +89,15 @@ const About = () => {
         <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group cursor-crosshair">
            <div className="w-full h-full relative overflow-hidden">
              {/* Easter Egg Code */}
-             <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-8 overflow-hidden">
-                 <pre className="text-green-500/80 font-mono text-[min(3vw,14px)] sm:text-base leading-relaxed">
-                   {`const ishan = {
-                   role: "Dev/AI-ML/Backend",
-                   passion: "Build, Innovate, Solve",
-                   skills: ["Py", "JS", "Java"],
-                   status: "Ready"
-                 };`}
-                 </pre>
+             <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-8 overflow-hidden underline-offset-4">
+                  <pre className="text-green-500/80 font-mono text-[min(3.5vw,14px)] sm:text-base leading-relaxed">
+                    {`const ishan = {
+  role: "Dev/AI-ML/Backend",
+  passion: "Build, Innovate, Solve",
+  skills: ["Python", "JavaScript", "Java"],
+  status: "Ready"
+};`}
+                  </pre>
              </div>
 
             <img
