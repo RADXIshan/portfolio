@@ -32,11 +32,11 @@ const Home = () => {
         start: "top 50%",
         end: "bottom 50%",
         onEnter: () => {
-          gsap.to("body", { "--bg-color": color, duration: 0.8 });
+          gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
           setActiveSection(id);
         },
         onEnterBack: () => {
-          gsap.to("body", { "--bg-color": color, duration: 0.8 });
+          gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
           setActiveSection(id);
         },
       });
