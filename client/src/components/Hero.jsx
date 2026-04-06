@@ -6,12 +6,13 @@ import { useEffect, useRef } from "react";
 import SplitType from 'split-type';
 import { useGSAP } from "@gsap/react";
 
-const Hero = () => {
+const Hero = ({ isLoading }) => {
+
   const heroRef = useRef(null);
   const textRef = useRef(null);
 
   useGSAP(() => {
-    if (!textRef.current) return;
+    if (isLoading || !textRef.current) return;
 
     // Split text into characters
     const splitTitle = new SplitType(textRef.current, { types: 'chars,words' });
@@ -30,7 +31,7 @@ const Hero = () => {
         stagger: 0.02,
         duration: 1.5,
         ease: "power4.out",
-        delay: 0.5,
+        delay: 0.2, // Reduced delay as preloader exit already takes time
         force3D: true,
       }
     );
@@ -42,7 +43,7 @@ const Hero = () => {
             y: 10,
             stagger: 0.01,
             duration: 1,
-            delay: 1.5,
+            delay: 1.2,
             ease: "power3.out",
         });
     }
@@ -52,7 +53,7 @@ const Hero = () => {
       opacity: 0,
       stagger: 0.1,
       duration: 0.8,
-      delay: 1.5,
+      delay: 1.2,
       ease: "back.out(1.7)",
     });
 
@@ -88,7 +89,7 @@ const Hero = () => {
         });
     }
 
-  }, { scope: heroRef });
+  }, { scope: heroRef, dependencies: [isLoading] });
 
   const socialLinks = [
     { icon: faLinkedin, label: "Linkedin", href: "https://www.linkedin.com/in/ishanroy-radx/" },

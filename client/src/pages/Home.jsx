@@ -13,7 +13,8 @@ import { useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Home = () => {
+const Home = ({ isLoading }) => {
+
   const mainRef = useRef(null);
   const [activeSection, setActiveSection] = useState("home");
 
@@ -46,7 +47,8 @@ const Home = () => {
   return (
     <main ref={mainRef}>
       <Navbar activeSection={activeSection} />
-      <Hero />
+      <Hero isLoading={isLoading} />
+
       <About />
       <Skills />
       <Projects />

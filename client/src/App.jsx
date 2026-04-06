@@ -3,11 +3,16 @@ import { Route, Routes, useLocation } from 'react-router';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import Home from './pages/Home';
+import Preloader from './components/Preloader';
+import { useState } from 'react';
+
 
 const App = () => {
   const location = useLocation();
   const cursorDotRef = useRef(null);
   const cursorOutlineRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -47,6 +52,22 @@ const App = () => {
       document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+      
+      // Entrance animation for content
+      gsap.fromTo(".app-content", 
+        { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'power3.out' }
+      );
+    }
+    
+    return () => document.body.classList.remove('no-scroll');
+  }, [isLoading]);
 
   useEffect(() => {
     const cursorDot = cursorDotRef.current;
@@ -103,12 +124,18 @@ const App = () => {
 
   return (
     <>
-      <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
-      <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       
-      <Routes location={location} key={location.pathname}>
-        <Route index element={<Home />} />
-      </Routes>
+      <div 
+        className={`app-content transition-all duration-700 ease-out z-10 ${isLoading ? 'blur-2xl scale-95 opacity-0 pointer-events-none' : 'blur-0 scale-100 opacity-100'}`}
+      >
+        <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
+        <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
+        
+        <Routes location={location} key={location.pathname}>
+          <Route index element={<Home isLoading={isLoading} />} />
+        </Routes>
+      </div>
     </>
   );
 };
