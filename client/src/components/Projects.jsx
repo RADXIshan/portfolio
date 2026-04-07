@@ -46,6 +46,8 @@ const Projects = () => {
     ];
 
     useGSAP(() => {
+        const mm = gsap.matchMedia();
+
         // 1. Massive Intro Title Reveal
         if (mainTitleRef.current) {
             const split = new SplitType(mainTitleRef.current, { types: 'chars' });
@@ -59,11 +61,10 @@ const Projects = () => {
                 scrollTrigger: {
                     trigger: introSectionRef.current,
                     start: "top 80%",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "restart none none reset"
                 }
             });
 
-            // Parallax/Scale effect as we scroll past it
             gsap.to(mainTitleRef.current, {
                 y: -100,
                 scale: 0.9,
@@ -78,103 +79,145 @@ const Projects = () => {
             });
         }
 
-        // 2. Initial State for Images
-        const images = gsap.utils.toArray(".sticky-image-item");
-        gsap.set(images, { 
-            clipPath: "inset(100% 0% 0% 0%)",
-            opacity: 1 
-        });
-        gsap.set(images[0], { 
-            clipPath: "inset(0% 0% 0% 0%)", 
-            opacity: 1 
-        });
+        // 2. DESKTOP ANIMATIONS (lg and above)
+        mm.add("(min-width: 1024px)", () => {
+            const images = gsap.utils.toArray(".sticky-image-item");
+            const projectSections = gsap.utils.toArray(".project-full-section");
+            
+            // Set initial state for images
+            gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1 });
+            gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 });
 
-        // 3. STICKY IMAGES TRANSITION
-        const projectSections = gsap.utils.toArray(".project-full-section");
-        
-        projectSections.forEach((section, i) => {
-            if (i === 0) return;
+            projectSections.forEach((section, i) => {
+                if (i === 0) return;
 
-            // Reveal current image (Slide up effect via clip-path)
-            gsap.to(images[i], {
-                clipPath: "inset(0% 0% 0% 0%)",
-                scale: 1,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "top top",
-                    scrub: true,
-                }
+                gsap.to(images[i], {
+                    clipPath: "inset(0% 0% 0% 0%)",
+                    scale: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top bottom",
+                        end: "top top",
+                        scrub: true,
+                    }
+                });
+
+                gsap.to(images[i-1], {
+                    yPercent: -20,
+                    opacity: 0.3,
+                    filter: "blur(15px)",
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top bottom",
+                        end: "top top",
+                        scrub: true,
+                    }
+                });
             });
 
-            // Parallax/hide for previous image
-            gsap.to(images[i-1], {
-                yPercent: -20,
-                opacity: 0.3,
-                filter: "blur(15px)",
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "top top",
-                    scrub: true,
-                }
-            });
-        });
-
-        // 4. Content Reveal for each project
-        projectSections.forEach((section) => {
-            const content = section.querySelector(".project-content");
-            gsap.from(content, {
-                x: -50,
-                opacity: 0,
-                duration: 1.2,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 70%",
-                    toggleActions: "play none none reverse",
-                }
+            projectSections.forEach((section) => {
+                const content = section.querySelector(".project-content");
+                gsap.from(content, {
+                    x: -50,
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 70%",
+                        toggleActions: "restart none none reset",
+                    }
+                });
             });
         });
 
+        // 3. MOBILE ANIMATIONS (below lg)
+        mm.add("(max-width: 1023px)", () => {
+            const cards = gsap.utils.toArray(".project-full-section");
+            
+            cards.forEach((card, i) => {
+                const isLast = i === cards.length - 1;
+                if (isLast) return;
+
+                // Improved Stacking Timing: lasts through full transition
+                gsap.to(card, {
+                    scale: 0.85,
+                    opacity: 0.2,
+                    filter: "blur(12px)",
+                    yPercent: -15,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: cards[i + 1],
+                        start: "top 60%",
+                        end: "top top",
+                        scrub: true,
+                    }
+                });
+            });
+
+            // Reveal each card's components
+            cards.forEach((card) => {
+                const content = card.querySelector(".project-content");
+                gsap.from(content, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "restart none none reset"
+                    }
+                });
+            });
+        });
+
+        return () => mm.revert();
     }, { scope: containerRef });
 
     return (
         <section ref={containerRef} className="relative w-full bg-[#0a0a0a]" id="projects">
             {/* Massive Full-Width Hero Title */}
-            <div ref={introSectionRef} className="h-screen w-full flex flex-col justify-center items-center px-6 md:px-20 overflow-hidden relative border-b border-white/5">
-                <div className="absolute top-20 left-6 md:left-20">
+            <div ref={introSectionRef} className="h-[70vh] lg:h-screen w-full flex flex-col justify-center items-center px-6 md:px-20 overflow-hidden relative border-b border-white/5">
+                <div className="absolute top-12 md:top-20 left-6 md:left-20">
                     <span className="text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
                 </div>
                 
-                <h1 ref={mainTitleRef} className="text-[clamp(4rem,18vw,25rem)] font-black tracking-tighter text-white leading-none uppercase select-none text-center">
+                <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-none uppercase select-none text-center">
                     Selected<br/>Work.
                 </h1>
 
-                <div className="absolute bottom-20 right-6 md:right-20 flex flex-col items-end gap-2 text-right opacity-30">
-                    <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none underline-offset-4 decoration-purple-500">2025 — 2026</span>
-                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none">INDIA</span>
+                <div className="absolute bottom-12 md:bottom-20 right-6 md:right-20 flex flex-col items-end gap-2 text-right opacity-30">
+                    <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none underline-offset-4 decoration-purple-500 font-bold">2025 — 2026</span>
+                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none font-bold">INDIA</span>
                 </div>
             </div>
 
             <div className="flex flex-col lg:flex-row w-full relative">
-                {/* Left Side: Scrollable Sections */}
+                {/* Scrollable Sections */}
                 <div className="w-full lg:w-1/2 flex flex-col">
                     {projects.map((project, index) => (
                         <div 
                             key={project.id} 
-                            className="project-full-section relative h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12"
+                            className="project-full-section sticky top-0 lg:relative h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12 bg-[#0a0a0a]"
+                            style={{ 
+                                zIndex: index + 1,
+                                top: `${index * 12}px` // Reduced stack offset for tighter feel on mobile
+                            }}
                         >
+                            {/* Card Glow/Shadow on Mobile */}
+                            <div className="absolute inset-x-4 inset-y-12 lg:hidden bg-white/[0.015] border border-white/5 rounded-[4rem] -z-10" />
+
                             <div className="project-content flex flex-col gap-6 group">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
+                                    <span className="text-xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] font-black">
                                         {`0${index + 1}`}
                                     </span>
                                     <div className="h-[1px] w-12 bg-purple-500/10 group-hover:w-24 transition-all duration-700" />
                                 </div>
-                                <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
+                                <h3 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
                                     {project.name}
                                 </h3>
                                 <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-lg font-light">
@@ -205,11 +248,11 @@ const Projects = () => {
                                 </div>
 
                                 {/* Mobile Image Display */}
-                                <div className="mt-12 lg:hidden w-full aspect-video rounded-[2rem] overflow-hidden border border-white/10 bg-zinc-950 shadow-2xl">
+                                <div className="mt-12 lg:hidden w-full aspect-video rounded-[3rem] overflow-hidden border border-white/5 bg-zinc-950/20">
                                     <img 
                                         src={project.image} 
                                         alt={project.name} 
-                                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" 
+                                        className="w-full h-full object-cover grayscale md:grayscale-0" 
                                     />
                                 </div>
                             </div>
@@ -217,7 +260,7 @@ const Projects = () => {
                     ))}
                 </div>
 
-                {/* Right Side: Sticky Images (Slide-Up Stacking) */}
+                {/* Right Side: Sticky Images (Desktop Only) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen sticky top-0 items-center justify-center p-24 pl-12 pr-24 pointer-events-none">
                     <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black">
                         {projects.map((project, index) => (
@@ -229,7 +272,7 @@ const Projects = () => {
                                 <img 
                                     src={project.image} 
                                     alt={project.name} 
-                                    className="w-full h-full object-cover grayscale md:grayscale-0"
+                                    className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             </div>

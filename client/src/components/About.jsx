@@ -28,7 +28,7 @@ const About = () => {
         scrollTrigger: {
             trigger: aboutRef.current,
             start: "top 60%",
-            toggleActions: "play none none reset"
+            toggleActions: "restart none none reset"
         }
       }
     );
@@ -59,7 +59,7 @@ const About = () => {
             scrollTrigger: {
                 trigger: paragraphRef.current,
                 start: "top 80%",
-                toggleActions: "play none none reset"
+                toggleActions: "restart none none reset"
             }
         });
     }
@@ -72,7 +72,7 @@ const About = () => {
         scrollTrigger: {
             trigger: aboutRef.current,
             start: "top 70%",
-            toggleActions: "play none none reset"
+            toggleActions: "restart none none reset"
         }
     });
 

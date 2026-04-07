@@ -132,7 +132,7 @@ const Skills = () => {
                         trigger: card,
                         containerAnimation: pin,
                         start: "left 80%",
-                        toggleActions: "play none none reset",
+                        toggleActions: "restart none none reset",
                     }
                 });
             }
@@ -148,7 +148,7 @@ const Skills = () => {
                         trigger: card,
                         containerAnimation: pin,
                         start: "left 80%",
-                        toggleActions: "play none none reset",
+                        toggleActions: "restart none none reset",
                     }
                 });
             }
@@ -168,22 +168,26 @@ const Skills = () => {
                     </div>
 
                     {/* Cards */}
-                    <div className="flex gap-[15vw] pr-[20vw] items-center h-full"> 
+                    <div className="flex gap-[20vw] pr-[20vw] items-center h-full"> 
                         {skillsData.map((skill, index) => (
                             <div 
                                 key={skill.category} 
-                                className="skill-card flex flex-col pt-[20vh] min-w-[70vw] md:min-w-[600px] h-full"
+                                className="skill-card flex flex-col pt-[20vh] w-max h-full"
                             >
                                 <div className="mb-12">
                                     <span className="text-2xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] block">
                                         {`0${index + 1}`}
                                     </span>
-                                    <h3 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-2 overflow-hidden leading-tight">
+                                    <h3 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-2 whitespace-nowrap leading-tight pb-4">
                                         {skill.category}
                                     </h3>
                                 </div>
 
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-10 max-w-2xl">
+                                <div className={`grid gap-x-8 gap-y-10 transition-all duration-500 ${
+                                    skill.items.length > 6 
+                                    ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 max-w-4xl md:max-w-5xl" 
+                                    : "grid-cols-2 sm:grid-cols-3 max-w-2xl"
+                                }`}>
                                     {skill.items.map((item) => (
                                         <div key={item.name} className="skill-item flex items-center gap-6 group/item">
                                             <div className="w-10 h-10 md:w-14 md:h-14 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
