@@ -93,12 +93,45 @@ const Skills = () => {
     const triggerRef = useRef(null);
     const sectionRef = useRef(null);
     const indicatorRef = useRef(null);
+    const introSectionRef = useRef(null);
+    const mainTitleRef = useRef(null);
 
     useGSAP(() => {
         const trigger = triggerRef.current;
         const section = sectionRef.current;
 
         if (!trigger || !section) return;
+
+        // Intro Animation (Mirroring Projects.jsx)
+        if (mainTitleRef.current) {
+            const split = new SplitType(mainTitleRef.current, { types: 'chars' });
+            gsap.from(split.chars, {
+                y: 150,
+                rotateX: -90,
+                opacity: 0,
+                stagger: 0.05,
+                duration: 1.5,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "restart none none reset"
+                }
+            });
+
+            gsap.to(mainTitleRef.current, {
+                y: () => window.innerWidth < 768 ? -30 : -100,
+                scale: 0.9,
+                opacity: 0,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        }
 
         const pin = gsap.fromTo(section, 
             { x: 0 },
@@ -185,15 +218,32 @@ const Skills = () => {
     }, { scope: triggerRef });
 
     return (
-        <section ref={triggerRef} className="relative h-[300vh] bg-[#0a0a0a]" id="skills">
-            <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
-                <div ref={sectionRef} className="flex h-full items-center px-[10vw] min-w-max">
-                    {/* Header */}
-                    <div className="mr-6 md:mr-16 lg:mr-24 flex-shrink-0">
-                        <h2 className="text-[clamp(3.5rem,12vw,20rem)] font-black tracking-wide leading-none text-white/5 uppercase select-none">
-                            Skills
-                        </h2>
-                    </div>
+        <section className="relative bg-[#0a0a0a]" id="skills">
+            {/* Massive Intro Section */}
+            <div ref={introSectionRef} className="h-screen w-full flex flex-col px-6 md:px-20 overflow-hidden relative border-b border-white/5">
+                {/* Top Label */}
+                <div className="pt-12 md:pt-20 flex-shrink-0">
+                    <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Skills</span>
+                </div>
+                
+                {/* Main Title */}
+                <div className="flex-1 flex flex-col justify-center items-center">
+                    <h1 ref={mainTitleRef} className="text-[clamp(2.5rem,11vw,25rem)] lg:text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
+                        <span className="whitespace-nowrap">Tech</span>
+                        <span className="whitespace-nowrap">Stack.</span>
+                    </h1>
+                </div>
+
+                {/* Bottom Badges */}
+                <div className="pb-12 md:pb-20 flex flex-col items-end gap-2 text-right opacity-30 flex-shrink-0">
+                    <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none underline-offset-4 decoration-purple-500 font-bold">CORE — TOOLS</span>
+                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none font-bold">FRONTEND — BACKEND — AI/ML</span>
+                </div>
+            </div>
+
+            <div ref={triggerRef} className="relative h-[300vh]">
+                <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+                    <div ref={sectionRef} className="flex h-full items-center pl-[25vw] pr-[10vw] min-w-max">
 
                     {/* Cards */}
                     <div className="flex gap-[20vw] pr-[20vw] items-center h-full"> 
@@ -235,7 +285,7 @@ const Skills = () => {
                 {/* Scroll Indicator */}
                 <div 
                     ref={indicatorRef} 
-                    className="absolute bottom-6 md:bottom-12 left-[10vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
+                    className="absolute bottom-6 md:bottom-12 left-[25vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
                 >
                     <div className="flex flex-col">
                         <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
@@ -246,8 +296,9 @@ const Skills = () => {
                     </div>
                 </div>
             </div>
-            
-            <style>{`
+        </div>
+
+        <style>{`
                 @keyframes shimmer {
                     0% { transform: translateX(-100%); }
                     100% { transform: translateX(100%); }
