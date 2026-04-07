@@ -183,10 +183,10 @@ const Projects = () => {
             {/* Massive Full-Width Hero Title */}
             <div ref={introSectionRef} className="h-[70vh] lg:h-screen w-full flex flex-col justify-center items-center px-6 md:px-20 overflow-hidden relative border-b border-white/5">
                 <div className="absolute top-12 md:top-20 left-6 md:left-20">
-                    <span className="text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
+                    <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
                 </div>
                 
-                <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
+                <h1 ref={mainTitleRef} className="text-[clamp(3.2rem,13vw,25rem)] lg:text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
                     <span>Selected</span>
                     <span>Work.</span>
                 </h1>
