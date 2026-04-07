@@ -162,7 +162,7 @@ const Skills = () => {
                 <div ref={sectionRef} className="flex h-full items-center px-[10vw] min-w-max">
                     {/* Header */}
                     <div className="mr-24 md:mr-48 lg:mr-72 flex-shrink-0">
-                        <h2 className="text-[clamp(5rem,15vw,20rem)] font-black tracking-widest leading-none text-white/5 uppercase select-none">
+                        <h2 className="text-[clamp(5rem,15vw,20rem)] font-black tracking-wide leading-none text-white/5 uppercase select-none">
                             Skills
                         </h2>
                     </div>
