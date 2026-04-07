@@ -189,8 +189,8 @@ const Skills = () => {
             <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
                 <div ref={sectionRef} className="flex h-full items-center px-[10vw] min-w-max">
                     {/* Header */}
-                    <div className="mr-8 md:mr-16 lg:mr-24 flex-shrink-0">
-                        <h2 className="text-[clamp(5rem,15vw,20rem)] font-black tracking-wide leading-none text-white/5 uppercase select-none">
+                    <div className="mr-6 md:mr-16 lg:mr-24 flex-shrink-0">
+                        <h2 className="text-[clamp(3.5rem,12vw,20rem)] font-black tracking-wide leading-none text-white/5 uppercase select-none">
                             Skills
                         </h2>
                     </div>
@@ -200,28 +200,28 @@ const Skills = () => {
                         {skillsData.map((skill, index) => (
                             <div 
                                 key={skill.category} 
-                                className="skill-card flex flex-col pt-[20vh] w-max h-full"
+                                className="skill-card flex flex-col pt-[12vh] md:pt-[20vh] w-max h-full"
                             >
                                 <div className="mb-12">
                                     <span className="text-2xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] block">
                                         {`0${index + 1}`}
                                     </span>
-                                    <h3 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-2 whitespace-nowrap leading-tight pb-4">
+                                    <h3 className="text-3xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-2 whitespace-nowrap leading-tight pb-4">
                                         {skill.category}
                                     </h3>
                                 </div>
 
-                                <div className={`grid gap-x-8 gap-y-10 transition-all duration-500 ${
+                                <div className={`grid gap-x-4 gap-y-6 md:gap-x-8 md:gap-y-10 transition-all duration-500 ${
                                     skill.items.length > 6 
                                     ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 max-w-4xl md:max-w-5xl" 
                                     : "grid-cols-2 sm:grid-cols-3 max-w-2xl"
                                 }`}>
                                     {skill.items.map((item) => (
-                                        <div key={item.name} className="skill-item flex items-center gap-6 group/item">
-                                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
-                                                <img src={item.img} alt={item.name} className="h-5 w-5 md:h-7 md:w-7 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
+                                        <div key={item.name} className="skill-item flex items-center gap-3 md:gap-6 group/item">
+                                            <div className="w-8 h-8 md:w-14 md:h-14 bg-white/[0.03] border border-white/5 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
+                                                <img src={item.img} alt={item.name} className="h-4 w-4 md:h-7 md:w-7 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
                                             </div>
-                                            <span className="text-base md:text-xl font-light text-white/30 group-hover/item:text-white transition-colors duration-300">
+                                            <span className="text-sm md:text-xl font-light text-white/30 group-hover/item:text-white transition-colors duration-300">
                                                 {item.name}
                                             </span>
                                         </div>
@@ -235,13 +235,13 @@ const Skills = () => {
                 {/* Scroll Indicator */}
                 <div 
                     ref={indicatorRef} 
-                    className="absolute bottom-12 left-[10vw] flex items-center gap-8 opacity-0 hover:!opacity-100 transition-opacity duration-500 group pointer-events-none sm:pointer-events-auto"
+                    className="absolute bottom-6 md:bottom-12 left-[10vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
                 >
                     <div className="flex flex-col">
-                        <span className="text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
-                        <span className="text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Horizontal</span>
+                        <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
+                        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Horizontal</span>
                     </div>
-                    <div className="relative w-48 h-[1px] bg-white/10 overflow-hidden">
+                    <div className="relative w-32 md:w-48 h-[1px] bg-white/10 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]"></div>
                     </div>
                 </div>
