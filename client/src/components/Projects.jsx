@@ -13,7 +13,8 @@ gsap.registerPlugin(ScrollTrigger);
 const Projects = () => {
     const containerRef = useRef(null);
     const rightRef = useRef(null);
-    const titleRef = useRef(null);
+    const mainTitleRef = useRef(null);
+    const introSectionRef = useRef(null);
 
     const projects = [
         {
@@ -45,7 +46,39 @@ const Projects = () => {
     ];
 
     useGSAP(() => {
-        // 1. Initial State
+        // 1. Massive Intro Title Reveal
+        if (mainTitleRef.current) {
+            const split = new SplitType(mainTitleRef.current, { types: 'chars' });
+            gsap.from(split.chars, {
+                y: 150,
+                rotateX: -90,
+                opacity: 0,
+                stagger: 0.05,
+                duration: 1.5,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Parallax/Scale effect as we scroll past it
+            gsap.to(mainTitleRef.current, {
+                y: -100,
+                scale: 0.9,
+                opacity: 0.2,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        }
+
+        // 2. Initial State for Images
         const images = gsap.utils.toArray(".sticky-image-item");
         gsap.set(images, { 
             clipPath: "inset(100% 0% 0% 0%)",
@@ -56,14 +89,13 @@ const Projects = () => {
             opacity: 1 
         });
 
-        // 2. STICKY IMAGES TRANSITION
-        // We trigger based on each project-section's entrance
+        // 3. STICKY IMAGES TRANSITION
         const projectSections = gsap.utils.toArray(".project-full-section");
         
         projectSections.forEach((section, i) => {
-            if (i === 0) return; // First image is already visible
+            if (i === 0) return;
 
-            // Reveal current image (Slide up effect)
+            // Reveal current image (Slide up effect via clip-path)
             gsap.to(images[i], {
                 clipPath: "inset(0% 0% 0% 0%)",
                 scale: 1,
@@ -76,11 +108,11 @@ const Projects = () => {
                 }
             });
 
-            // Subtle parallax/hide for previous image
+            // Parallax/hide for previous image
             gsap.to(images[i-1], {
                 yPercent: -20,
-                opacity: 0.5,
-                filter: "blur(10px)",
+                opacity: 0.3,
+                filter: "blur(15px)",
                 ease: "none",
                 scrollTrigger: {
                     trigger: section,
@@ -91,56 +123,45 @@ const Projects = () => {
             });
         });
 
-        // 3. Text Reveal for each section
+        // 4. Content Reveal for each project
         projectSections.forEach((section) => {
             const content = section.querySelector(".project-content");
             gsap.from(content, {
-                y: 100,
+                x: -50,
                 opacity: 0,
                 duration: 1.2,
-                splitType: "chars",
                 ease: "power3.out",
                 scrollTrigger: {
                     trigger: section,
-                    start: "top 60%",
+                    start: "top 70%",
                     toggleActions: "play none none reverse",
                 }
             });
         });
 
-        // 4. Main Title Reveal
-        if (titleRef.current) {
-            const split = new SplitType(titleRef.current, { types: 'chars' });
-            gsap.from(split.chars, {
-                y: 100,
-                rotateX: -90,
-                opacity: 0,
-                stagger: 0.02,
-                duration: 1.5,
-                ease: "power4.out",
-                scrollTrigger: {
-                    trigger: titleRef.current,
-                    start: "top 90%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        }
-
     }, { scope: containerRef });
 
     return (
         <section ref={containerRef} className="relative w-full bg-[#0a0a0a]" id="projects">
-            <div className="flex flex-col lg:flex-row w-full">
+            {/* Massive Full-Width Hero Title */}
+            <div ref={introSectionRef} className="h-screen w-full flex flex-col justify-center items-center px-6 md:px-20 overflow-hidden relative border-b border-white/5">
+                <div className="absolute top-20 left-6 md:left-20">
+                    <span className="text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
+                </div>
                 
-                {/* Left Side: Full-Height Sections */}
-                <div className="w-full lg:w-1/2 flex flex-col">
-                    <div className="h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12">
-                        <div className="overflow-hidden">
-                            <h2 className="text-sm font-mono text-purple-400 uppercase tracking-widest mb-4">/ Projects</h2>
-                            <h1 ref={titleRef} className="text-6xl md:text-8xl font-bold tracking-tighter text-white py-2">Selected <br /> Work.</h1>
-                        </div>
-                    </div>
+                <h1 ref={mainTitleRef} className="text-[clamp(4rem,18vw,25rem)] font-black tracking-tighter text-white leading-none uppercase select-none text-center">
+                    Selected<br/>Work.
+                </h1>
 
+                <div className="absolute bottom-20 right-6 md:right-20 flex flex-col items-end gap-2 text-right opacity-30">
+                    <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none underline-offset-4 decoration-purple-500">2025 — 2026</span>
+                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none">INDIA</span>
+                </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row w-full relative">
+                {/* Left Side: Scrollable Sections */}
+                <div className="w-full lg:w-1/2 flex flex-col">
                     {projects.map((project, index) => (
                         <div 
                             key={project.id} 
@@ -148,40 +169,47 @@ const Projects = () => {
                         >
                             <div className="project-content flex flex-col gap-6 group">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-xl font-mono text-purple-500/50">{`0${index + 1}`}</span>
-                                    <div className="h-[1px] w-10 bg-white/10 group-hover:w-20 transition-all duration-500" />
+                                    <span className="text-xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
+                                        {`0${index + 1}`}
+                                    </span>
+                                    <div className="h-[1px] w-12 bg-purple-500/10 group-hover:w-24 transition-all duration-700" />
                                 </div>
-                                <h3 className="text-4xl md:text-7xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 py-2">
+                                <h3 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
                                     {project.name}
                                 </h3>
-                                <p className="text-lg text-white/50 leading-snug max-w-md font-light">
+                                <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-lg font-light">
                                     {project.description}
                                 </p>
-                                <div className="flex flex-wrap gap-2 mt-2">
+                                <div className="flex flex-wrap gap-3 mt-4">
                                     {project.technologies.map((tech, i) => (
-                                        <span key={i} className="px-2 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] text-white/40">{tech}</span>
+                                        <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[11px] font-mono text-white/40 tracking-wider hover:text-white transition-colors">
+                                            {tech}
+                                        </span>
                                     ))}
                                 </div>
-                                <div className="flex gap-6 mt-4">
-                                    <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
-                                        <Github size={20} />
-                                        <span className="text-xs font-mono uppercase tracking-widest hidden md:block">Source</span>
+                                <div className="flex gap-8 mt-8">
+                                    <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/40 hover:text-white transition-all duration-300 group/link">
+                                        <div className="p-3 bg-white/5 rounded-full group-hover:bg-purple-500/20 transition-colors">
+                                            <Github size={20} />
+                                        </div>
+                                        <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Source</span>
                                     </a>
                                     {project.liveLink && (
-                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 group/link">
-                                            <ArrowUpRight size={20} className="group-hover/link:rotate-45 transition-transform duration-300" />
-                                            <span className="text-xs font-mono uppercase tracking-widest hidden md:block">Live Demo</span>
+                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/40 hover:text-white transition-all duration-300 group/link">
+                                            <div className="p-3 bg-white/5 rounded-full group-hover:bg-purple-500/20 transition-colors">
+                                                <ArrowUpRight size={22} className="group-hover/link:rotate-45 transition-transform duration-500" />
+                                            </div>
+                                            <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Live Demo</span>
                                         </a>
                                     )}
                                 </div>
 
-                                {/* Mobile Image */}
-                                <div className="mt-8 lg:hidden w-full aspect-video rounded-xl overflow-hidden border border-white/5 bg-zinc-900/50">
+                                {/* Mobile Image Display */}
+                                <div className="mt-12 lg:hidden w-full aspect-video rounded-[2rem] overflow-hidden border border-white/10 bg-zinc-950 shadow-2xl">
                                     <img 
                                         src={project.image} 
                                         alt={project.name} 
-                                        className="w-full h-full object-cover" 
-                                        onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/800x450/1a1a1a/FFFFFF?text=${project.name}`; }}
+                                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" 
                                     />
                                 </div>
                             </div>
@@ -191,7 +219,7 @@ const Projects = () => {
 
                 {/* Right Side: Sticky Images (Slide-Up Stacking) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen sticky top-0 items-center justify-center p-24 pl-12 pr-24 pointer-events-none">
-                    <div className="relative w-full h-[80%] max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-[#0a0a0a]">
+                    <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black">
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
@@ -201,10 +229,9 @@ const Projects = () => {
                                 <img 
                                     src={project.image} 
                                     alt={project.name} 
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/800x1200/1a1a1a/FFFFFF?text=${project.name}`; }}
+                                    className="w-full h-full object-cover grayscale md:grayscale-0"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             </div>
                         ))}
                     </div>
