@@ -92,6 +92,7 @@ const skillsData = [
 const Skills = () => {
     const triggerRef = useRef(null);
     const sectionRef = useRef(null);
+    const indicatorRef = useRef(null);
 
     useGSAP(() => {
         const trigger = triggerRef.current;
@@ -154,6 +155,33 @@ const Skills = () => {
             }
         });
 
+        // Entrance animation for scroll indicator
+        gsap.fromTo(indicatorRef.current, 
+            { opacity: 0, x: -20 },
+            {
+                opacity: 0.4,
+                x: 0,
+                scrollTrigger: {
+                    trigger: trigger,
+                    start: "top center",
+                    end: "top top",
+                    scrub: true,
+                }
+            }
+        );
+
+        // Exit animation for scroll indicator
+        gsap.to(indicatorRef.current, {
+            opacity: 0,
+            x: -20,
+            scrollTrigger: {
+                trigger: trigger,
+                start: "bottom 30%",
+                end: "bottom top",
+                scrub: true,
+            }
+        });
+
     }, { scope: triggerRef });
 
     return (
@@ -205,7 +233,10 @@ const Skills = () => {
                 </div>
                 
                 {/* Scroll Indicator */}
-                <div className="absolute bottom-12 left-[10vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group">
+                <div 
+                    ref={indicatorRef} 
+                    className="absolute bottom-12 left-[10vw] flex items-center gap-8 opacity-0 hover:!opacity-100 transition-opacity duration-500 group pointer-events-none sm:pointer-events-auto"
+                >
                     <div className="flex flex-col">
                         <span className="text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
                         <span className="text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Horizontal</span>

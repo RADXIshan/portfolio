@@ -135,29 +135,30 @@ const Projects = () => {
 
         // 3. MOBILE ANIMATIONS (below lg)
         mm.add("(max-width: 1023px)", () => {
-            const cards = gsap.utils.toArray(".project-full-section");
+            const cards = gsap.utils.toArray(".mobile-project-card-wrapper");
             
             cards.forEach((card, i) => {
                 const isLast = i === cards.length - 1;
                 if (isLast) return;
 
-                // Improved Stacking Timing: lasts through full transition
-                gsap.to(card, {
+                // High-fidelity stacking animation for mobile
+                gsap.to(card.querySelector(".project-card-inner"), {
                     scale: 0.85,
                     opacity: 0.2,
-                    filter: "blur(12px)",
+                    filter: "blur(10px)",
                     yPercent: -15,
+                    transformOrigin: "top center",
                     ease: "none",
                     scrollTrigger: {
                         trigger: cards[i + 1],
-                        start: "top 60%",
+                        start: "top center",
                         end: "top top",
                         scrub: true,
                     }
                 });
             });
 
-            // Reveal each card's components
+            // Content Reveal for mobile
             cards.forEach((card) => {
                 const content = card.querySelector(".project-content");
                 gsap.from(content, {
@@ -185,8 +186,9 @@ const Projects = () => {
                     <span className="text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
                 </div>
                 
-                <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-none uppercase select-none text-center">
-                    Selected<br/>Work.
+                <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
+                    <span>Selected</span>
+                    <span>Work.</span>
                 </h1>
 
                 <div className="absolute bottom-12 md:bottom-20 right-6 md:right-20 flex flex-col items-end gap-2 text-right opacity-30">
@@ -196,71 +198,116 @@ const Projects = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row w-full relative">
-                {/* Scrollable Sections */}
+                
+                {/* Desktop Left Side / Mobile Stack */}
                 <div className="w-full lg:w-1/2 flex flex-col">
-                    {projects.map((project, index) => (
-                        <div 
-                            key={project.id} 
-                            className="project-full-section sticky top-0 lg:relative h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12 bg-[#0a0a0a]"
-                            style={{ 
-                                zIndex: index + 1,
-                                top: `${index * 12}px` // Reduced stack offset for tighter feel on mobile
-                            }}
-                        >
-                            {/* Card Glow/Shadow on Mobile */}
-                            <div className="absolute inset-x-4 inset-y-12 lg:hidden bg-white/[0.015] border border-white/5 rounded-[4rem] -z-10" />
-
-                            <div className="project-content flex flex-col gap-6 group">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] font-black">
-                                        {`0${index + 1}`}
-                                    </span>
-                                    <div className="h-[1px] w-12 bg-purple-500/10 group-hover:w-24 transition-all duration-700" />
-                                </div>
-                                <h3 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
-                                    {project.name}
-                                </h3>
-                                <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-lg font-light">
-                                    {project.description}
-                                </p>
-                                <div className="flex flex-wrap gap-3 mt-4">
-                                    {project.technologies.map((tech, i) => (
-                                        <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[11px] font-mono text-white/40 tracking-wider hover:text-white transition-colors">
+                    {/* PC View (Hidden on Mobile) */}
+                    <div className="hidden lg:flex flex-col">
+                        {projects.map((project, index) => (
+                            <div 
+                                key={project.id} 
+                                className="project-full-section relative h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12"
+                            >
+                                <div className="project-content flex flex-col gap-6 group">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] font-black">
+                                            {`0${index + 1}`}
+                                        </span>
+                                        <div className="h-[1px] w-12 bg-purple-500/10 group-hover:w-24 transition-all duration-700" />
+                                    </div>
+                                    <h3 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
+                                        {project.name}
+                                    </h3>
+                                    <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-lg font-light">
+                                        {project.description}
+                                    </p>
+                                    <div className="flex flex-wrap gap-3 mt-4">
+                                        {project.technologies.map((tech, i) => (
+                                            <span key={i} className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-full text-[11px] font-mono text-white/70 tracking-wider hover:text-white hover:bg-white/20 transition-all duration-300">
                                             {tech}
                                         </span>
-                                    ))}
-                                </div>
-                                <div className="flex gap-8 mt-8">
-                                    <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/40 hover:text-white transition-all duration-300 group/link">
-                                        <div className="p-3 bg-white/5 rounded-full group-hover:bg-purple-500/20 transition-colors">
-                                            <Github size={20} />
-                                        </div>
-                                        <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Source</span>
-                                    </a>
-                                    {project.liveLink && (
-                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/40 hover:text-white transition-all duration-300 group/link">
-                                            <div className="p-3 bg-white/5 rounded-full group-hover:bg-purple-500/20 transition-colors">
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-8 mt-8">
+                                            <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/70 hover:text-white transition-all duration-300 group/link">
+                                            <div className="p-3 bg-white/10 rounded-full group-hover:bg-purple-500/30 transition-colors">
+                                                <Github size={20} />
+                                            </div>
+                                            <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Source</span>
+                                        </a>
+                                        {project.liveLink && (
+                                            <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/70 hover:text-white transition-all duration-300 group/link">
+                                            <div className="p-3 bg-white/10 rounded-full group-hover:bg-purple-500/30 transition-colors">
                                                 <ArrowUpRight size={22} className="group-hover/link:rotate-45 transition-transform duration-500" />
                                             </div>
-                                            <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Live Demo</span>
-                                        </a>
-                                    )}
-                                </div>
-
-                                {/* Mobile Image Display */}
-                                <div className="mt-12 lg:hidden w-full aspect-video rounded-[3rem] overflow-hidden border border-white/5 bg-zinc-950/20">
-                                    <img 
-                                        src={project.image} 
-                                        alt={project.name} 
-                                        className="w-full h-full object-cover grayscale md:grayscale-0" 
-                                    />
+                                                <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Live Demo</span>
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+
+                    {/* Mobile View (Hidden on PC) */}
+                    <div className="lg:hidden flex flex-col px-4 py-12 gap-[10vh]">
+                        {projects.map((project, index) => (
+                            <div 
+                                key={project.id} 
+                                className="mobile-project-card-wrapper sticky top-24 h-[75vh]"
+                            >
+                                <div className="project-card-inner h-full w-full bg-[#111] border border-white/5 rounded-[2.5rem] p-8 flex flex-col shadow-2xl overflow-hidden relative">
+                                    <div className="project-content flex flex-col h-full">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <span className="text-xl font-mono text-purple-500 uppercase tracking-widest font-black">
+                                                {`0${index + 1}`}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-4xl font-bold text-white mb-4 leading-tight">
+                                            {project.name}
+                                        </h3>
+
+                                        <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/5">
+                                            <img 
+                                                src={project.image} 
+                                                alt={project.name} 
+                                                className="w-full h-full object-cover" 
+                                            />
+                                        </div>
+
+                                        <p className="text-sm text-white/50 line-clamp-3 mb-6 font-light">
+                                            {project.description}
+                                        </p>
+
+                                        <div className="mt-auto flex justify-between items-center">
+                                            <div className="flex gap-4">
+                                                <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="p-3 bg-white/10 rounded-full text-white/80 hover:text-white transition-all">
+                                                    <Github size={20} />
+                                                </a>
+                                                {project.liveLink && (
+                                                    <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="p-3 bg-white/10 rounded-full text-white/80 hover:text-white transition-all">
+                                                        <ArrowUpRight size={20} />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-wrap gap-2 justify-end max-w-[50%]">
+                                                {project.technologies.slice(0, 3).map((tech, i) => (
+                                                    <span key={i} className="px-2 py-1 bg-white/10 border border-white/10 rounded-full text-[9px] font-mono text-white/80 uppercase tracking-wider">
+                                                        {tech}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Right Side: Sticky Images (Desktop Only) */}
+                {/* Desktop Right Side: Sticky Images (Desktop Only) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen sticky top-0 items-center justify-center p-24 pl-12 pr-24 pointer-events-none">
                     <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black">
                         {projects.map((project, index) => (
