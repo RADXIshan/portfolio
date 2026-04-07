@@ -62,7 +62,16 @@ const App = () => {
       // Entrance animation for content
       gsap.fromTo(".app-content", 
         { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'power3.out' }
+        { 
+          opacity: 1, 
+          scale: 1, 
+          filter: 'blur(0px)', 
+          duration: 1.5, 
+          ease: 'power3.out',
+          onComplete: () => {
+            gsap.set(".app-content", { clearProps: "filter,scale" });
+          }
+        }
       );
     }
     

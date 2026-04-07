@@ -85,7 +85,7 @@ const Preloader = ({ onComplete }) => {
   return (
     <div 
       ref={preloaderRef}
-      className="fixed inset-0 z-[10000] flex items-center justify-center overflow-hidden pointer-events-none"
+      className="fixed inset-0 z-[20000] flex items-center justify-center overflow-hidden pointer-events-none"
     >
       {/* Optimized Single Noise Layer */}
       <div className="absolute inset-0 bg-[#0a0a0a] z-0">

@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = ({ activeSection }) => {
+const Navbar = ({ activeSection, isLoading }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navRef = useRef(null);
@@ -116,12 +116,22 @@ const Navbar = ({ activeSection }) => {
         }, "-=1");
       }
 
-      // Smart Navbar logic removed to keep navbar visible at all times as requested
-      gsap.to(navRef.current, { yPercent: 0, duration: 0 });
+      // Navbar set to permanently sticky at top as requested
+      if (isLoading) {
+        gsap.set(navRef.current, { opacity: 0, yPercent: -100 });
+      } else {
+        gsap.to(navRef.current, { 
+          opacity: 1, 
+          yPercent: 0, 
+          duration: 1.2, 
+          ease: "power4.out",
+          delay: 0.5 
+        });
+      }
     }, navbarScopeRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoading]);
 
   useLayoutEffect(() => {
     isMenuOpenRef.current = isMenuOpen;
@@ -138,7 +148,7 @@ const Navbar = ({ activeSection }) => {
 
   return (
     <div ref={navbarScopeRef}>
-      <div ref={navRef} className="fixed top-0 left-0 w-full z-[100]">
+      <div ref={navRef} className={`fixed top-0 left-0 w-full z-[10000] ${isLoading ? "pointer-events-none opacity-0" : ""}`}>
         <nav
           ref={navContainerRef}
           className="w-full px-6 py-4 md:px-10 md:py-6 flex justify-between items-center mix-blend-difference text-white"
@@ -168,7 +178,7 @@ const Navbar = ({ activeSection }) => {
       {/* Fullscreen Menu Overlay */}
       <div
         ref={menuOverlayRef}
-        className="fixed inset-0 bg-[#0a0a0a] z-[101] flex flex-col justify-between px-6 pt-4 pb-10 md:px-10 md:pt-6 md:pb-14"
+        className="fixed inset-0 bg-[#0a0a0a] z-[10001] flex flex-col justify-between px-6 pt-4 pb-10 md:px-10 md:pt-6 md:pb-14"
         style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
       >
         {/* Top Bar: Logo & Close Button */}

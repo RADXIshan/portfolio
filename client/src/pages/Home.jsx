@@ -46,7 +46,7 @@ const Home = ({ isLoading }) => {
 
   return (
     <main ref={mainRef}>
-      <Navbar activeSection={activeSection} />
+      <Navbar activeSection={activeSection} isLoading={isLoading} />
       <Hero isLoading={isLoading} />
 
       <About />
