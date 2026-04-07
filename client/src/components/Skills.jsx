@@ -228,7 +228,7 @@ const Skills = () => {
                 
                 {/* Main Title */}
                 <div className="flex-1 flex flex-col justify-center items-center">
-                    <h1 ref={mainTitleRef} className="text-[clamp(3.8rem,16vw,25rem)] lg:text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
+                    <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,20vw,25rem)] lg:text-[clamp(5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
                         <span className="whitespace-nowrap">Tech</span>
                         <span className="whitespace-nowrap">Stack.</span>
                     </h1>
@@ -243,7 +243,7 @@ const Skills = () => {
 
             <div ref={triggerRef} className="relative h-[300vh]">
                 <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
-                    <div ref={sectionRef} className="flex h-full items-center pl-[25vw] pr-[10vw] min-w-max">
+                    <div ref={sectionRef} className="flex h-full items-center pl-[40vw] pr-[10vw] min-w-max">
 
                     {/* Cards */}
                     <div className="flex gap-[20vw] pr-[20vw] items-center h-full"> 
@@ -283,10 +283,10 @@ const Skills = () => {
                 </div>
                 
                 {/* Scroll Indicator */}
-                <div 
-                    ref={indicatorRef} 
-                    className="absolute bottom-6 md:bottom-12 left-[25vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
-                >
+                    <div 
+                        ref={indicatorRef} 
+                        className="absolute bottom-6 md:bottom-12 left-[40vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
+                    >
                     <div className="flex flex-col">
                         <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
                         <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Horizontal</span>

@@ -22,6 +22,7 @@ const Navbar = ({ activeSection }) => {
   const logoRef = useRef(null);
   const menuBtnRef = useRef(null);
   const closeBtnRef = useRef(null);
+  const isMenuOpenRef = useRef(false);
 
   const menuItems = [
     { label: "Home", href: "#home", id: "home" },
@@ -115,30 +116,16 @@ const Navbar = ({ activeSection }) => {
         }, "-=1");
       }
 
-      // Smart Navbar Hide/Show
-      const showAnim = gsap.fromTo(navRef.current, { 
-        yPercent: -100,
-        autoAlpha: 0 
-      }, {
-        yPercent: 0,
-        autoAlpha: 1,
-        paused: true,
-        duration: 0.4,
-        ease: "power2.out"
-      }).progress(1);
-
-      ScrollTrigger.create({
-        start: "top top",
-        end: "max",
-        onUpdate: (self) => {
-          self.direction === -1 ? showAnim.play() : showAnim.reverse();
-        }
-      });
-
+      // Smart Navbar logic removed to keep navbar visible at all times as requested
+      gsap.to(navRef.current, { yPercent: 0, duration: 0 });
     }, navbarScopeRef);
 
     return () => ctx.revert();
   }, []);
+
+  useLayoutEffect(() => {
+    isMenuOpenRef.current = isMenuOpen;
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     if (isMenuOpen) {

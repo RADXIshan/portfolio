@@ -186,7 +186,7 @@ const Projects = () => {
                     <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
                 </div>
                 
-                <h1 ref={mainTitleRef} className="text-[clamp(3.2rem,13vw,25rem)] lg:text-[clamp(4.5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
+                <h1 ref={mainTitleRef} className="text-[clamp(3.8rem,16vw,25rem)] lg:text-[clamp(5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
                     <span>Selected</span>
                     <span>Work.</span>
                 </h1>
