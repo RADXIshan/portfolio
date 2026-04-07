@@ -101,12 +101,11 @@ const App = () => {
       if (isProject) {
         cursorDot.classList.add('project-active');
         cursorOutline.classList.add('hidden');
-      } else if (isHero && !isClickable) {
-        cursorDot.classList.add('active');
-        cursorOutline.classList.add('active');
       } else if (isClickable) {
         cursorDot.classList.add('active');
         cursorOutline.classList.add('active');
+        cursorDot.classList.remove('project-active');
+        cursorOutline.classList.remove('hidden');
       } else {
         cursorDot.classList.remove('active', 'project-active');
         cursorOutline.classList.remove('active', 'hidden');
@@ -126,12 +125,12 @@ const App = () => {
     <>
       {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       
+      <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
+      <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
+
       <div 
         className="app-content z-10"
       >
-        <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
-        <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
-        
         <Routes location={location} key={location.pathname}>
           <Route index element={<Home isLoading={isLoading} />} />
         </Routes>

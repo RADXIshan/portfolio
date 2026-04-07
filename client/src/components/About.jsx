@@ -86,7 +86,7 @@ const About = () => {
     >
       {/* Image Section */}
       <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
-        <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group cursor-crosshair">
+        <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group">
            <div className="w-full h-full relative overflow-hidden">
              {/* Easter Egg Code */}
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-8 overflow-hidden underline-offset-4">

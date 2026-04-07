@@ -11,6 +11,7 @@ const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navRef = useRef(null);
+  const navbarScopeRef = useRef(null);
   const navContainerRef = useRef(null);
   const menuOverlayRef = useRef(null);
   const menuLinksRef = useRef(null);
@@ -134,7 +135,7 @@ const Navbar = ({ activeSection }) => {
         }
       });
 
-    }, navContainerRef);
+    }, navbarScopeRef);
 
     return () => ctx.revert();
   }, []);
@@ -149,7 +150,7 @@ const Navbar = ({ activeSection }) => {
   };
 
   return (
-    <>
+    <div ref={navbarScopeRef}>
       <div ref={navRef} className="fixed top-0 left-0 w-full z-[100]">
         <nav
           ref={navContainerRef}
@@ -261,7 +262,7 @@ const Navbar = ({ activeSection }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

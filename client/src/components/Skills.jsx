@@ -90,117 +90,118 @@ const skillsData = [
 ];
 
 const Skills = () => {
+    const triggerRef = useRef(null);
     const sectionRef = useRef(null);
-    const containerRef = useRef(null);
 
     useGSAP(() => {
+        const trigger = triggerRef.current;
         const section = sectionRef.current;
-        const container = containerRef.current;
 
-        const pin = gsap.to(container, {
-            x: () => -(container.scrollWidth - window.innerWidth + container.offsetLeft), 
-            ease: "none",
-            scrollTrigger: {
-                trigger: section,
-                pin: true,
-                scrub: 1,
-                start: "top top",
-                end: () => `+=${container.scrollWidth}`, // Robust distance
-                invalidateOnRefresh: true,
-                anticipatePin: 1,
-            },
-            force3D: true,
-        });
+        if (!trigger || !section) return;
 
-        const skillCards = gsap.utils.toArray(".skill-card");
-        skillCards.forEach((card) => {
-            // Heading Reveal
-            const heading = card.querySelector(".skill-category-heading");
-            if (heading) {
-                const split = new SplitType(heading, { types: 'chars' });
+        const pin = gsap.fromTo(section, 
+            { x: 0 },
+            {
+                x: () => -(section.offsetWidth - window.innerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: trigger,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
+                    invalidateOnRefresh: true,
+                }
+            }
+        );
+
+        // Individual Animations for cards within the scroll
+        const cards = gsap.utils.toArray(".skill-card");
+        cards.forEach((card) => {
+            const h3 = card.querySelector("h3");
+            const items = card.querySelectorAll(".skill-item");
+
+            if (h3) {
+                const split = new SplitType(h3, { types: 'chars' });
                 gsap.from(split.chars, {
-                    y: 50,
+                    y: 20,
                     opacity: 0,
                     stagger: 0.02,
-                    duration: 1,
-                    ease: "power4.out",
+                    duration: 0.8,
+                    ease: "power2.out",
                     scrollTrigger: {
                         trigger: card,
-                        start: "top-=[10vh] top",
-                        end: () => `+=${containerRef.current.offsetWidth}`,
-                        pin: true,
-                        scrub: 1,
-                        anticipatePin: 1,
-                        invalidateOnRefresh: true,
+                        containerAnimation: pin,
+                        start: "left 80%",
+                        toggleActions: "play none none reset",
                     }
                 });
             }
 
-            // Items Reveal
-            gsap.from(card.querySelectorAll(".skill-item"), {
-                y: 30,
-                opacity: 0,
-                stagger: 0.1,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: card,
-                    start: "left 90%",
-                    containerAnimation: pin,
-                    toggleActions: "play none none reset"
-                }
-            });
+            if (items.length > 0) {
+                gsap.from(items, {
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.05,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        containerAnimation: pin,
+                        start: "left 80%",
+                        toggleActions: "play none none reset",
+                    }
+                });
+            }
         });
 
-        return () => pin.kill();
-    }, { scope: sectionRef });
+    }, { scope: triggerRef });
 
-  return (
-    <section ref={sectionRef} className="overflow-hidden bg-[#0a0a0a]" id="skills">
-      <div className="flex items-center h-screen">
-        <div className="flex items-center px-[10vw]">
-          <div className="mr-20 md:mr-40 lg:mr-60 flex-shrink-0">
-            <h2 className="text-[clamp(5rem,15vw,20rem)] font-bold tracking-wide leading-none text-white/5 uppercase select-none cursor-default will-change-transform">
-                Skills
-            </h2>
-          </div>
-          
-          <div ref={containerRef} className="flex min-w-max gap-[15vw] pr-[30vw] md:pr-[40vw]"> 
-            {skillsData.map((skill, index) => (
-              <div 
-                key={skill.category} 
-                className="skill-card relative flex flex-col justify-start pt-[15vh] min-w-[70vw] md:min-w-[500px] flex-shrink-0 group will-change-transform"
-              >
-                <div className="flex flex-col items-start gap-4 mb-12 will-change-transform">
-                    <span className="text-xl md:text-2xl font-mono text-purple-400/60 uppercase tracking-widest">
-                        {`0${index + 1}`}
-                    </span>
-                    <h3 className="skill-category-heading text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tight leading-[1.1] whitespace-nowrap overflow-hidden py-4 will-change-transform">
-                        {skill.category}
-                    </h3>
+    return (
+        <section ref={triggerRef} className="relative h-[300vh] bg-[#0a0a0a]" id="skills">
+            <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+                <div ref={sectionRef} className="flex h-full items-center px-[10vw] min-w-max">
+                    {/* Header */}
+                    <div className="mr-24 md:mr-48 lg:mr-72 flex-shrink-0">
+                        <h2 className="text-[clamp(5rem,15vw,20rem)] font-black tracking-widest leading-none text-white/5 uppercase select-none">
+                            Skills
+                        </h2>
+                    </div>
+
+                    {/* Cards */}
+                    <div className="flex gap-[15vw] pr-[20vw] items-center h-full"> 
+                        {skillsData.map((skill, index) => (
+                            <div 
+                                key={skill.category} 
+                                className="skill-card flex flex-col justify-center min-w-[70vw] md:min-w-[600px] h-full"
+                            >
+                                <div className="mb-12">
+                                    <span className="text-xl md:text-2xl font-mono text-purple-500/50 uppercase tracking-widest">
+                                        {`0${index + 1}`}
+                                    </span>
+                                    <h3 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-4 overflow-hidden">
+                                        {skill.category}
+                                    </h3>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-10 max-w-2xl">
+                                    {skill.items.map((item) => (
+                                        <div key={item.name} className="skill-item flex items-center gap-6 group/item">
+                                            <div className="w-12 h-12 md:w-16 md:h-16 bg-white/[0.03] border border-white/5 rounded-3xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-2">
+                                                <img src={item.img} alt={item.name} className="h-7 w-7 md:h-9 md:w-9 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
+                                            </div>
+                                            <span className="text-base md:text-xl font-light text-white/30 group-hover/item:text-white transition-colors duration-300">
+                                                {item.name}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-
-                <div className="flex flex-wrap gap-x-4 gap-y-6 md:gap-x-6 md:gap-y-8 max-w-2xl">
-                    {skill.items.map((item) => (
-                      <div key={item.name} className="skill-item flex items-center gap-4 group/item">
-                        <div className="w-10 h-10 md:w-14 md:h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
-                            <img src={item.img} alt={item.name} className="h-6 w-6 md:h-8 md:w-8 object-contain opacity-60 md:opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
-                        </div>
-                        <span className="text-sm md:text-lg font-light text-white/40 group-hover/item:text-white transition-colors duration-300">
-                            {item.name}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/[0.03] rounded-full blur-[100px] pointer-events-none" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+            </div>
+        </section>
+    );
 };
 
 export default Skills;
