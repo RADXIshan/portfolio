@@ -248,8 +248,8 @@ const Navbar = ({ activeSection, isLoading }) => {
         </div>
 
         {/* Bottom Bar: Socials & Info */}
-        <div className="flex flex-row justify-between items-end w-full px-2 md:px-0">
-          <div className="text-white/40 text-[10px] sm:text-xs md:text-base font-mono pb-1 md:pb-0">
+        <div className="flex flex-row justify-between items-end w-full">
+          <div className="text-white/40 text-[10px] sm:text-xs md:text-sm font-mono pb-1 md:pb-0">
             <p>BASED IN INDIA</p>
             <p>AVAILABLE FOR WORK</p>
           </div>
