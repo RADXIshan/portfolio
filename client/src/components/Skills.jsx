@@ -268,11 +268,11 @@ const Skills = () => {
                                 }`}>
                                     {skill.items.map((item) => (
                                         <div key={item.name} className="skill-item flex items-center gap-3 md:gap-6 group/item">
-                                            <div className="w-8 h-8 md:w-14 md:h-14 bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 p-1.5 md:p-3">
+                                            <div className={`${item.name === "BeautifulSoup" ? "flex-none w-10 h-10 md:w-16 md:h-16 p-1.5 md:p-2.5" : "w-8 h-8 md:w-14 md:h-14 p-1.5 md:p-3"} bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 overflow-hidden`}>
                                                 <img 
                                                     src={item.img} 
                                                     alt={item.name} 
-                                                    className={`h-full w-full object-contain opacity-80 group-hover/item:opacity-100 transition-opacity ${item.name === "BeautifulSoup" ? "scale-90" : "scale-100"}`} 
+                                                    className={`object-contain opacity-80 group-hover/item:opacity-100 transition-opacity ${item.name === "BeautifulSoup" ? "h-full w-full scale-90 rounded-lg" : "h-full w-full"}`} 
                                                 /> 
                                             </div>
                                             <span className="text-sm md:text-xl font-light text-white/60 group-hover/item:text-white transition-colors duration-300">
@@ -292,8 +292,8 @@ const Skills = () => {
                         className="absolute bottom-6 md:bottom-12 left-[40vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
                     >
                     <div className="flex flex-col">
-                        <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Scroll</span>
-                        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Horizontal</span>
+                        <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Keep</span>
+                        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Scrolling</span>
                     </div>
                     <div className="relative w-32 md:w-48 h-[1px] bg-white/10 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]"></div>
