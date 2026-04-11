@@ -218,7 +218,7 @@ const Projects = () => {
                                     <h3 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white group-hover:text-purple-400 transition-colors duration-500 leading-tight tracking-tighter">
                                         {project.name}
                                     </h3>
-                                    <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-lg font-light">
+                                    <p className="text-lg md:text-xl text-white/70 leading-relaxed max-w-lg font-light">
                                         {project.description}
                                     </p>
                                     <div className="flex flex-wrap gap-3 mt-4">
