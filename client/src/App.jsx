@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import Home from './pages/Home';
 import Preloader from './components/Preloader';
+import Navbar from './components/Navbar';
 import { useState } from 'react';
 
 
@@ -12,6 +13,7 @@ const App = () => {
   const cursorDotRef = useRef(null);
   const cursorOutlineRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState("home");
 
 
   useEffect(() => {
@@ -132,16 +134,18 @@ const App = () => {
 
   return (
     <>
+      <Navbar activeSection={activeSection} isLoading={isLoading} />
+      
       {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       
       <div ref={cursorDotRef} className="cursor-dot hidden md:flex items-center justify-center"></div>
       <div ref={cursorOutlineRef} className="cursor-outline hidden md:block"></div>
 
       <div 
-        className="app-content z-10"
+        className="app-content"
       >
         <Routes location={location} key={location.pathname}>
-          <Route index element={<Home isLoading={isLoading} />} />
+          <Route index element={<Home isLoading={isLoading} setActiveSection={setActiveSection} />} />
         </Routes>
       </div>
     </>

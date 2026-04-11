@@ -1,5 +1,4 @@
 import { Toaster } from "react-hot-toast";
-import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Skills from '../components/Skills';
@@ -13,10 +12,9 @@ import { useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Home = ({ isLoading }) => {
+const Home = ({ isLoading, setActiveSection }) => {
 
   const mainRef = useRef(null);
-  const [activeSection, setActiveSection] = useState("home");
 
   useGSAP(() => {
     const sections = [
@@ -46,7 +44,6 @@ const Home = ({ isLoading }) => {
 
   return (
     <main ref={mainRef}>
-      <Navbar activeSection={activeSection} isLoading={isLoading} />
       <Hero isLoading={isLoading} />
 
       <About />
