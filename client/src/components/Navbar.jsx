@@ -134,6 +134,17 @@ const Navbar = ({ activeSection, isLoading }) => {
 
   useLayoutEffect(() => {
     isMenuOpenRef.current = isMenuOpen;
+    
+    // Disable scrolling when menu is open
+    if (isMenuOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
   }, [isMenuOpen]);
 
   const toggleMenu = () => {
@@ -237,13 +248,13 @@ const Navbar = ({ activeSection, isLoading }) => {
         </div>
 
         {/* Bottom Bar: Socials & Info */}
-        <div className="flex flex-col md:flex-row justify-between items-end w-full gap-8">
-          <div className="text-white/40 text-sm md:text-base font-mono hidden md:block pl-10">
+        <div className="flex flex-row justify-between items-end w-full px-2 md:px-0">
+          <div className="text-white/40 text-[10px] sm:text-xs md:text-base font-mono pb-1 md:pb-0">
             <p>BASED IN INDIA</p>
             <p>AVAILABLE FOR WORK</p>
           </div>
 
-          <div ref={socialLinksRef} className="flex gap-6">
+          <div ref={socialLinksRef} className="flex gap-4 md:gap-6">
             {socialLinks.map((link, index) => (
               <a
                 key={index}
