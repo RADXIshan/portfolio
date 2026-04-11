@@ -268,10 +268,10 @@ const Skills = () => {
                                 }`}>
                                     {skill.items.map((item) => (
                                         <div key={item.name} className="skill-item flex items-center gap-3 md:gap-6 group/item">
-                                            <div className="w-8 h-8 md:w-14 md:h-14 bg-white/[0.03] border border-white/5 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
-                                                <img src={item.img} alt={item.name} className="h-4 w-4 md:h-7 md:w-7 object-contain opacity-40 group-hover/item:opacity-100 transition-opacity" /> 
+                                            <div className="w-8 h-8 md:w-14 md:h-14 bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1">
+                                                <img src={item.img} alt={item.name} className="h-4 w-4 md:h-7 md:w-7 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" /> 
                                             </div>
-                                            <span className="text-sm md:text-xl font-light text-white/30 group-hover/item:text-white transition-colors duration-300">
+                                            <span className="text-sm md:text-xl font-light text-white/60 group-hover/item:text-white transition-colors duration-300">
                                                 {item.name}
                                             </span>
                                         </div>

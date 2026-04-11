@@ -138,12 +138,15 @@ const Navbar = ({ activeSection, isLoading }) => {
     // Disable scrolling when menu is open
     if (isMenuOpen) {
       document.body.classList.add('no-scroll');
+      window.lenis?.stop();
     } else {
       document.body.classList.remove('no-scroll');
+      window.lenis?.start();
     }
 
     return () => {
       document.body.classList.remove('no-scroll');
+      window.lenis?.start();
     };
   }, [isMenuOpen]);
 
