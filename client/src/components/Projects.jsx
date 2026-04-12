@@ -23,7 +23,8 @@ const Projects = () => {
             description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition and context-aware support to navigate social interactions confidently.",
             image: mindtrace,
             githublink: "https://github.com/RADXIshan/mindtrace",
-            technologies: ["FastAPI", "OpenCV", "PyTorch", "Gemini 2.5"]
+            technologies: ["FastAPI", "OpenCV", "PyTorch", "Gemini 2.5"],
+            imageStyle: "object-contain scale-90"
         },
         {
             id: 2,
@@ -32,7 +33,8 @@ const Projects = () => {
             image: ainews,
             githublink: "https://github.com/RADXIshan/AI-News-Aggregator",
             liveLink: "https://ai-news-aggregator-digest.vercel.app",
-            technologies: ["Python", "BS4", "Gemini API", "PostgreSQL"]
+            technologies: ["Python", "BS4", "Gemini API", "PostgreSQL"],
+            imageStyle: "object-contain scale-90"
         },
         {
             id: 3,
@@ -41,7 +43,8 @@ const Projects = () => {
             image: syncspace,
             githublink: "https://github.com/RADXIshan/SyncSpace",
             liveLink: "https://syncspace-client.vercel.app",
-            technologies: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL"]
+            technologies: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL"],
+            imageStyle: "object-contain scale-90"
         }
     ];
 
@@ -272,7 +275,7 @@ const Projects = () => {
                                             <img 
                                                 src={project.image} 
                                                 alt={project.name} 
-                                                className="w-full h-full object-cover" 
+                                                className={`w-full h-full ${project.imageStyle || "object-cover"}`} 
                                             />
                                         </div>
 
@@ -319,7 +322,7 @@ const Projects = () => {
                                 <img 
                                     src={project.image} 
                                     alt={project.name} 
-                                    className="w-full h-full object-cover"
+                                    className={`w-full h-full ${project.imageStyle || "object-cover"}`}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             </div>
