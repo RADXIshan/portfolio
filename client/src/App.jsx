@@ -30,6 +30,10 @@ const App = () => {
 
     window.lenis = lenis;
 
+    if (isLoading) {
+      lenis.stop();
+    }
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -60,9 +64,8 @@ const App = () => {
   useEffect(() => {
     if (isLoading) {
       document.body.classList.add('no-scroll');
+      window.lenis?.stop();
     } else {
-      document.body.classList.remove('no-scroll');
-      
       // Entrance animation for content
       gsap.fromTo(".app-content", 
         { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
@@ -73,13 +76,18 @@ const App = () => {
           duration: 1.5, 
           ease: 'power3.out',
           onComplete: () => {
+            document.body.classList.remove('no-scroll');
+            window.lenis?.start();
             gsap.set(".app-content", { clearProps: "filter,scale" });
           }
         }
       );
     }
     
-    return () => document.body.classList.remove('no-scroll');
+    return () => {
+      document.body.classList.remove('no-scroll');
+      window.lenis?.start();
+    };
   }, [isLoading]);
 
   useEffect(() => {
