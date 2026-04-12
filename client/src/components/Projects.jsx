@@ -23,8 +23,7 @@ const Projects = () => {
             description: "An AI memory assistant for Ray-Ban Meta smart glasses and similar wearables, providing real-time face recognition and context-aware support to navigate social interactions confidently.",
             image: mindtrace,
             githublink: "https://github.com/RADXIshan/mindtrace",
-            technologies: ["FastAPI", "OpenCV", "PyTorch", "Gemini 2.5"],
-            imageStyle: "object-contain scale-90"
+            technologies: ["FastAPI", "OpenCV", "PyTorch", "Gemini 2.5"]
         },
         {
             id: 2,
@@ -33,8 +32,7 @@ const Projects = () => {
             image: ainews,
             githublink: "https://github.com/RADXIshan/AI-News-Aggregator",
             liveLink: "https://ai-news-aggregator-digest.vercel.app",
-            technologies: ["Python", "BS4", "Gemini API", "PostgreSQL"],
-            imageStyle: "object-contain scale-90"
+            technologies: ["Python", "BS4", "Gemini API", "PostgreSQL"]
         },
         {
             id: 3,
@@ -43,8 +41,7 @@ const Projects = () => {
             image: syncspace,
             githublink: "https://github.com/RADXIshan/SyncSpace",
             liveLink: "https://syncspace-client.vercel.app",
-            technologies: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL"],
-            imageStyle: "object-contain scale-90"
+            technologies: ["Node.js", "Socket.io", "WebRTC", "PostgreSQL"]
         }
     ];
 
@@ -271,12 +268,14 @@ const Projects = () => {
                                             {project.name}
                                         </h3>
 
-                                        <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/5">
-                                            <img 
-                                                src={project.image} 
-                                                alt={project.name} 
-                                                className={`w-full h-full ${project.imageStyle || "object-cover"}`} 
-                                            />
+                                        <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-6 border border-white/10 p-4 bg-white/5">
+                                            <div className="w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-black">
+                                                <img 
+                                                    src={project.image} 
+                                                    alt={project.name} 
+                                                    className="w-full h-full object-contain" 
+                                                />
+                                            </div>
                                         </div>
 
                                         <p className="text-sm text-white/50 line-clamp-3 mb-6 font-light">
@@ -312,19 +311,19 @@ const Projects = () => {
 
                 {/* Desktop Right Side: Sticky Images (Desktop Only) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen sticky top-0 items-center justify-center p-24 pl-12 pr-24 pointer-events-none">
-                    <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black">
+                    <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black p-10">
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
-                                className="sticky-image-item absolute inset-0 w-full h-full will-change-transform"
+                                className="sticky-image-item absolute inset-[40px] will-change-transform rounded-[2.5rem] border border-white/10 overflow-hidden bg-[#111]"
                                 style={{ zIndex: 10 + index }}
                             >
                                 <img 
                                     src={project.image} 
                                     alt={project.name} 
-                                    className={`w-full h-full ${project.imageStyle || "object-cover"}`}
+                                    className="w-full h-full object-contain p-2"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                             </div>
                         ))}
                     </div>
