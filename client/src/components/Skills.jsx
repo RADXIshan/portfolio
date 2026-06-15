@@ -182,7 +182,7 @@ const Skills = () => {
             trigger: trigger,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1,
+            scrub: isMobile ? true : 1, // instant on mobile (no lag), smoothed on desktop
             invalidateOnRefresh: true,
           },
         }

@@ -23,13 +23,28 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    // On mobile, skip Lenis entirely — native scroll is smoother and Lenis
+    // RAF loop adds CPU overhead that causes jank on low-end phones.
+    const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    if (isMobileDevice) {
+      // Use native scroll; provide a no-op lenis stub so other code doesn't break
+      window.lenis = {
+        stop: () => {},
+        start: () => {},
+        destroy: () => {},
+        scrollTo: (target) => {
+          if (target && target.scrollIntoView) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        },
+      };
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
       smoothTouch: false,
       touchMultiplier: 2,
     });
@@ -39,12 +54,10 @@ const App = () => {
     // Always stop lenis initially — preloader is always shown first
     lenis.stop();
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
+    // Use gsap ticker for RAF — avoids double RAF loops and syncs with GSAP
+    const onTick = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(onTick);
+    gsap.ticker.lagSmoothing(0);
 
     // Smooth scroll for anchor links
     const handleAnchorClick = (e) => {
@@ -61,6 +74,7 @@ const App = () => {
     document.addEventListener('click', handleAnchorClick);
 
     return () => {
+      gsap.ticker.remove(onTick);
       lenis.destroy();
       document.removeEventListener('click', handleAnchorClick);
     };

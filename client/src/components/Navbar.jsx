@@ -127,7 +127,7 @@ const Navbar = ({ activeSection, isLoading }) => {
     <div ref={navbarScopeRef}>
       <div 
         ref={navRef} 
-        className="fixed top-0 left-0 w-full z-[10000] will-change-transform"
+        className="fixed top-0 left-0 w-full z-[10000]"
       >
         <nav
           ref={navContainerRef}

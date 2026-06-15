@@ -170,14 +170,14 @@ const Hero = ({ isLoading }) => {
       ref={heroRef}
       className="flex flex-col items-center justify-center min-h-[100svh] gap-6 px-4 sm:px-8 py-4 text-center overflow-hidden relative"
     >
-      {/* Background Glow — cheaper blur on mobile */}
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,70vw,600px)] h-[clamp(200px,70vw,600px)] bg-blue-500/5 rounded-full blur-[80px] md:blur-[140px] pointer-events-none transform-gpu" />
-      <div className="bg-glow hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none transform-gpu" />
+      {/* Background Glow — no blur on mobile (GPU killer), subtle gradient only */}
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,70vw,600px)] h-[clamp(200px,70vw,600px)] rounded-full pointer-events-none md:blur-[140px] md:bg-blue-500/5" />
+      <div className="bg-glow hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Title — no overflow-hidden wrapper needed (no char-split animation) */}
       <h1
         ref={textRef}
-        className="hero-title text-[clamp(3rem,12vw,15rem)] font-bold tracking-tighter leading-[1.15] z-10 whitespace-nowrap will-change-transform"
+        className="hero-title text-[clamp(3rem,12vw,15rem)] font-bold tracking-tighter leading-[1.15] z-10 whitespace-nowrap"
       >
         Ishan Roy
       </h1>

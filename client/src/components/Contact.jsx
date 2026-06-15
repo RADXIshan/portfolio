@@ -77,8 +77,7 @@ const Contact = () => {
     const initAnimations = () => {
       if (isCleanedUp) return;
 
-      // Optimized SplitType with cleanup
-      splitTitle = new SplitType(".contact-title", { types: "words" });
+      const isMobile = window.innerWidth < 768;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -88,20 +87,29 @@ const Contact = () => {
         }
       });
 
-      // Title Reveal (Faster)
-      tl.fromTo(splitTitle.words, {
-        y: 20,
-        opacity: 0,
-        rotateX: -30,
-      }, {
-        y: 0,
-        opacity: 1,
-        rotateX: 0,
-        stagger: 0.03,
-        duration: 0.5,
-        ease: "power3.out",
-        force3D: true,
-      }, 0);
+      if (!isMobile) {
+        // Desktop: SplitType word reveal
+        splitTitle = new SplitType(".contact-title", { types: "words" });
+        tl.fromTo(splitTitle.words, {
+          y: 20,
+          opacity: 0,
+          rotateX: -30,
+        }, {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          stagger: 0.03,
+          duration: 0.5,
+          ease: "power3.out",
+          force3D: true,
+        }, 0);
+      } else {
+        // Mobile: simple title fade
+        tl.fromTo(".contact-title", { opacity: 0, y: 15 }, {
+          opacity: 1, y: 0, duration: 0.5, ease: "power2.out", force3D: true,
+          onComplete: () => gsap.set(".contact-title", { clearProps: "all" }),
+        }, 0);
+      }
 
       // Subtitle Reveal (Faster)
       tl.fromTo(".contact-subtitle", {
@@ -211,7 +219,7 @@ const Contact = () => {
       <div className="flex flex-col lg:flex-row items-stretch justify-center gap-8 lg:gap-12 w-full max-w-7xl relative z-10">
         
         {/* Left Card: "Get in Touch" */}
-        <div className="contact-card w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm transition-all duration-500 hover:bg-white/10 group/card will-change-transform">
+        <div className="contact-card w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-10 rounded-[2rem] bg-white/5 border border-white/10 transition-all duration-500 hover:bg-white/10 group/card">
           <div>
             <h2 className="contact-title text-5xl sm:text-7xl font-bold mb-6 tracking-tighter">Let's Talk</h2>
             <p className="contact-subtitle text-xl text-white/60 font-light max-w-md leading-relaxed">
@@ -233,7 +241,7 @@ const Contact = () => {
         </div>
         
         {/* Right Card: Form */}
-        <div className={`contact-card w-full lg:w-1/2 p-6 sm:p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm transition-all duration-500 will-change-transform ${loading ? "border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)]" : "hover:bg-white/10"}`}>
+        <div className={`contact-card w-full lg:w-1/2 p-6 sm:p-10 rounded-[2rem] bg-white/5 border border-white/10 transition-all duration-500 ${loading ? "border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)]" : "hover:bg-white/10"}`}>
           <form onSubmit={handleSubmit} className={`flex flex-col gap-8 h-full justify-center transition-opacity duration-300 ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
             <div className="form-group group">
               <label htmlFor="name" className="block text-sm font-medium text-white/40 mb-2 uppercase tracking-widest group-focus-within:text-white transition-colors">Name</label>

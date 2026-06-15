@@ -170,46 +170,28 @@ const Projects = () => {
                 });
             });
 
-            // 3. MOBILE ANIMATIONS (below lg)
+            // 3. MOBILE ANIMATIONS (below lg) — NO scrub (causes touch jank)
             mm.add("(max-width: 1023px)", () => {
                 const cards = gsap.utils.toArray(".mobile-project-card-wrapper");
                 
-                cards.forEach((card, i) => {
-                    const isLast = i === cards.length - 1;
-                    if (isLast) return;
-
-                    // High-fidelity stacking animation for mobile
-                    gsap.to(card.querySelector(".project-card-inner"), {
-                        scale: 0.85,
-                        opacity: 0.2,
-                        yPercent: -15,
-                        transformOrigin: "top center",
-                        ease: "none",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: cards[i + 1],
-                            start: "top center",
-                            end: "top top",
-                            scrub: true,
-                        }
-                    });
-                });
-
-                // Content Reveal for mobile
+                // Simple fade+slide reveal only — toggleActions so no scrub overhead
                 cards.forEach((card) => {
-                    const content = card.querySelector(".project-content");
-                    gsap.from(content, {
-                        y: 30,
-                        opacity: 0,
-                        duration: 1,
-                        ease: "power3.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 85%",
-                            toggleActions: "play none none none"
+                    gsap.fromTo(card,
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.6,
+                            ease: "power2.out",
+                            force3D: true,
+                            onComplete: () => gsap.set(card, { clearProps: "all" }),
+                            scrollTrigger: {
+                                trigger: card,
+                                start: "top 90%",
+                                toggleActions: "play none none none",
+                            },
                         }
-                    });
+                    );
                 });
             });
 
@@ -304,14 +286,14 @@ const Projects = () => {
                     </div>
 
                     {/* Mobile View (Hidden on PC) */}
-                    <div className="lg:hidden flex flex-col px-4 py-12 gap-[10vh]">
+                    <div className="lg:hidden flex flex-col px-4 py-12 gap-6">
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
-                                className="mobile-project-card-wrapper sticky top-24 h-[75vh]"
+                                className="mobile-project-card-wrapper"
                             >
-                                <div className="project-card-inner h-full w-full bg-[#111] border border-white/5 rounded-[2.5rem] p-8 flex flex-col shadow-2xl overflow-hidden relative">
-                                    <div className="project-content flex flex-col h-full">
+                                <div className="project-card-inner w-full bg-[#111] border border-white/5 rounded-[2.5rem] p-8 flex flex-col shadow-2xl overflow-hidden relative">
+                                    <div className="project-content flex flex-col">
                                         <div className="flex items-center gap-3 mb-6">
                                             <span className="text-xl font-mono text-purple-500 uppercase tracking-widest font-black">
                                                 {`0${index + 1}`}
@@ -336,7 +318,7 @@ const Projects = () => {
                                             {project.description}
                                         </p>
 
-                                        <div className="mt-auto flex justify-between items-center">
+                                        <div className="mt-4 flex justify-between items-center">
                                             <div className="flex gap-4">
                                                 <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="p-3 bg-white/10 rounded-full text-white/80 hover:text-white transition-all">
                                                     <Github size={20} />

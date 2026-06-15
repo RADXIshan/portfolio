@@ -58,21 +58,42 @@ const About = () => {
 
       // Text Split Animation
       if (paragraphRef.current) {
+        if (window.innerWidth >= 768) {
+          // Desktop only: SplitType line reveal
           split = new SplitType(paragraphRef.current, { types: 'lines' });
-          
           gsap.from(split.lines, {
-              y: 30,
-              opacity: 0,
-              stagger: 0.1,
-              duration: 1,
-              ease: "power3.out",
-              force3D: true,
-              scrollTrigger: {
-                  trigger: paragraphRef.current,
-                  start: "top 80%",
-                  toggleActions: "play none none none"
-              }
+            y: 30,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 1,
+            ease: "power3.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: paragraphRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none"
+            }
           });
+        } else {
+          // Mobile: simple whole-element fade — no SplitType layout thrash
+          gsap.fromTo(
+            paragraphRef.current,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              force3D: true,
+              onComplete: () => gsap.set(paragraphRef.current, { clearProps: "all" }),
+              scrollTrigger: {
+                trigger: paragraphRef.current,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        }
       }
 
       gsap.from(".about-header", {
