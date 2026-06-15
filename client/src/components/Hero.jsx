@@ -167,6 +167,12 @@ const Hero = ({ isLoading }) => {
             duration: isDesktop ? 1 : 0.6,
             ease: isDesktop ? "elastic.out(1, 0.75)" : "power2.out",
             force3D: true,
+            onComplete: () => {
+              // Release GSAP's ownership of these props so they stay
+              // visible even if mm.revert() or ScrollTrigger.refresh()
+              // is called later (e.g. when scrolling back to the top).
+              gsap.set(".social-link-item", { clearProps: "all" });
+            },
           }, "-=0.6"
         );
 
