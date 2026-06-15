@@ -101,7 +101,7 @@ const Hero = ({ isLoading }) => {
 
         // ── Desktop only: glow pulse + magnetic social effect ────────────────
         if (isDesktop) {
-          gsap.set(".bg-glow", { xPercent: -50, yPercent: -50, scale: 1 });
+          // Glow pulse — desktop only, mobile gets a static glow to avoid GPU load
           glowTween = gsap.to(".bg-glow", {
             scale: 1.2, duration: 4, repeat: -1,
             yoyo: true, ease: "sine.inOut", force3D: true,
@@ -128,9 +128,7 @@ const Hero = ({ isLoading }) => {
               activeListeners.push({ item, onEnter, onMove, onLeave });
             });
           }
-        } else {
-          gsap.set(".bg-glow", { xPercent: -50, yPercent: -50, scale: 1 });
-        }
+        } // end isDesktop
 
         // ── matchMedia cleanup ────────────────────────────────────────────────
         return () => {
@@ -172,9 +170,9 @@ const Hero = ({ isLoading }) => {
       ref={heroRef}
       className="flex flex-col items-center justify-center min-h-[100svh] gap-6 px-4 sm:px-8 py-4 text-center overflow-hidden relative"
     >
-      {/* Background Glow */}
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform transform-gpu" />
-      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700 will-change-transform transform-gpu" />
+      {/* Background Glow — cheaper blur on mobile */}
+      <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,70vw,600px)] h-[clamp(200px,70vw,600px)] bg-blue-500/5 rounded-full blur-[80px] md:blur-[140px] pointer-events-none transform-gpu" />
+      <div className="bg-glow hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none transform-gpu" />
 
       {/* Title — no overflow-hidden wrapper needed (no char-split animation) */}
       <h1

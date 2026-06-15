@@ -94,19 +94,17 @@ const App = () => {
           { opacity: 0 },
           {
             opacity: 1,
-            duration: 0.8,
+            duration: 0.6,
             ease: 'power2.out',
             onComplete: onRevealComplete,
           }
         );
       } else {
         gsap.fromTo(".app-content",
-          { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
+          { opacity: 0 },
           {
             opacity: 1,
-            scale: 1,
-            filter: 'none',
-            duration: 1.5,
+            duration: 1.0,
             ease: 'power3.out',
             onComplete: onRevealComplete,
           }

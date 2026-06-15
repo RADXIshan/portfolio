@@ -30,7 +30,6 @@ const Footer = () => {
       const isMobile = window.innerWidth < 768;
 
       if (isMobile) {
-        // Mobile: Animate the headline as a single block for better performance
         gsap.fromTo(".footer-headline", {
           y: 40,
           opacity: 0,
@@ -40,6 +39,7 @@ const Footer = () => {
           duration: 1.0,
           ease: "power3.out",
           force3D: true,
+          onComplete: () => gsap.set(".footer-headline", { clearProps: "all" }),
           scrollTrigger: {
             trigger: ".footer-headline",
             start: "top 95%",
@@ -47,7 +47,6 @@ const Footer = () => {
           },
         });
       } else {
-        // Desktop: Character splitting animation
         splitText = new SplitType(".footer-headline", { types: "chars,words" });
         
         gsap.fromTo(splitText.chars, {
@@ -62,8 +61,9 @@ const Footer = () => {
           duration: 1.5,
           ease: "power4.out",
           force3D: true,
+          onComplete: () => gsap.set(splitText.chars, { clearProps: "all" }),
           scrollTrigger: {
-            trigger: ".footer-headline",
+            trigger: ".footer-headline-wrap",
             start: "top 95%",
             toggleActions: "play none none none",
           },
@@ -128,10 +128,13 @@ const Footer = () => {
     <footer ref={footerRef} className="relative z-50 bg-[#0a0a0a] text-white py-20 px-8 border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center text-center mb-20">
-            <h2 className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
-                LET'S BUILD <br />
-                <span className="text-white/20 italic font-light">TOGETHER.</span>
-            </h2>
+            {/* overflow-hidden clips the chars as they animate up from y:100 */}
+            <div className="footer-headline-wrap overflow-hidden pb-2">
+              <h2 className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
+                  LET'S BUILD <br />
+                  <span className="text-white/20 italic font-light">TOGETHER.</span>
+              </h2>
+            </div>
             <a href="mailto:ishanroy3118107@gmail.com" className="footer-email text-xl md:text-2xl font-mono hover:text-purple-400 transition-colors duration-300 inline-block">
                 ishanroy3118107@gmail.com
             </a>

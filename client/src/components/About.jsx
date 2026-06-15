@@ -32,26 +32,29 @@ const About = () => {
           duration: 1.8, 
           ease: "power4.inOut",
           force3D: true,
+          onComplete: () => gsap.set(imageWrapperRef.current, { clearProps: "will-change" }),
           scrollTrigger: {
               trigger: aboutRef.current,
-              start: "top 60%",
+              start: window.innerWidth < 768 ? "top 85%" : "top 60%",
               toggleActions: "play none none none"
           }
         }
       );
 
-      // Parallax effect on scroll for inner image
-      gsap.to(imageRef.current, {
-          yPercent: 15,
-          ease: "none",
-          force3D: true,
-          scrollTrigger: {
-              trigger: aboutRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true
-          }
-      });
+      // Parallax effect on scroll — desktop only (scrub on mobile causes jank)
+      if (window.innerWidth >= 768) {
+        gsap.to(imageRef.current, {
+            yPercent: 15,
+            ease: "none",
+            force3D: true,
+            scrollTrigger: {
+                trigger: aboutRef.current,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+      }
 
       // Text Split Animation
       if (paragraphRef.current) {
@@ -112,7 +115,7 @@ const About = () => {
     >
       {/* Image Section */}
       <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
-        <div ref={imageWrapperRef} className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group will-change-[clip-path,transform] transform-gpu">
+        <div ref={imageWrapperRef} className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group transform-gpu">
            <div className="w-full h-full relative overflow-hidden">
              {/* Easter Egg Code */}
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-8 overflow-hidden underline-offset-4">
