@@ -2,11 +2,13 @@ import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
 import Lenis from 'lenis';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Home from './pages/Home';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import { useState } from 'react';
 
+gsap.registerPlugin(ScrollTrigger);
 
 const App = () => {
   const location = useLocation();
@@ -15,6 +17,10 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
 
+  // Immediately hide app-content to prevent flash before preloader takes over
+  useEffect(() => {
+    gsap.set(".app-content", { opacity: 0 });
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -30,9 +36,8 @@ const App = () => {
 
     window.lenis = lenis;
 
-    if (isLoading) {
-      lenis.stop();
-    }
+    // Always stop lenis initially — preloader is always shown first
+    lenis.stop();
 
     function raf(time) {
       lenis.raf(time);
@@ -66,29 +71,48 @@ const App = () => {
       document.body.classList.add('no-scroll');
       window.lenis?.stop();
     } else {
+      // Remove scroll lock first so lenis can work
+      document.body.classList.remove('no-scroll');
+
       const isMobile = window.innerWidth < 768;
-      // Entrance animation for content
-      gsap.fromTo(".app-content", 
-        { 
-          opacity: 0, 
-          scale: isMobile ? 1 : 1.05, 
-          filter: isMobile ? 'none' : 'blur(20px)' 
-        },
-        { 
-          opacity: 1, 
-          scale: 1, 
-          filter: 'none', 
-          duration: isMobile ? 1.0 : 1.5, 
-          ease: 'power3.out',
-          onComplete: () => {
-            document.body.classList.remove('no-scroll');
-            window.lenis?.start();
-            gsap.set(".app-content", { clearProps: "all" });
+
+      if (isMobile) {
+        // On mobile: simple fade-in only, no scale/blur (GPU-heavy and buggy)
+        gsap.fromTo(".app-content",
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            onComplete: () => {
+              gsap.set(".app-content", { clearProps: "opacity" });
+              window.lenis?.start();
+              // Recalculate all scroll triggers now layout is visible
+              ScrollTrigger.refresh();
+            }
           }
-        }
-      );
+        );
+      } else {
+        // Desktop: full entrance animation
+        gsap.fromTo(".app-content",
+          { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
+          {
+            opacity: 1,
+            scale: 1,
+            filter: 'none',
+            duration: 1.5,
+            ease: 'power3.out',
+            onComplete: () => {
+              gsap.set(".app-content", { clearProps: "all" });
+              window.lenis?.start();
+              // Recalculate all scroll triggers now layout is visible
+              ScrollTrigger.refresh();
+            }
+          }
+        );
+      }
     }
-    
+
     return () => {
       document.body.classList.remove('no-scroll');
       window.lenis?.start();

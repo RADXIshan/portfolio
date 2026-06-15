@@ -19,8 +19,10 @@ const Preloader = ({ onComplete }) => {
         }
       });
 
+      const isMobile = window.innerWidth < 768;
+
       // 1. Initial State
-      gsap.set(panelsRef.current, { yPercent: 0, willChange: 'transform' });
+      gsap.set(panelsRef.current, { yPercent: 0 });
       gsap.set(logoRef.current, { opacity: 0, scale: 0.8, filter: 'invert(1)' });
       gsap.set([hundredRef.current, tensRef.current, onesRef.current], { y: 0 });
       gsap.set(hundredRef.current, { opacity: 0, width: 0 });
@@ -48,29 +50,38 @@ const Preloader = ({ onComplete }) => {
       
       .to(hundredRef.current, {
         opacity: 1,
-        width: window.innerWidth < 768 ? '2.4rem' : '4.2rem',
+        width: isMobile ? '2.4rem' : '4.2rem',
         duration: 0.4,
         ease: 'power2.out'
       }, "-=0.6")
       
-      // 4. Final Flash / Exit Start
-      .to(containerRef.current, {
-        opacity: 0,
-        scale: 0.9,
-        y: -40,
-        filter: 'blur(10px)',
-        duration: 0.8,
-        ease: 'power3.inOut',
-        delay: 0.2
-      })
+      // 4. Final Exit: simple fade+translate on mobile, blur on desktop
+      .to(containerRef.current, isMobile
+        ? {
+            opacity: 0,
+            y: -30,
+            duration: 0.6,
+            ease: 'power3.inOut',
+            delay: 0.2
+          }
+        : {
+            opacity: 0,
+            scale: 0.9,
+            y: -40,
+            filter: 'blur(10px)',
+            duration: 0.8,
+            ease: 'power3.inOut',
+            delay: 0.2
+          }
+      )
       
-      // 5. OPTIMIZED PANEL EXIT
+      // 5. PANEL EXIT — fewer stagger panels on mobile for perf
       .to(panelsRef.current, {
         yPercent: -100,
-        duration: 1.2,
+        duration: isMobile ? 0.8 : 1.2,
         stagger: {
-          amount: 0.4,
-          from: "random"
+          amount: isMobile ? 0.2 : 0.4,
+          from: isMobile ? "start" : "random"
         },
         ease: 'expo.inOut'
       }, "-=0.2");

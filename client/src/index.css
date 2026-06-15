@@ -113,9 +113,9 @@ body::before {
   overflow: hidden !important;
 }
 
-body.no-scroll .app-content {
-  opacity: 0;
-  pointer-events: none;
+/* app-content is hidden initially via GSAP in App.jsx - no CSS override needed */
+.app-content {
+  will-change: opacity;
 }
 
 .bg-glow {
