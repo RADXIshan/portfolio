@@ -70,27 +70,41 @@ const Hero = ({ isLoading }) => {
     });
 
     // Magnetic Effect for Social Links (Only if hover is supported)
+    const activeListeners = [];
     if (window.matchMedia("(hover: hover)").matches) {
         const socialItems = gsap.utils.toArray(".social-link-item");
         socialItems.forEach(item => {
             const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
             const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
 
-            item.addEventListener("mousemove", (e) => {
+            const handleMouseMove = (e) => {
                 const { clientX, clientY } = e;
                 const { left, top, width, height } = item.getBoundingClientRect();
                 const x = clientX - (left + width / 2);
                 const y = clientY - (top + height / 2);
                 xTo(x * 0.3);
                 yTo(y * 0.3);
-            });
+            };
 
-            item.addEventListener("mouseleave", () => {
+            const handleMouseLeave = () => {
                 xTo(0);
                 yTo(0);
-            });
+            };
+
+            item.addEventListener("mousemove", handleMouseMove);
+            item.addEventListener("mouseleave", handleMouseLeave);
+            activeListeners.push({ item, handleMouseMove, handleMouseLeave });
         });
     }
+
+    return () => {
+        if (splitTitle) splitTitle.revert();
+        if (subtitle) subtitle.revert();
+        activeListeners.forEach(({ item, handleMouseMove, handleMouseLeave }) => {
+            item.removeEventListener("mousemove", handleMouseMove);
+            item.removeEventListener("mouseleave", handleMouseLeave);
+        });
+    };
 
   }, { scope: heroRef, dependencies: [isLoading] });
 

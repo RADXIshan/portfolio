@@ -102,10 +102,13 @@ const Skills = () => {
 
         if (!trigger || !section) return;
 
+        const splits = [];
+
         // Intro Animation (Mirroring Projects.jsx)
         if (mainTitleRef.current) {
-            const split = new SplitType(mainTitleRef.current, { types: 'chars' });
-            gsap.from(split.chars, {
+            const splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
+            splits.push(splitIntro);
+            gsap.from(splitIntro.chars, {
                 y: 150,
                 rotateX: -90,
                 opacity: 0,
@@ -155,8 +158,9 @@ const Skills = () => {
             const items = card.querySelectorAll(".skill-item");
 
             if (h3) {
-                const split = new SplitType(h3, { types: 'chars' });
-                gsap.from(split.chars, {
+                const splitCard = new SplitType(h3, { types: 'chars' });
+                splits.push(splitCard);
+                gsap.from(splitCard.chars, {
                     y: 20,
                     opacity: 0,
                     stagger: 0.02,
@@ -214,6 +218,10 @@ const Skills = () => {
                 scrub: true,
             }
         });
+
+        return () => {
+            splits.forEach(s => s.revert());
+        };
 
     }, { scope: triggerRef });
 

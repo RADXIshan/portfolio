@@ -4,6 +4,7 @@ import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useMagnetic } from "../hooks/useMagnetic";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,40 +38,6 @@ const Navbar = ({ activeSection, isLoading }) => {
     { icon: Github, href: "https://github.com/RADXIshan", label: "GitHub" },
     { icon: Mail, href: "mailto:ishanroy3118107@gmail.com", label: "Email" },
   ];
-
-  // Magnetic Effect Helper
-  const useMagnetic = (ref) => {
-    useGSAP(() => {
-      if (!window.matchMedia("(hover: hover)").matches) return;
-      const element = ref.current;
-      if (!element) return;
-
-      const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-      const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
-
-      const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const { left, top, width, height } = element.getBoundingClientRect();
-        const x = clientX - (left + width / 2);
-        const y = clientY - (top + height / 2);
-        xTo(x * 0.3);
-        yTo(y * 0.3);
-      };
-
-      const handleMouseLeave = () => {
-        xTo(0);
-        yTo(0);
-      };
-
-      element.addEventListener("mousemove", handleMouseMove);
-      element.addEventListener("mouseleave", handleMouseLeave);
-
-      return () => {
-        element.removeEventListener("mousemove", handleMouseMove);
-        element.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    }, { scope: ref });
-  };
 
   useMagnetic(logoRef);
   useMagnetic(menuBtnRef);

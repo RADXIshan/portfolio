@@ -77,6 +77,10 @@ const Footer = () => {
     });
 
     ScrollTrigger.refresh();
+
+    return () => {
+      splitText.revert();
+    };
   }, { scope: footerRef });
 
   return (

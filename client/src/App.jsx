@@ -96,28 +96,27 @@ const App = () => {
 
     if (!cursorDot || !cursorOutline) return;
 
+    // Set centering properties to avoid inline override of translate(-50%, -50%)
+    gsap.set(cursorDot, { xPercent: -50, yPercent: -50 });
+    gsap.set(cursorOutline, { xPercent: -50, yPercent: -50 });
+
+    const xToDot = gsap.quickTo(cursorDot, "x", { duration: 0.08, ease: "power2.out" });
+    const yToDot = gsap.quickTo(cursorDot, "y", { duration: 0.08, ease: "power2.out" });
+    const xToOutline = gsap.quickTo(cursorOutline, "x", { duration: 0.35, ease: "power3.out" });
+    const yToOutline = gsap.quickTo(cursorOutline, "y", { duration: 0.35, ease: "power3.out" });
+
     const moveCursor = (e) => {
       const { clientX, clientY } = e;
       
-      gsap.to(cursorDot, {
-        x: clientX,
-        y: clientY,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-
-      gsap.to(cursorOutline, {
-        x: clientX,
-        y: clientY,
-        duration: 0.5,
-        ease: "power3.out"
-      });
+      xToDot(clientX);
+      yToDot(clientY);
+      xToOutline(clientX);
+      yToOutline(clientY);
 
       // Context Awareness
       const target = e.target;
       const isProject = target.closest('.project-card');
       const isClickable = target.closest('a, button, .cursor-pointer, input, textarea');
-      const isHero = target.closest('#home');
 
       if (isProject) {
         cursorDot.classList.add('project-active');

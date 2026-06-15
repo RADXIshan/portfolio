@@ -47,11 +47,12 @@ const Projects = () => {
 
     useGSAP(() => {
         const mm = gsap.matchMedia();
+        let splitIntro;
 
         // 1. Massive Intro Title Reveal
         if (mainTitleRef.current) {
-            const split = new SplitType(mainTitleRef.current, { types: 'chars' });
-            gsap.from(split.chars, {
+            splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
+            gsap.from(splitIntro.chars, {
                 y: 150,
                 rotateX: -90,
                 opacity: 0,
@@ -105,8 +106,8 @@ const Projects = () => {
 
                 gsap.to(images[i-1], {
                     yPercent: -20,
-                    opacity: 0.3,
-                    filter: "blur(15px)",
+                    opacity: 0.1,
+                    scale: 0.95,
                     ease: "none",
                     scrollTrigger: {
                         trigger: section,
@@ -145,7 +146,6 @@ const Projects = () => {
                 gsap.to(card.querySelector(".project-card-inner"), {
                     scale: 0.85,
                     opacity: 0.2,
-                    filter: "blur(10px)",
                     yPercent: -15,
                     transformOrigin: "top center",
                     ease: "none",
@@ -175,7 +175,10 @@ const Projects = () => {
             });
         });
 
-        return () => mm.revert();
+        return () => {
+            mm.revert();
+            if (splitIntro) splitIntro.revert();
+        };
     }, { scope: containerRef });
 
     return (

@@ -11,14 +11,15 @@ gsap.registerPlugin(ScrollTrigger);
 const About = () => {
   const aboutRef = useRef(null);
   const imageRef = useRef(null);
+  const imageWrapperRef = useRef(null);
   const textRef = useRef(null);
   const paragraphRef = useRef(null);
 
   useGSAP(() => {
-    // Image Reveal with Parallax
+    // Image Reveal on wrapper
     gsap.fromTo(
-      imageRef.current,
-      { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", scale: 1.4 },
+      imageWrapperRef.current,
+      { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", scale: 1.05 },
       { 
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
         scale: 1, 
@@ -33,9 +34,9 @@ const About = () => {
       }
     );
 
-    // Parallax effect on scroll
+    // Parallax effect on scroll for inner image
     gsap.to(imageRef.current, {
-        yPercent: 20,
+        yPercent: 15,
         ease: "none",
         force3D: true,
         scrollTrigger: {
@@ -86,7 +87,7 @@ const About = () => {
     >
       {/* Image Section */}
       <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
-        <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group">
+        <div ref={imageWrapperRef} className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group will-change-[clip-path,transform] transform-gpu">
            <div className="w-full h-full relative overflow-hidden">
              {/* Easter Egg Code */}
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-8 overflow-hidden underline-offset-4">

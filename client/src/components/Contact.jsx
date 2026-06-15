@@ -8,8 +8,26 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
+import { useMagnetic } from "../hooks/useMagnetic";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const MagneticSocialLink = ({ href, ariaLabel, children }) => {
+  const ref = useRef(null);
+  useMagnetic(ref);
+  return (
+    <a
+      ref={ref}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={ariaLabel}
+      className="social-link-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
+    >
+      {children}
+    </a>
+  );
+};
 
 const Contact = () => {
   const contactRef = useRef(null);
@@ -48,39 +66,6 @@ const Contact = () => {
     { icon: faGithub, label: "GitHub", href: "https://github.com/RADXIshan" },
     { icon: faEnvelope, label: "Email", href: "mailto:ishanroy3118107@gmail.com" },
   ];
-
-  const useMagnetic = (ref) => {
-    useGSAP(() => {
-      if (!window.matchMedia("(hover: hover)").matches) return;
-      const element = ref.current;
-      if (!element) return;
-
-      const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-      const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
-
-      const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const { left, top, width, height } = element.getBoundingClientRect();
-        const x = clientX - (left + width / 2);
-        const y = clientY - (top + height / 2);
-        xTo(x * 0.3);
-        yTo(y * 0.3);
-      };
-
-      const handleMouseLeave = () => {
-        xTo(0);
-        yTo(0);
-      };
-
-      element.addEventListener("mousemove", handleMouseMove);
-      element.addEventListener("mouseleave", handleMouseLeave);
-
-      return () => {
-        element.removeEventListener("mousemove", handleMouseMove);
-        element.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    }, { scope: ref });
-  };
 
   const submitBtnRef = useRef(null);
   useMagnetic(submitBtnRef);
@@ -208,23 +193,15 @@ const Contact = () => {
           </div>
 
           <div className="social-links-container flex flex-wrap gap-4 mt-12">
-            {socialLinks.map((link, index) => {
-              const iconRef = useRef(null);
-              useMagnetic(iconRef);
-              return (
-                <a
-                  key={index}
-                  ref={iconRef}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.label}
-                  className="social-link-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
-                >
-                  <FontAwesomeIcon icon={link.icon} className="text-xl" />
-                </a>
-              );
-            })}
+            {socialLinks.map((link, index) => (
+              <MagneticSocialLink
+                key={index}
+                href={link.href}
+                ariaLabel={link.label}
+              >
+                <FontAwesomeIcon icon={link.icon} className="text-xl" />
+              </MagneticSocialLink>
+            ))}
           </div>
         </div>
         
