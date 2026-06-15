@@ -59,15 +59,28 @@ const Projects = () => {
             if (mainTitleRef.current) {
                 if (isMobile) {
                     gsap.from(mainTitleRef.current, {
-                        y: 50,
+                        y: 40,
                         opacity: 0,
-                        duration: 1.2,
-                        ease: "power4.out",
+                        duration: 1.0,
+                        ease: "power3.out",
                         force3D: true,
                         scrollTrigger: {
                             trigger: introSectionRef.current,
-                            start: "top 80%",
-                            toggleActions: "restart none none reset"
+                            start: "top 90%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                    // Exit: only start fading when the section is already 40% scrolled past top
+                    gsap.to(mainTitleRef.current, {
+                        y: -30,
+                        opacity: 0.2,
+                        ease: "none",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "40% top",
+                            end: "bottom top",
+                            scrub: true
                         }
                     });
                 } else {
@@ -83,24 +96,23 @@ const Projects = () => {
                         scrollTrigger: {
                             trigger: introSectionRef.current,
                             start: "top 80%",
-                            toggleActions: "restart none none reset"
+                            toggleActions: "play none none none"
+                        }
+                    });
+                    gsap.to(mainTitleRef.current, {
+                        y: isMobile ? -30 : -100,
+                        scale: 0.9,
+                        opacity: 0.2,
+                        ease: "none",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
                         }
                     });
                 }
-
-                gsap.to(mainTitleRef.current, {
-                    y: isMobile ? -30 : -100,
-                    scale: 0.9,
-                    opacity: 0.2,
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: introSectionRef.current,
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
             }
 
             // 2. DESKTOP ANIMATIONS (lg and above)
@@ -154,7 +166,7 @@ const Projects = () => {
                         scrollTrigger: {
                             trigger: section,
                             start: "top 70%",
-                            toggleActions: "restart none none reset",
+                            toggleActions: "play none none none",
                         }
                     });
                 });
@@ -197,7 +209,7 @@ const Projects = () => {
                         scrollTrigger: {
                             trigger: card,
                             start: "top 85%",
-                            toggleActions: "restart none none reset"
+                            toggleActions: "play none none none"
                         }
                     });
                 });

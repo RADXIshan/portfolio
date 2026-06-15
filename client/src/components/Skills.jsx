@@ -71,13 +71,13 @@ const skillsData = [
     ],
   },
   {
-    category: "Tools & Technologies",
+    category: "Tools & Tech",
     items: [
       { name: "Git", img: git },
       { name: "GitHub", img: github },
-      { name: "Tailwind CSS", img: tailwind },
+      { name: "Tailwind", img: tailwind },
       { name: "GSAP", img: gsapImg },
-      { name: "RESTful API", img: restapi },
+      { name: "REST API", img: restapi },
       { name: "Socket.io", img: socketio },
       { name: "WebRTC", img: webrtc },
       { name: "Bootstrap", img: bootstrap },
@@ -90,288 +90,358 @@ const skillsData = [
 ];
 
 const Skills = () => {
-    const triggerRef = useRef(null);
-    const sectionRef = useRef(null);
-    const indicatorRef = useRef(null);
-    const introSectionRef = useRef(null);
-    const mainTitleRef = useRef(null);
+  const wrapperRef      = useRef(null); // full section scope
+  const triggerRef      = useRef(null); // the tall scroll-pinned div
+  const sectionRef      = useRef(null); // inner horizontal content
+  const indicatorRef    = useRef(null);
+  const introSectionRef = useRef(null);
+  const mainTitleRef    = useRef(null);
 
-    useGSAP(() => {
-        const trigger = triggerRef.current;
-        const section = sectionRef.current;
+  useGSAP(() => {
+    const trigger = triggerRef.current;
+    const section = sectionRef.current;
+    if (!trigger || !section) return;
 
-        if (!trigger || !section) return;
+    const splits = [];
+    let isCleanedUp = false;
 
-        const splits = [];
-        let isCleanedUp = false;
+    const initAnimations = () => {
+      if (isCleanedUp) return;
 
-        const initAnimations = () => {
-            if (isCleanedUp) return;
+      const isMobile = window.innerWidth < 768;
 
-            const isMobile = window.innerWidth < 768;
-
-            // Intro Animation (Mirroring Projects.jsx)
-            if (mainTitleRef.current) {
-                if (isMobile) {
-                    gsap.from(mainTitleRef.current, {
-                        y: 50,
-                        opacity: 0,
-                        duration: 1.2,
-                        ease: "power4.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: introSectionRef.current,
-                            start: "top 80%",
-                            toggleActions: "play none none none",
-                        }
-                    });
-                } else {
-                    const splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
-                    splits.push(splitIntro);
-                    gsap.from(splitIntro.chars, {
-                        y: 150,
-                        rotateX: -90,
-                        opacity: 0,
-                        stagger: 0.05,
-                        duration: 1.5,
-                        ease: "power4.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: introSectionRef.current,
-                            start: "top 80%",
-                            toggleActions: "play none none none",
-                        }
-                    });
-                }
-
-                gsap.to(mainTitleRef.current, {
-                    y: () => isMobile ? -30 : -100,
-                    scale: 0.9,
-                    opacity: 0,
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: introSectionRef.current,
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
+      // ── "Tech Stack." intro title ──────────────────────────────────────────
+      // Strategy: use fromTo so the final state is ALWAYS opacity:1 / y:0
+      // after the entry plays. The scrub-exit only runs on desktop where
+      // there is enough time/space to complete it before the user scrolls back.
+      if (mainTitleRef.current) {
+        if (isMobile) {
+          // On mobile: just fade in, NO scrub-out exit (avoids blank-on-return).
+          gsap.fromTo(
+            mainTitleRef.current,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.0,
+              ease: "power3.out",
+              force3D: true,
+              onComplete: () =>
+                gsap.set(mainTitleRef.current, { clearProps: "all" }),
+              scrollTrigger: {
+                trigger: introSectionRef.current,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
             }
-
-            const pin = gsap.fromTo(section, 
-                { x: 0 },
-                {
-                    x: () => -(section.offsetWidth - window.innerWidth),
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: trigger,
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1,
-                        invalidateOnRefresh: true,
-                    }
-                }
-            );
-
-            // Individual Animations for cards within the scroll
-            const cards = gsap.utils.toArray(".skill-card");
-            cards.forEach((card) => {
-                const h3 = card.querySelector("h3");
-                const items = card.querySelectorAll(".skill-item");
-
-                if (h3) {
-                    if (isMobile) {
-                        gsap.from(h3, {
-                            y: 20,
-                            opacity: 0,
-                            duration: 0.8,
-                            ease: "power2.out",
-                            force3D: true,
-                            scrollTrigger: {
-                                trigger: card,
-                                containerAnimation: pin,
-                                start: "left 80%",
-                                toggleActions: "play none none none",
-                            }
-                        });
-                    } else {
-                        const splitCard = new SplitType(h3, { types: 'chars' });
-                        splits.push(splitCard);
-                        gsap.from(splitCard.chars, {
-                            y: 20,
-                            opacity: 0,
-                            stagger: 0.02,
-                            duration: 0.8,
-                            ease: "power2.out",
-                            force3D: true,
-                            scrollTrigger: {
-                                trigger: card,
-                                containerAnimation: pin,
-                                start: "left 80%",
-                                toggleActions: "play none none none",
-                            }
-                        });
-                    }
-                }
-
-                if (items.length > 0) {
-                    gsap.from(items, {
-                        y: 30,
-                        opacity: 0,
-                        stagger: 0.05,
-                        duration: 0.8,
-                        ease: "power3.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: card,
-                            containerAnimation: pin,
-                            start: "left 80%",
-                            toggleActions: "play none none none",
-                        }
-                    });
-                }
-            });
-
-            // Entrance animation for scroll indicator
-            gsap.fromTo(indicatorRef.current, 
-                { opacity: 0, x: -20 },
-                {
-                    opacity: 0.4,
-                    x: 0,
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: trigger,
-                        start: "top center",
-                        end: "top top",
-                        scrub: true,
-                    }
-                }
-            );
-
-            // Exit animation for scroll indicator
-            gsap.to(indicatorRef.current, {
-                opacity: 0,
-                x: -20,
-                force3D: true,
-                scrollTrigger: {
-                    trigger: trigger,
-                    start: "bottom 30%",
-                    end: "bottom top",
-                    scrub: true,
-                }
-            });
-
-            ScrollTrigger.refresh();
-        };
-
-        if (document.fonts) {
-            document.fonts.ready.then(initAnimations);
+          );
         } else {
-            initAnimations();
+          // Desktop: SplitType char reveal + scrub exit
+          const splitIntro = new SplitType(mainTitleRef.current, { types: "chars" });
+          splits.push(splitIntro);
+          gsap.from(splitIntro.chars, {
+            y: 150,
+            rotateX: -90,
+            opacity: 0,
+            stagger: 0.05,
+            duration: 1.5,
+            ease: "power4.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: introSectionRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          });
+          // Scrub exit — only on desktop
+          gsap.to(mainTitleRef.current, {
+            y: -100,
+            scale: 0.9,
+            opacity: 0,
+            ease: "none",
+            force3D: true,
+            scrollTrigger: {
+              trigger: introSectionRef.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+        }
+      }
+
+      // ── Horizontal scroll (ALL screen sizes) ──────────────────────────────
+      const pin = gsap.fromTo(
+        section,
+        { x: 0 },
+        {
+          x: () => -(section.offsetWidth - window.innerWidth),
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      // ── Card header + item reveal (scoped to containerAnimation) ──────────
+      const cards = gsap.utils.toArray(".skill-card");
+      cards.forEach((card) => {
+        const h3    = card.querySelector("h3");
+        const items = card.querySelectorAll(".skill-item");
+
+        if (h3) {
+          if (!isMobile) {
+            // Desktop: SplitType chars
+            const splitCard = new SplitType(h3, { types: "chars" });
+            splits.push(splitCard);
+            gsap.from(splitCard.chars, {
+              y: 20,
+              opacity: 0,
+              stagger: 0.02,
+              duration: 0.8,
+              ease: "power2.out",
+              force3D: true,
+              scrollTrigger: {
+                trigger: card,
+                containerAnimation: pin,
+                start: "left 80%",
+                toggleActions: "play none none none",
+              },
+            });
+          } else {
+            // Mobile: simple whole-element reveal — NO SplitType
+            gsap.fromTo(
+              h3,
+              { opacity: 0, y: 15 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                ease: "power2.out",
+                force3D: true,
+                onComplete: () => gsap.set(h3, { clearProps: "all" }),
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: pin,
+                  start: "left 90%",
+                  toggleActions: "play none none none",
+                },
+              }
+            );
+          }
         }
 
-        return () => {
-            isCleanedUp = true;
-            splits.forEach(s => s.revert());
-        };
+        if (items.length > 0) {
+          gsap.fromTo(
+            items,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.04,
+              duration: 0.7,
+              ease: "power3.out",
+              force3D: true,
+              onComplete: () => gsap.set(items, { clearProps: "all" }),
+              scrollTrigger: {
+                trigger: card,
+                containerAnimation: pin,
+                start: "left 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        }
+      });
 
-    }, { scope: triggerRef });
+      // ── Scroll indicator ───────────────────────────────────────────────────
+      if (indicatorRef.current) {
+        gsap.fromTo(
+          indicatorRef.current,
+          { opacity: 0, x: -20 },
+          {
+            opacity: 0.4,
+            x: 0,
+            force3D: true,
+            scrollTrigger: {
+              trigger: trigger,
+              start: "top center",
+              end: "top top",
+              scrub: true,
+            },
+          }
+        );
+        gsap.to(indicatorRef.current, {
+          opacity: 0,
+          x: -20,
+          force3D: true,
+          scrollTrigger: {
+            trigger: trigger,
+            start: "bottom 30%",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
 
-    return (
-        <section className="relative bg-[#0a0a0a]" id="skills">
-            {/* Massive Intro Section */}
-            <div ref={introSectionRef} className="h-screen w-full flex flex-col px-6 md:px-20 overflow-hidden relative border-b border-white/5">
-                {/* Top Label */}
-                <div className="pt-12 md:pt-20 flex-shrink-0">
-                    <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Skills</span>
-                </div>
-                
-                {/* Main Title */}
-                <div className="flex-1 flex flex-col justify-center items-center">
-                    <h1 ref={mainTitleRef} className="text-[clamp(4.5rem,20vw,25rem)] lg:text-[clamp(5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
-                        <span className="whitespace-nowrap">Tech</span>
-                        <span className="whitespace-nowrap">Stack.</span>
-                    </h1>
-                </div>
+      ScrollTrigger.refresh();
+    };
 
-                {/* Bottom Badges */}
-                <div className="pb-12 md:pb-20 flex flex-col items-end gap-2 text-right opacity-30 flex-shrink-0">
-                    <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none underline-offset-4 decoration-purple-500 font-bold">CORE — TOOLS</span>
-                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none font-bold">FRONTEND — BACKEND — AI/ML</span>
-                </div>
-            </div>
+    if (document.fonts) {
+      document.fonts.ready.then(initAnimations);
+    } else {
+      initAnimations();
+    }
 
-            <div ref={triggerRef} className="relative h-[300vh]">
-                <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
-                    <div ref={sectionRef} className="flex h-full items-center pl-[40vw] pr-[10vw] min-w-max">
+    return () => {
+      isCleanedUp = true;
+      splits.forEach((s) => s.revert());
+    };
+  }, { scope: wrapperRef });
 
-                    {/* Cards */}
-                    <div className="flex gap-[20vw] pr-[20vw] items-center h-full"> 
-                        {skillsData.map((skill, index) => (
-                            <div 
-                                key={skill.category} 
-                                className="skill-card flex flex-col pt-[12vh] md:pt-[20vh] w-max h-full"
-                            >
-                                <div className="mb-12">
-                                    <span className="text-2xl md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] block">
-                                        {`0${index + 1}`}
-                                    </span>
-                                    <h3 className="text-3xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-2 whitespace-nowrap leading-tight pb-4">
-                                        {skill.category}
-                                    </h3>
-                                </div>
+  return (
+    <section ref={wrapperRef} className="relative bg-[#0a0a0a]" id="skills">
 
-                                <div className={`grid gap-x-4 gap-y-6 md:gap-x-8 md:gap-y-10 transition-all duration-500 ${
-                                    skill.items.length > 6 
-                                    ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 max-w-4xl md:max-w-5xl" 
-                                    : "grid-cols-2 sm:grid-cols-3 max-w-2xl"
-                                }`}>
-                                    {skill.items.map((item) => (
-                                        <div key={item.name} className="skill-item flex items-center gap-3 md:gap-6 group/item">
-                                            <div className={`${item.name === "BeautifulSoup" ? "flex-none w-10 h-10 md:w-16 md:h-16 p-1.5 md:p-2.5" : "w-8 h-8 md:w-14 md:h-14 p-1.5 md:p-3"} bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 overflow-hidden`}>
-                                                <img 
-                                                    src={item.img} 
-                                                    alt={item.name} 
-                                                    className={`object-contain opacity-80 group-hover/item:opacity-100 transition-opacity ${item.name === "BeautifulSoup" ? "h-full w-full scale-90 rounded-lg" : "h-full w-full"}`} 
-                                                /> 
-                                            </div>
-                                            <span className="text-sm md:text-xl font-light text-white/60 group-hover/item:text-white transition-colors duration-300">
-                                                {item.name}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                
-                {/* Scroll Indicator */}
-                    <div 
-                        ref={indicatorRef} 
-                        className="absolute bottom-6 md:bottom-12 left-[40vw] flex items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500 group"
-                    >
-                    <div className="flex flex-col">
-                        <span className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Keep</span>
-                        <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Scrolling</span>
-                    </div>
-                    <div className="relative w-32 md:w-48 h-[1px] bg-white/10 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]"></div>
-                    </div>
-                </div>
-            </div>
+      {/* ── Intro screen ──────────────────────────────────────────────────── */}
+      <div
+        ref={introSectionRef}
+        className="h-screen w-full flex flex-col px-6 md:px-20 overflow-hidden relative border-b border-white/5"
+      >
+        <div className="pt-12 md:pt-20 flex-shrink-0">
+          <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">
+            / Skills
+          </span>
         </div>
 
-        <style>{`
-                @keyframes shimmer {
-                    0% { transform: translateX(-100%); }
-                    100% { transform: translateX(100%); }
-                }
-            `}</style>
-        </section>
-    );
+        <div className="flex-1 flex flex-col justify-center items-center">
+          <h1
+            ref={mainTitleRef}
+            className="text-[clamp(4rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center"
+          >
+            <span className="whitespace-nowrap">Tech</span>
+            <span className="whitespace-nowrap">Stack.</span>
+          </h1>
+        </div>
+
+        <div className="pb-10 md:pb-20 flex flex-col items-end gap-2 text-right opacity-30 flex-shrink-0">
+          <span className="text-[10px] font-mono text-white uppercase tracking-widest leading-none font-bold">
+            CORE — TOOLS
+          </span>
+          <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest leading-none font-bold">
+            FRONTEND — BACKEND — AI/ML
+          </span>
+        </div>
+      </div>
+
+      {/* ── Horizontal scroll (all screen sizes) ──────────────────────────── */}
+      {/*
+        h-[400vh] on mobile gives more scroll distance so each card
+        has enough room to scroll into view at a comfortable pace.
+        On desktop h-[300vh] is enough.
+      */}
+      <div ref={triggerRef} className="relative h-[400vh] md:h-[300vh]">
+        <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+          <div
+            ref={sectionRef}
+            className="flex h-full items-center min-w-max"
+            style={{ paddingLeft: "clamp(1.5rem, 15vw, 40vw)", paddingRight: "clamp(1.5rem, 10vw, 10vw)" }}
+          >
+            <div
+              className="flex items-center h-full"
+              style={{ gap: "clamp(3rem, 12vw, 20vw)", paddingRight: "clamp(2rem, 10vw, 20vw)" }}
+            >
+              {skillsData.map((skill, index) => (
+                <div
+                  key={skill.category}
+                  className="skill-card flex flex-col h-full"
+                  style={{ paddingTop: "clamp(6vh, 12vh, 20vh)" }}
+                >
+                  {/* Category label + heading */}
+                  <div className="mb-6 md:mb-12">
+                    <span className="text-base md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] block">
+                      {`0${index + 1}`}
+                    </span>
+                    <h3 className="text-2xl sm:text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-1 md:mt-2 whitespace-nowrap leading-tight pb-2 md:pb-4">
+                      {skill.category}
+                    </h3>
+                  </div>
+
+                  {/* Skill items grid */}
+                  <div
+                    className={`grid ${
+                      skill.items.length > 6
+                        ? "grid-cols-2 sm:grid-cols-3"
+                        : "grid-cols-2"
+                    }`}
+                    style={{ gap: "clamp(0.75rem, 2vw, 2.5rem)" }}
+                  >
+                    {skill.items.map((item) => (
+                      <div
+                        key={item.name}
+                        className="skill-item flex items-center group/item"
+                        style={{ gap: "clamp(0.5rem, 1.5vw, 1.5rem)" }}
+                      >
+                        <div
+                          className={`${
+                            item.name === "BeautifulSoup" || item.name === "BeautifulSoup"
+                              ? "flex-none p-1"
+                              : "p-1.5 md:p-3"
+                          } bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 overflow-hidden flex-shrink-0`}
+                          style={{
+                            width:  "clamp(2rem, 4vw, 3.5rem)",
+                            height: "clamp(2rem, 4vw, 3.5rem)",
+                          }}
+                        >
+                          <img
+                            src={item.img}
+                            alt={item.name}
+                            className="object-contain opacity-80 group-hover/item:opacity-100 transition-opacity h-full w-full"
+                          />
+                        </div>
+                        <span
+                          className="font-light text-white/60 group-hover/item:text-white transition-colors duration-300 whitespace-nowrap"
+                          style={{ fontSize: "clamp(0.65rem, 1.5vw, 1.25rem)" }}
+                        >
+                          {item.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Scroll indicator — desktop only */}
+          <div
+            ref={indicatorRef}
+            className="hidden md:flex absolute bottom-12 items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500"
+            style={{ left: "clamp(1.5rem, 15vw, 40vw)" }}
+          >
+            <div className="flex flex-col">
+              <span className="text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Keep</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Scrolling</span>
+            </div>
+            <div className="relative w-48 h-[1px] bg-white/10 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes shimmer {
+          0%   { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
+    </section>
+  );
 };
 
 export default Skills;
