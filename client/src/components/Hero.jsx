@@ -130,6 +130,10 @@ const Hero = ({ isLoading }) => {
               duration: 1.0,
               ease: "power4.out",
               force3D: true,
+              onComplete: () => {
+                // Release GSAP ownership so mm.revert() can't snap back to opacity:0
+                gsap.set(textRef.current, { clearProps: "all" });
+              },
             }
           );
 
@@ -144,6 +148,9 @@ const Hero = ({ isLoading }) => {
               duration: 0.8,
               ease: "power3.out",
               force3D: true,
+              onComplete: () => {
+                gsap.set(subtitleRef.current, { clearProps: "all" });
+              },
             },
             "-=0.6"
           );
@@ -222,7 +229,7 @@ const Hero = ({ isLoading }) => {
     <div
       id="home"
       ref={heroRef}
-      className="flex flex-col items-center justify-center min-h-screen gap-6 px-8 py-4 text-center overflow-hidden relative"
+      className="flex flex-col items-center justify-center min-h-[100svh] gap-6 px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow */}
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform transform-gpu" />
