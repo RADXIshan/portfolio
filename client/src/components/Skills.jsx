@@ -103,130 +103,177 @@ const Skills = () => {
         if (!trigger || !section) return;
 
         const splits = [];
+        let isCleanedUp = false;
 
-        // Intro Animation (Mirroring Projects.jsx)
-        if (mainTitleRef.current) {
-            const splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
-            splits.push(splitIntro);
-             gsap.from(splitIntro.chars, {
-                y: 150,
-                rotateX: -90,
-                opacity: 0,
-                stagger: 0.05,
-                duration: 1.5,
-                ease: "power4.out",
-                force3D: true,
-                scrollTrigger: {
-                    trigger: introSectionRef.current,
-                    start: "top 80%",
-                    toggleActions: "restart none none reset"
+        const initAnimations = () => {
+            if (isCleanedUp) return;
+
+            const isMobile = window.innerWidth < 768;
+
+            // Intro Animation (Mirroring Projects.jsx)
+            if (mainTitleRef.current) {
+                if (isMobile) {
+                    gsap.from(mainTitleRef.current, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: "power4.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "top 80%",
+                            toggleActions: "restart none none reset"
+                        }
+                    });
+                } else {
+                    const splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
+                    splits.push(splitIntro);
+                    gsap.from(splitIntro.chars, {
+                        y: 150,
+                        rotateX: -90,
+                        opacity: 0,
+                        stagger: 0.05,
+                        duration: 1.5,
+                        ease: "power4.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "top 80%",
+                            toggleActions: "restart none none reset"
+                        }
+                    });
+                }
+
+                gsap.to(mainTitleRef.current, {
+                    y: () => isMobile ? -30 : -100,
+                    scale: 0.9,
+                    opacity: 0,
+                    ease: "none",
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: introSectionRef.current,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            }
+
+            const pin = gsap.fromTo(section, 
+                { x: 0 },
+                {
+                    x: () => -(section.offsetWidth - window.innerWidth),
+                    ease: "none",
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: trigger,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1,
+                        invalidateOnRefresh: true,
+                    }
+                }
+            );
+
+            // Individual Animations for cards within the scroll
+            const cards = gsap.utils.toArray(".skill-card");
+            cards.forEach((card) => {
+                const h3 = card.querySelector("h3");
+                const items = card.querySelectorAll(".skill-item");
+
+                if (h3) {
+                    if (isMobile) {
+                        gsap.from(h3, {
+                            y: 20,
+                            opacity: 0,
+                            duration: 0.8,
+                            ease: "power2.out",
+                            force3D: true,
+                            scrollTrigger: {
+                                trigger: card,
+                                containerAnimation: pin,
+                                start: "left 80%",
+                                toggleActions: "restart none none reset",
+                            }
+                        });
+                    } else {
+                        const splitCard = new SplitType(h3, { types: 'chars' });
+                        splits.push(splitCard);
+                        gsap.from(splitCard.chars, {
+                            y: 20,
+                            opacity: 0,
+                            stagger: 0.02,
+                            duration: 0.8,
+                            ease: "power2.out",
+                            force3D: true,
+                            scrollTrigger: {
+                                trigger: card,
+                                containerAnimation: pin,
+                                start: "left 80%",
+                                toggleActions: "restart none none reset",
+                            }
+                        });
+                    }
+                }
+
+                if (items.length > 0) {
+                    gsap.from(items, {
+                        y: 30,
+                        opacity: 0,
+                        stagger: 0.05,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: card,
+                            containerAnimation: pin,
+                            start: "left 80%",
+                            toggleActions: "restart none none reset",
+                        }
+                    });
                 }
             });
 
-            gsap.to(mainTitleRef.current, {
-                y: () => window.innerWidth < 768 ? -30 : -100,
-                scale: 0.9,
+            // Entrance animation for scroll indicator
+            gsap.fromTo(indicatorRef.current, 
+                { opacity: 0, x: -20 },
+                {
+                    opacity: 0.4,
+                    x: 0,
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: trigger,
+                        start: "top center",
+                        end: "top top",
+                        scrub: true,
+                    }
+                }
+            );
+
+            // Exit animation for scroll indicator
+            gsap.to(indicatorRef.current, {
                 opacity: 0,
-                ease: "none",
+                x: -20,
                 force3D: true,
                 scrollTrigger: {
-                    trigger: introSectionRef.current,
-                    start: "top top",
+                    trigger: trigger,
+                    start: "bottom 30%",
                     end: "bottom top",
-                    scrub: true
-                }
-            });
-        }
-
-        const pin = gsap.fromTo(section, 
-            { x: 0 },
-            {
-                x: () => -(section.offsetWidth - window.innerWidth),
-                ease: "none",
-                force3D: true,
-                scrollTrigger: {
-                    trigger: trigger,
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1,
-                    invalidateOnRefresh: true,
-                }
-            }
-        );
-
-        // Individual Animations for cards within the scroll
-        const cards = gsap.utils.toArray(".skill-card");
-        cards.forEach((card) => {
-            const h3 = card.querySelector("h3");
-            const items = card.querySelectorAll(".skill-item");
-
-            if (h3) {
-                const splitCard = new SplitType(h3, { types: 'chars' });
-                splits.push(splitCard);
-                gsap.from(splitCard.chars, {
-                    y: 20,
-                    opacity: 0,
-                    stagger: 0.02,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: card,
-                        containerAnimation: pin,
-                        start: "left 80%",
-                        toggleActions: "restart none none reset",
-                    }
-                });
-            }
-
-            if (items.length > 0) {
-                gsap.from(items, {
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.05,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: card,
-                        containerAnimation: pin,
-                        start: "left 80%",
-                        toggleActions: "restart none none reset",
-                    }
-                });
-            }
-        });
-
-        // Entrance animation for scroll indicator
-        gsap.fromTo(indicatorRef.current, 
-            { opacity: 0, x: -20 },
-            {
-                opacity: 0.4,
-                x: 0,
-                force3D: true,
-                scrollTrigger: {
-                    trigger: trigger,
-                    start: "top center",
-                    end: "top top",
                     scrub: true,
                 }
-            }
-        );
+            });
 
-        // Exit animation for scroll indicator
-        gsap.to(indicatorRef.current, {
-            opacity: 0,
-            x: -20,
-            force3D: true,
-            scrollTrigger: {
-                trigger: trigger,
-                start: "bottom 30%",
-                end: "bottom top",
-                scrub: true,
-            }
-        });
+            ScrollTrigger.refresh();
+        };
+
+        if (document.fonts) {
+            document.fonts.ready.then(initAnimations);
+        } else {
+            initAnimations();
+        }
 
         return () => {
+            isCleanedUp = true;
             splits.forEach(s => s.revert());
         };
 

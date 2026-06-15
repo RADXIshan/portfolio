@@ -71,110 +71,131 @@ const Contact = () => {
   useMagnetic(submitBtnRef);
 
   useGSAP(() => {
-    // Optimized SplitType with cleanup
-    const splitTitle = new SplitType(".contact-title", { types: "words" });
+    let splitTitle = null;
+    let isCleanedUp = false;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: contactRef.current,
-        start: "top 95%",
-        toggleActions: "play none none reset",
-      }
-    });
+    const initAnimations = () => {
+      if (isCleanedUp) return;
 
-    // Title Reveal (Faster)
-    tl.fromTo(splitTitle.words, {
-      y: 20,
-      opacity: 0,
-      rotateX: -30,
-    }, {
-      y: 0,
-      opacity: 1,
-      rotateX: 0,
-      stagger: 0.03,
-      duration: 0.5,
-      ease: "power3.out",
-      force3D: true,
-    }, 0);
+      // Optimized SplitType with cleanup
+      splitTitle = new SplitType(".contact-title", { types: "words" });
 
-    // Subtitle Reveal (Faster)
-    tl.fromTo(".contact-subtitle", {
-      y: 15,
-      opacity: 0,
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: "power3.out",
-      force3D: true,
-    }, 0.1);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: contactRef.current,
+          start: "top 95%",
+          toggleActions: "play none none reset",
+        }
+      });
 
-    // Cards Reveal (Faster, force3D for performance)
-    tl.fromTo(".contact-card", {
-      y: 30,
-      opacity: 0,
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.7,
-      stagger: 0.1,
-      ease: "power3.out",
-      force3D: true,
-    }, 0.05);
-
-    // Social Links Stagger (Ensuring visibility)
-    tl.fromTo(".social-link-item", {
-      scale: 0.7,
-      opacity: 0,
-    }, {
-      scale: 1,
-      opacity: 1,
-      stagger: 0.05,
-      duration: 0.5,
-      ease: "back.out(2)",
-      force3D: true,
-    }, 0.2);
-
-    // Form Fields Reveal (Faster)
-    tl.fromTo(".form-group", {
-      x: 15,
-      opacity: 0,
-    }, {
-      x: 0,
-      opacity: 1,
-      stagger: 0.05,
-      duration: 0.6,
-      ease: "power2.out",
-      force3D: true,
-    }, 0.15);
-
-    // Submit Button Reveal
-    tl.fromTo(".submit-btn", {
-      y: 10,
-      opacity: 0,
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: "power2.out",
-      force3D: true,
-    }, 0.3);
-
-    // Contact Background Glow
-    gsap.to(".contact-bg-glow", {
-        x: 60,
-        y: -30,
-        duration: 8,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
+      // Title Reveal (Faster)
+      tl.fromTo(splitTitle.words, {
+        y: 20,
+        opacity: 0,
+        rotateX: -30,
+      }, {
+        y: 0,
+        opacity: 1,
+        rotateX: 0,
+        stagger: 0.03,
+        duration: 0.5,
+        ease: "power3.out",
         force3D: true,
-    });
+      }, 0);
 
-    ScrollTrigger.refresh();
+      // Subtitle Reveal (Faster)
+      tl.fromTo(".contact-subtitle", {
+        y: 15,
+        opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        force3D: true,
+      }, 0.1);
+
+      // Cards Reveal (Faster, force3D for performance)
+      tl.fromTo(".contact-card", {
+        y: 30,
+        opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: "power3.out",
+        force3D: true,
+      }, 0.05);
+
+      // Social Links Stagger (Ensuring visibility)
+      tl.fromTo(".social-link-item", {
+        scale: 0.7,
+        opacity: 0,
+      }, {
+        scale: 1,
+        opacity: 1,
+        stagger: 0.05,
+        duration: 0.5,
+        ease: "back.out(2)",
+        force3D: true,
+      }, 0.2);
+
+      // Form Fields Reveal (Faster)
+      tl.fromTo(".form-group", {
+        x: 15,
+        opacity: 0,
+      }, {
+        x: 0,
+        opacity: 1,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: "power2.out",
+        force3D: true,
+      }, 0.15);
+
+      // Submit Button Reveal
+      tl.fromTo(".submit-btn", {
+        y: 10,
+        opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.out",
+        force3D: true,
+      }, 0.3);
+
+      // Contact Background Glow - Only animate on desktop to improve mobile performance
+      if (window.innerWidth >= 768) {
+        gsap.to(".contact-bg-glow", {
+            x: 60,
+            y: -30,
+            duration: 8,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            force3D: true,
+        });
+      } else {
+        gsap.set(".contact-bg-glow", { x: 0, y: 0 });
+      }
+
+      ScrollTrigger.refresh();
+    };
+
+    if (document.fonts) {
+      document.fonts.ready.then(initAnimations);
+    } else {
+      initAnimations();
+    }
 
     return () => {
+      isCleanedUp = true;
+      if (splitTitle) {
         splitTitle.revert();
+        splitTitle = null;
+      }
     };
   }, { scope: contactRef });
 

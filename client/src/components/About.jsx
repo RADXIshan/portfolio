@@ -16,72 +16,90 @@ const About = () => {
   const paragraphRef = useRef(null);
 
   useGSAP(() => {
-    // Image Reveal on wrapper
-    gsap.fromTo(
-      imageWrapperRef.current,
-      { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", scale: 1.05 },
-      { 
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
-        scale: 1, 
-        duration: 1.8, 
-        ease: "power4.inOut",
-        force3D: true,
-        scrollTrigger: {
-            trigger: aboutRef.current,
-            start: "top 60%",
-            toggleActions: "restart none none reset"
+    let split = null;
+    let isCleanedUp = false;
+
+    const initAnimations = () => {
+      if (isCleanedUp) return;
+
+      // Image Reveal on wrapper
+      gsap.fromTo(
+        imageWrapperRef.current,
+        { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", scale: 1.05 },
+        { 
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
+          scale: 1, 
+          duration: 1.8, 
+          ease: "power4.inOut",
+          force3D: true,
+          scrollTrigger: {
+              trigger: aboutRef.current,
+              start: "top 60%",
+              toggleActions: "restart none none reset"
+          }
         }
+      );
+
+      // Parallax effect on scroll for inner image
+      gsap.to(imageRef.current, {
+          yPercent: 15,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+              trigger: aboutRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true
+          }
+      });
+
+      // Text Split Animation
+      if (paragraphRef.current) {
+          split = new SplitType(paragraphRef.current, { types: 'lines' });
+          
+          gsap.from(split.lines, {
+              y: 30,
+              opacity: 0,
+              stagger: 0.1,
+              duration: 1,
+              ease: "power3.out",
+              force3D: true,
+              scrollTrigger: {
+                  trigger: paragraphRef.current,
+                  start: "top 80%",
+                  toggleActions: "restart none none reset"
+              }
+          });
       }
-    );
 
-    // Parallax effect on scroll for inner image
-    gsap.to(imageRef.current, {
-        yPercent: 15,
-        ease: "none",
-        force3D: true,
-        scrollTrigger: {
-            trigger: aboutRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-        }
-    });
+      gsap.from(".about-header", {
+          x: -50,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          force3D: true,
+          scrollTrigger: {
+              trigger: aboutRef.current,
+              start: "top 70%",
+              toggleActions: "restart none none reset"
+          }
+      });
 
-    // Text Split Animation
-    let split;
-    if (paragraphRef.current) {
-        split = new SplitType(paragraphRef.current, { types: 'lines' });
-        
-        gsap.from(split.lines, {
-            y: 30,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 1,
-            ease: "power3.out",
-            force3D: true,
-            scrollTrigger: {
-                trigger: paragraphRef.current,
-                start: "top 80%",
-                toggleActions: "restart none none reset"
-            }
-        });
+      ScrollTrigger.refresh();
+    };
+
+    if (document.fonts) {
+      document.fonts.ready.then(initAnimations);
+    } else {
+      initAnimations();
     }
 
-    gsap.from(".about-header", {
-        x: -50,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        force3D: true,
-        scrollTrigger: {
-            trigger: aboutRef.current,
-            start: "top 70%",
-            toggleActions: "restart none none reset"
-        }
-    });
-
     return () => {
-        if (split) split.revert();
+      isCleanedUp = true;
+      if (split) {
+        split.revert();
+        split = null;
+      }
     };
 
   }, { scope: aboutRef });

@@ -21,68 +21,106 @@ const Footer = () => {
   const footerRef = useRef(null);
 
   useGSAP(() => {
-    // Big Headline Reveal
-    const splitText = new SplitType(".footer-headline", { types: "chars,words" });
-    
-    gsap.fromTo(splitText.chars, {
-      y: 100,
-      opacity: 0,
-      rotateX: -90,
-    }, {
-      y: 0,
-      opacity: 1,
-      rotateX: 0,
-      stagger: 0.02,
-      duration: 1.5,
-      ease: "power4.out",
-      force3D: true,
-      scrollTrigger: {
-        trigger: ".footer-headline",
-        start: "top 95%",
-        toggleActions: "play none none reset",
-      },
-    });
+    let splitText = null;
+    let isCleanedUp = false;
 
-    // Email Reveal
-    gsap.fromTo(".footer-email", {
-      y: 20,
-      opacity: 0,
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      ease: "power3.out",
-      delay: 0.5,
-      force3D: true,
-      scrollTrigger: {
-        trigger: ".footer-email",
-        start: "top 95%",
-        toggleActions: "play none none reset",
-      },
-    });
+    const initAnimations = () => {
+      if (isCleanedUp) return;
 
-    // Bottom Bar Stagger
-    gsap.fromTo(".footer-bottom > *", {
-      y: 30,
-      opacity: 0,
-    }, {
-      y: 0,
-      opacity: 1,
-      stagger: 0.2,
-      duration: 1,
-      ease: "power3.out",
-      force3D: true,
-      scrollTrigger: {
-        trigger: ".footer-bottom",
-        start: "top 98%",
-        toggleActions: "play none none reset",
-      },
-    });
+      const isMobile = window.innerWidth < 768;
 
-    ScrollTrigger.refresh();
+      if (isMobile) {
+        // Mobile: Animate the headline as a single block for better performance
+        gsap.fromTo(".footer-headline", {
+          y: 40,
+          opacity: 0,
+        }, {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "power3.out",
+          force3D: true,
+          scrollTrigger: {
+            trigger: ".footer-headline",
+            start: "top 95%",
+            toggleActions: "play none none reset",
+          },
+        });
+      } else {
+        // Desktop: Character splitting animation
+        splitText = new SplitType(".footer-headline", { types: "chars,words" });
+        
+        gsap.fromTo(splitText.chars, {
+          y: 100,
+          opacity: 0,
+          rotateX: -90,
+        }, {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          stagger: 0.02,
+          duration: 1.5,
+          ease: "power4.out",
+          force3D: true,
+          scrollTrigger: {
+            trigger: ".footer-headline",
+            start: "top 95%",
+            toggleActions: "play none none reset",
+          },
+        });
+      }
+
+      // Email Reveal
+      gsap.fromTo(".footer-email", {
+        y: 20,
+        opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        delay: isMobile ? 0.3 : 0.5,
+        force3D: true,
+        scrollTrigger: {
+          trigger: ".footer-email",
+          start: "top 95%",
+          toggleActions: "play none none reset",
+        },
+      });
+
+      // Bottom Bar Stagger
+      gsap.fromTo(".footer-bottom > *", {
+        y: 30,
+        opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
+        stagger: isMobile ? 0.1 : 0.2,
+        duration: 1,
+        ease: "power3.out",
+        force3D: true,
+        scrollTrigger: {
+          trigger: ".footer-bottom",
+          start: "top 98%",
+          toggleActions: "play none none reset",
+        },
+      });
+
+      ScrollTrigger.refresh();
+    };
+
+    if (document.fonts) {
+      document.fonts.ready.then(initAnimations);
+    } else {
+      initAnimations();
+    }
 
     return () => {
-      splitText.revert();
+      isCleanedUp = true;
+      if (splitText) {
+        splitText.revert();
+        splitText = null;
+      }
     };
   }, { scope: footerRef });
 

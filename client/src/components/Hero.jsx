@@ -15,111 +15,190 @@ const Hero = ({ isLoading }) => {
   useGSAP(() => {
     if (isLoading || !textRef.current || !subtitleRef.current) return;
 
-    const tl = gsap.timeline({
-      defaults: { ease: "power4.out" }
-    });
+    // Immediately hide social items to prevent FOUC before fonts.ready resolves
+    gsap.set(".social-link-item", { opacity: 0 });
 
-    // 1. Split text into characters
-    const splitTitle = new SplitType(textRef.current, { types: 'chars,words' });
-    
-    // 2. Title Animation (Mask Reveal)
-    tl.fromTo(splitTitle.chars, 
-      { 
-        y: "110%", 
-        opacity: 0,
-        scaleY: 1.5,
-        transformOrigin: "bottom"
-      },
-      {
-        y: 0,
-        opacity: 1,
-        scaleY: 1,
-        stagger: 0.03,
-        duration: 1.2,
-        force3D: true,
-      }
-    );
+    const mm = gsap.matchMedia();
+    let splitTitle = null;
+    let subtitle = null;
+    let activeListeners = [];
+    let isCleanedUp = false;
 
-    // 3. Subtitle Animation
-    const subtitle = new SplitType(subtitleRef.current, { types: 'chars' });
-    tl.from(subtitle.chars, {
-        opacity: 0,
-        y: 10,
-        scale: 0.8,
-        stagger: 0.01,
-        duration: 1,
-        ease: "power3.out",
-        force3D: true,
-    }, "-=0.8");
+    const runAnimation = () => {
+      if (isCleanedUp) return;
 
-    // 4. Social Links Animation
-    tl.from(".social-link-item", {
-      y: 30,
-      opacity: 0,
-      scale: 0.5,
-      stagger: 0.08,
-      duration: 1,
-      ease: "elastic.out(1, 0.75)",
-      force3D: true,
-    }, "-=0.6");
-
-    // 5. Background Glow Animation
-    gsap.set(".bg-glow", { xPercent: -50, yPercent: -50 });
-    gsap.to(".bg-glow", {
-        scale: 1.2,
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        force3D: true,
-    });
-
-    // Magnetic Effect for Social Links (Only if hover is supported)
-    const activeListeners = [];
-    if (window.matchMedia("(hover: hover)").matches) {
-        const socialItems = gsap.utils.toArray(".social-link-item");
-        socialItems.forEach(item => {
-            const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
-            const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
-
-            let rect = null;
-
-            const handleMouseEnter = () => {
-                rect = item.getBoundingClientRect();
-            };
-
-            const handleMouseMove = (e) => {
-                if (!rect) {
-                    rect = item.getBoundingClientRect();
-                }
-                const { clientX, clientY } = e;
-                const x = clientX - (rect.left + rect.width / 2);
-                const y = clientY - (rect.top + rect.height / 2);
-                xTo(x * 0.3);
-                yTo(y * 0.3);
-            };
-
-            const handleMouseLeave = () => {
-                rect = null;
-                xTo(0);
-                yTo(0);
-            };
-
-            item.addEventListener("mouseenter", handleMouseEnter);
-            item.addEventListener("mousemove", handleMouseMove);
-            item.addEventListener("mouseleave", handleMouseLeave);
-            activeListeners.push({ item, handleMouseEnter, handleMouseMove, handleMouseLeave });
+      mm.add({
+        isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)"
+      }, (context) => {
+        const { isDesktop } = context.conditions;
+        const tl = gsap.timeline({
+          defaults: { ease: "power4.out" }
         });
+
+        if (isDesktop) {
+          // 1. Split text into characters (Desktop only)
+          splitTitle = new SplitType(textRef.current, { types: 'chars,words' });
+          
+          // 2. Title Animation (Mask Reveal)
+          tl.fromTo(splitTitle.chars, 
+            { 
+              y: "110%", 
+              opacity: 0,
+              scaleY: 1.5,
+              transformOrigin: "bottom"
+            },
+            {
+              y: 0,
+              opacity: 1,
+              scaleY: 1,
+              stagger: 0.03,
+              duration: 1.2,
+              force3D: true,
+            }
+          );
+
+          // 3. Subtitle Animation
+          subtitle = new SplitType(subtitleRef.current, { types: 'chars' });
+          tl.from(subtitle.chars, {
+              opacity: 0,
+              y: 10,
+              scale: 0.8,
+              stagger: 0.01,
+              duration: 1,
+              ease: "power3.out",
+              force3D: true,
+          }, "-=0.8");
+
+          // 5. Background Glow Animation (Pulsing scale on desktop only)
+          gsap.set(".bg-glow", { xPercent: -50, yPercent: -50, scale: 1 });
+          gsap.to(".bg-glow", {
+              scale: 1.2,
+              duration: 4,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+              force3D: true,
+          });
+
+          // Magnetic Effect for Social Links (Only if hover is supported - desktop)
+          if (window.matchMedia("(hover: hover)").matches) {
+              const socialItems = gsap.utils.toArray(".social-link-item");
+              socialItems.forEach(item => {
+                  const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
+                  const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
+
+                  let rect = null;
+
+                  const handleMouseEnter = () => {
+                      rect = item.getBoundingClientRect();
+                  };
+
+                  const handleMouseMove = (e) => {
+                      if (!rect) {
+                          rect = item.getBoundingClientRect();
+                      }
+                      const { clientX, clientY } = e;
+                      const x = clientX - (rect.left + rect.width / 2);
+                      const y = clientY - (rect.top + rect.height / 2);
+                      xTo(x * 0.3);
+                      yTo(y * 0.3);
+                  };
+
+                  const handleMouseLeave = () => {
+                      rect = null;
+                      xTo(0);
+                      yTo(0);
+                  };
+
+                  item.addEventListener("mouseenter", handleMouseEnter);
+                  item.addEventListener("mousemove", handleMouseMove);
+                  item.addEventListener("mouseleave", handleMouseLeave);
+                  activeListeners.push({ item, handleMouseEnter, handleMouseMove, handleMouseLeave });
+              });
+          }
+        } else {
+          // Mobile Animation (Single line opacity and simple reveal)
+          tl.fromTo(textRef.current,
+            {
+              y: "30%",
+              opacity: 0,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1.0,
+              ease: "power4.out",
+              force3D: true,
+            }
+          );
+
+          tl.fromTo(subtitleRef.current,
+            {
+              y: 15,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              ease: "power3.out",
+              force3D: true,
+            },
+            "-=0.6"
+          );
+
+          // Position background glow statically (no heavy scale/pulsing on mobile)
+          gsap.set(".bg-glow", { xPercent: -50, yPercent: -50, scale: 1 });
+        }
+
+        // 4. Social Links Animation (Shared, optimized stagger)
+        tl.fromTo(".social-link-item",
+          {
+            y: isDesktop ? 30 : 15,
+            opacity: 0,
+            scale: isDesktop ? 0.5 : 0.8,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: isDesktop ? 0.08 : 0.05,
+            duration: isDesktop ? 1 : 0.6,
+            ease: isDesktop ? "elastic.out(1, 0.75)" : "power2.out",
+            force3D: true,
+          }, "-=0.6"
+        );
+
+        // Return cleanup inside the matchMedia block
+        return () => {
+          if (splitTitle) {
+            splitTitle.revert();
+            splitTitle = null;
+          }
+          if (subtitle) {
+            subtitle.revert();
+            subtitle = null;
+          }
+          activeListeners.forEach(({ item, handleMouseEnter, handleMouseMove, handleMouseLeave }) => {
+              item.removeEventListener("mouseenter", handleMouseEnter);
+              item.removeEventListener("mousemove", handleMouseMove);
+              item.removeEventListener("mouseleave", handleMouseLeave);
+          });
+          activeListeners = [];
+        };
+      });
+    };
+
+    if (document.fonts) {
+      document.fonts.ready.then(runAnimation);
+    } else {
+      runAnimation();
     }
 
     return () => {
-        if (splitTitle) splitTitle.revert();
-        if (subtitle) subtitle.revert();
-        activeListeners.forEach(({ item, handleMouseEnter, handleMouseMove, handleMouseLeave }) => {
-            item.removeEventListener("mouseenter", handleMouseEnter);
-            item.removeEventListener("mousemove", handleMouseMove);
-            item.removeEventListener("mouseleave", handleMouseLeave);
-        });
+      isCleanedUp = true;
+      mm.revert();
     };
 
   }, { scope: heroRef, dependencies: [isLoading] });

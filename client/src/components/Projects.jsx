@@ -47,144 +47,178 @@ const Projects = () => {
 
     useGSAP(() => {
         const mm = gsap.matchMedia();
-        let splitIntro;
+        let splitIntro = null;
+        let isCleanedUp = false;
 
-        // 1. Massive Intro Title Reveal
-        if (mainTitleRef.current) {
-            splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
-            gsap.from(splitIntro.chars, {
-                y: 150,
-                rotateX: -90,
-                opacity: 0,
-                stagger: 0.05,
-                duration: 1.5,
-                ease: "power4.out",
-                force3D: true,
-                scrollTrigger: {
-                    trigger: introSectionRef.current,
-                    start: "top 80%",
-                    toggleActions: "restart none none reset"
+        const initAnimations = () => {
+            if (isCleanedUp) return;
+
+            const isMobile = window.innerWidth < 768;
+
+            // 1. Massive Intro Title Reveal
+            if (mainTitleRef.current) {
+                if (isMobile) {
+                    gsap.from(mainTitleRef.current, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: "power4.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "top 80%",
+                            toggleActions: "restart none none reset"
+                        }
+                    });
+                } else {
+                    splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
+                    gsap.from(splitIntro.chars, {
+                        y: 150,
+                        rotateX: -90,
+                        opacity: 0,
+                        stagger: 0.05,
+                        duration: 1.5,
+                        ease: "power4.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: introSectionRef.current,
+                            start: "top 80%",
+                            toggleActions: "restart none none reset"
+                        }
+                    });
                 }
+
+                gsap.to(mainTitleRef.current, {
+                    y: isMobile ? -30 : -100,
+                    scale: 0.9,
+                    opacity: 0.2,
+                    ease: "none",
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: introSectionRef.current,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            }
+
+            // 2. DESKTOP ANIMATIONS (lg and above)
+            mm.add("(min-width: 1024px)", () => {
+                const images = gsap.utils.toArray(".sticky-image-item");
+                const projectSections = gsap.utils.toArray(".project-full-section");
+                
+                // Set initial state for images
+                gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1, force3D: true });
+                gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, force3D: true });
+
+                projectSections.forEach((section, i) => {
+                    if (i === 0) return;
+
+                    gsap.to(images[i], {
+                        clipPath: "inset(0% 0% 0% 0%)",
+                        scale: 1,
+                        ease: "none",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top bottom",
+                            end: "top top",
+                            scrub: true,
+                        }
+                    });
+
+                    gsap.to(images[i-1], {
+                        yPercent: -20,
+                        opacity: 0.1,
+                        scale: 0.95,
+                        ease: "none",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top bottom",
+                            end: "top top",
+                            scrub: true,
+                        }
+                    });
+                });
+
+                projectSections.forEach((section) => {
+                    const content = section.querySelector(".project-content");
+                    gsap.from(content, {
+                        x: -50,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: "power3.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 70%",
+                            toggleActions: "restart none none reset",
+                        }
+                    });
+                });
             });
 
-            gsap.to(mainTitleRef.current, {
-                y: -100,
-                scale: 0.9,
-                opacity: 0.2,
-                ease: "none",
-                force3D: true,
-                scrollTrigger: {
-                    trigger: introSectionRef.current,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
-                }
+            // 3. MOBILE ANIMATIONS (below lg)
+            mm.add("(max-width: 1023px)", () => {
+                const cards = gsap.utils.toArray(".mobile-project-card-wrapper");
+                
+                cards.forEach((card, i) => {
+                    const isLast = i === cards.length - 1;
+                    if (isLast) return;
+
+                    // High-fidelity stacking animation for mobile
+                    gsap.to(card.querySelector(".project-card-inner"), {
+                        scale: 0.85,
+                        opacity: 0.2,
+                        yPercent: -15,
+                        transformOrigin: "top center",
+                        ease: "none",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: cards[i + 1],
+                            start: "top center",
+                            end: "top top",
+                            scrub: true,
+                        }
+                    });
+                });
+
+                // Content Reveal for mobile
+                cards.forEach((card) => {
+                    const content = card.querySelector(".project-content");
+                    gsap.from(content, {
+                        y: 30,
+                        opacity: 0,
+                        duration: 1,
+                        ease: "power3.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 85%",
+                            toggleActions: "restart none none reset"
+                        }
+                    });
+                });
             });
+
+            ScrollTrigger.refresh();
+        };
+
+        if (document.fonts) {
+            document.fonts.ready.then(initAnimations);
+        } else {
+            initAnimations();
         }
 
-        // 2. DESKTOP ANIMATIONS (lg and above)
-        mm.add("(min-width: 1024px)", () => {
-            const images = gsap.utils.toArray(".sticky-image-item");
-            const projectSections = gsap.utils.toArray(".project-full-section");
-            
-            // Set initial state for images
-            gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1, force3D: true });
-            gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, force3D: true });
-
-            projectSections.forEach((section, i) => {
-                if (i === 0) return;
-
-                gsap.to(images[i], {
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    scale: 1,
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top bottom",
-                        end: "top top",
-                        scrub: true,
-                    }
-                });
-
-                gsap.to(images[i-1], {
-                    yPercent: -20,
-                    opacity: 0.1,
-                    scale: 0.95,
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top bottom",
-                        end: "top top",
-                        scrub: true,
-                    }
-                });
-            });
-
-            projectSections.forEach((section) => {
-                const content = section.querySelector(".project-content");
-                gsap.from(content, {
-                    x: -50,
-                    opacity: 0,
-                    duration: 1.2,
-                    ease: "power3.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 70%",
-                        toggleActions: "restart none none reset",
-                    }
-                });
-            });
-        });
-
-        // 3. MOBILE ANIMATIONS (below lg)
-        mm.add("(max-width: 1023px)", () => {
-            const cards = gsap.utils.toArray(".mobile-project-card-wrapper");
-            
-            cards.forEach((card, i) => {
-                const isLast = i === cards.length - 1;
-                if (isLast) return;
-
-                // High-fidelity stacking animation for mobile
-                gsap.to(card.querySelector(".project-card-inner"), {
-                    scale: 0.85,
-                    opacity: 0.2,
-                    yPercent: -15,
-                    transformOrigin: "top center",
-                    ease: "none",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: cards[i + 1],
-                        start: "top center",
-                        end: "top top",
-                        scrub: true,
-                    }
-                });
-            });
-
-            // Content Reveal for mobile
-            cards.forEach((card) => {
-                const content = card.querySelector(".project-content");
-                gsap.from(content, {
-                    y: 30,
-                    opacity: 0,
-                    duration: 1,
-                    ease: "power3.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 85%",
-                        toggleActions: "restart none none reset"
-                    }
-                });
-            });
-        });
-
         return () => {
+            isCleanedUp = true;
             mm.revert();
-            if (splitIntro) splitIntro.revert();
+            if (splitIntro) {
+                splitIntro.revert();
+                splitIntro = null;
+            }
         };
     }, { scope: containerRef });
 
