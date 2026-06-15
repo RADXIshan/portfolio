@@ -154,22 +154,35 @@ const Skills = () => {
       }
 
       // ── Horizontal scroll (ALL screen sizes) ──────────────────────────────
-      const pin = gsap.fromTo(
-        section,
-        { x: 0 },
-        {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: trigger,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: isMobile ? 0.8 : 1, // smooth momentum on mobile, smoothed on desktop
+          invalidateOnRefresh: true,
+        }
+      });
+
+      if (isMobile) {
+        // Add a 15% scroll delay/gap at the start before horizontal scroll begins
+        tl.to(section, { x: 0, duration: 0.15 });
+        tl.to(section, {
           x: () => -(section.offsetWidth - window.innerWidth),
           ease: "none",
+          duration: 0.85,
           force3D: true,
-          scrollTrigger: {
-            trigger: trigger,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: isMobile ? 0.8 : 1, // smooth momentum on mobile, smoothed on desktop
-            invalidateOnRefresh: true,
-          },
-        }
-      );
+        });
+      } else {
+        tl.to(section, {
+          x: () => -(section.offsetWidth - window.innerWidth),
+          ease: "none",
+          duration: 1,
+          force3D: true,
+        });
+      }
+
+      const pin = tl;
 
       // ── Card header + item reveal (scoped to containerAnimation) ──────────
       const cards = gsap.utils.toArray(".skill-card");
