@@ -152,7 +152,6 @@ body {
     -webkit-backdrop-filter: none !important;
     /* Replace with a soft radial gradient that's rasterized once, not repainted */
     background: radial-gradient(ellipse, rgba(99,102,241,0.07) 0%, transparent 70%) !important;
-    blur: none !important;
   }
 
   /* backdrop-blur cards — extremely costly compositing on mobile */

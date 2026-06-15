@@ -83,7 +83,7 @@ const Contact = () => {
         scrollTrigger: {
           trigger: contactRef.current,
           start: "top 95%",
-          toggleActions: "play none none none",
+          toggleActions: "play none none reverse",
         }
       });
 
@@ -205,7 +205,7 @@ const Contact = () => {
         splitTitle = null;
       }
     };
-  }, { scope: contactRef });
+  }, { scope: contactRef, dependencies: [] });
 
   return (
     <div

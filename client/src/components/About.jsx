@@ -36,7 +36,7 @@ const About = () => {
           scrollTrigger: {
               trigger: aboutRef.current,
               start: window.innerWidth < 768 ? "top 85%" : "top 60%",
-              toggleActions: "play none none none"
+              toggleActions: "play none none reverse"
           }
         }
       );
@@ -71,7 +71,7 @@ const About = () => {
             scrollTrigger: {
               trigger: paragraphRef.current,
               start: "top 80%",
-              toggleActions: "play none none none"
+              toggleActions: "play none none reverse"
             }
           });
         } else {
@@ -89,7 +89,7 @@ const About = () => {
               scrollTrigger: {
                 trigger: paragraphRef.current,
                 start: "top 90%",
-                toggleActions: "play none none none",
+                toggleActions: "play none none reverse",
               },
             }
           );
@@ -105,7 +105,7 @@ const About = () => {
           scrollTrigger: {
               trigger: aboutRef.current,
               start: "top 70%",
-              toggleActions: "play none none none"
+              toggleActions: "play none none reverse"
           }
       });
 
@@ -126,7 +126,7 @@ const About = () => {
       }
     };
 
-  }, { scope: aboutRef });
+  }, { scope: aboutRef, dependencies: [] });
 
   return (
     <div

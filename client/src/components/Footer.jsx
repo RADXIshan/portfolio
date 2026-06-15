@@ -19,6 +19,7 @@ const Footer = () => {
   ];
 
   const footerRef = useRef(null);
+  const headlineRef = useRef(null);
 
   useGSAP(() => {
     let splitText = null;
@@ -39,35 +40,40 @@ const Footer = () => {
           duration: 1.0,
           ease: "power3.out",
           force3D: true,
-          onComplete: () => gsap.set(".footer-headline", { clearProps: "all" }),
           scrollTrigger: {
             trigger: ".footer-headline",
             start: "top 95%",
-            toggleActions: "play none none none",
+            toggleActions: "play none none reverse",
           },
         });
       } else {
-        splitText = new SplitType(".footer-headline", { types: "chars,words" });
+        if (headlineRef.current) {
+          if (splitText) {
+            splitText.revert();
+          }
+          splitText = new SplitType(headlineRef.current, { types: "chars,words" });
+        }
         
-        gsap.fromTo(splitText.chars, {
-          y: 100,
-          opacity: 0,
-          rotateX: -90,
-        }, {
-          y: 0,
-          opacity: 1,
-          rotateX: 0,
-          stagger: 0.02,
-          duration: 1.5,
-          ease: "power4.out",
-          force3D: true,
-          onComplete: () => gsap.set(splitText.chars, { clearProps: "all" }),
-          scrollTrigger: {
-            trigger: ".footer-headline-wrap",
-            start: "top 95%",
-            toggleActions: "play none none none",
-          },
-        });
+        if (splitText && splitText.chars) {
+          gsap.fromTo(splitText.chars, {
+            y: 100,
+            opacity: 0,
+            rotateX: -90,
+          }, {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            stagger: 0.02,
+            duration: 1.5,
+            ease: "power4.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: ".footer-headline-wrap",
+              start: "top 95%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        }
       }
 
       // Email Reveal
@@ -84,7 +90,7 @@ const Footer = () => {
         scrollTrigger: {
           trigger: ".footer-email",
           start: "top 95%",
-          toggleActions: "play none none none",
+          toggleActions: "play none none reverse",
         },
       });
 
@@ -102,7 +108,7 @@ const Footer = () => {
         scrollTrigger: {
           trigger: ".footer-bottom",
           start: "top 98%",
-          toggleActions: "play none none none",
+          toggleActions: "play none none reverse",
         },
       });
 
@@ -122,7 +128,7 @@ const Footer = () => {
         splitText = null;
       }
     };
-  }, { scope: footerRef });
+  }, { scope: footerRef, dependencies: [] });
 
   return (
     <footer ref={footerRef} className="relative z-50 bg-[#0a0a0a] text-white py-20 px-8 border-t border-white/5 overflow-hidden">
@@ -130,7 +136,7 @@ const Footer = () => {
         <div className="flex flex-col items-center text-center mb-20">
             {/* overflow-hidden clips the chars as they animate up from y:100 */}
             <div className="footer-headline-wrap overflow-hidden pb-2">
-              <h2 className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
+              <h2 ref={headlineRef} className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
                   LET'S BUILD <br />
                   <span className="text-white/20 italic font-light">TOGETHER.</span>
               </h2>

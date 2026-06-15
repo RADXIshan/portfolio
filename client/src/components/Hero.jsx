@@ -4,6 +4,7 @@ import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
+import SplitType from "split-type";
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 // Animation strategy:
@@ -52,8 +53,22 @@ const Hero = ({ isLoading }) => {
           ? Array.from(socialRef.current.children)
           : [];
 
+        // ── Title split text for desktop ──────────────────────────────────────
+        let splitHero = null;
+        if (isDesktop && textRef.current) {
+          splitHero = new SplitType(textRef.current, { types: "chars" });
+        }
+
         // ── Initial states ────────────────────────────────────────────────────
-        gsap.set(textRef.current,    { opacity: 0, y: isDesktop ? "8%" : "30%" });
+        if (isDesktop && splitHero) {
+          gsap.set(splitHero.chars, {
+            opacity: 0,
+            y: 100,
+            rotateX: -60,
+          });
+        } else {
+          gsap.set(textRef.current,    { opacity: 0, y: isDesktop ? "8%" : "30%" });
+        }
         gsap.set(subtitleRef.current, { opacity: 0, y: isDesktop ? 12 : 15 });
         if (socialItems.length) {
           gsap.set(socialItems, {
@@ -66,14 +81,26 @@ const Hero = ({ isLoading }) => {
         // ── Timeline ─────────────────────────────────────────────────────────
         const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-        // Title — simple whole-element reveal (no SplitType chars on hero)
-        tl.to(textRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: isDesktop ? 1.2 : 1.0,
-          force3D: true,
-          onComplete: () => gsap.set(textRef.current, { clearProps: "all" }),
-        });
+        // Title — split character reveal on desktop
+        if (isDesktop && splitHero) {
+          tl.to(splitHero.chars, {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            stagger: 0.05,
+            duration: 1.2,
+            force3D: true,
+            onComplete: () => gsap.set(textRef.current, { clearProps: "all" }),
+          });
+        } else {
+          tl.to(textRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: isDesktop ? 1.2 : 1.0,
+            force3D: true,
+            onComplete: () => gsap.set(textRef.current, { clearProps: "all" }),
+          });
+        }
 
         // Subtitle
         tl.to(subtitleRef.current, {
@@ -139,6 +166,9 @@ const Hero = ({ isLoading }) => {
             item.removeEventListener("mouseleave", onLeave);
           });
           activeListeners = [];
+          if (splitHero) {
+            splitHero.revert();
+          }
         };
       });
     };

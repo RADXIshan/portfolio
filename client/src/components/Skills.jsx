@@ -111,49 +111,32 @@ const Skills = () => {
       const isMobile = window.innerWidth < 768;
 
       // ── "Tech Stack." intro title ──────────────────────────────────────────
-      // Strategy: use fromTo so the final state is ALWAYS opacity:1 / y:0
-      // after the entry plays. The scrub-exit only runs on desktop where
-      // there is enough time/space to complete it before the user scrolls back.
       if (mainTitleRef.current) {
-        if (isMobile) {
-          // On mobile: just fade in, NO scrub-out exit (avoids blank-on-return).
-          gsap.fromTo(
-            mainTitleRef.current,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1.0,
-              ease: "power3.out",
-              force3D: true,
-              onComplete: () =>
-                gsap.set(mainTitleRef.current, { clearProps: "all" }),
-              scrollTrigger: {
-                trigger: introSectionRef.current,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
-            }
-          );
-        } else {
-          // Desktop: SplitType char reveal + scrub exit
-          const splitIntro = new SplitType(mainTitleRef.current, { types: "chars" });
-          splits.push(splitIntro);
-          gsap.from(splitIntro.chars, {
-            y: 150,
-            rotateX: -90,
-            opacity: 0,
-            stagger: 0.05,
-            duration: 1.5,
-            ease: "power4.out",
-            force3D: true,
-            scrollTrigger: {
-              trigger: introSectionRef.current,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          });
-          // Scrub exit — only on desktop
+        // Desktop & Mobile: SplitType char reveal
+        const splitIntro = new SplitType(mainTitleRef.current, { types: "chars" });
+        splits.push(splitIntro);
+        
+        gsap.fromTo(splitIntro.chars, {
+          y: isMobile ? 80 : 150,
+          rotateX: isMobile ? -45 : -90,
+          opacity: 0,
+        }, {
+          y: 0,
+          rotateX: 0,
+          opacity: 1,
+          stagger: isMobile ? 0.03 : 0.05,
+          duration: isMobile ? 1.0 : 1.5,
+          ease: "power4.out",
+          force3D: true,
+          scrollTrigger: {
+            trigger: mainTitleRef.current,
+            start: isMobile ? "top 85%" : "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        // Scrub exit — only on desktop
+        if (!isMobile) {
           gsap.to(mainTitleRef.current, {
             y: -100,
             scale: 0.9,
@@ -182,7 +165,7 @@ const Skills = () => {
             trigger: trigger,
             start: "top top",
             end: "bottom bottom",
-            scrub: isMobile ? true : 1, // instant on mobile (no lag), smoothed on desktop
+            scrub: isMobile ? 0.8 : 1, // smooth momentum on mobile, smoothed on desktop
             invalidateOnRefresh: true,
           },
         }
@@ -195,45 +178,27 @@ const Skills = () => {
         const items = card.querySelectorAll(".skill-item");
 
         if (h3) {
-          if (!isMobile) {
-            // Desktop: SplitType chars
-            const splitCard = new SplitType(h3, { types: "chars" });
-            splits.push(splitCard);
-            gsap.from(splitCard.chars, {
-              y: 20,
-              opacity: 0,
-              stagger: 0.02,
-              duration: 0.8,
-              ease: "power2.out",
-              force3D: true,
-              scrollTrigger: {
-                trigger: card,
-                containerAnimation: pin,
-                start: "left 80%",
-                toggleActions: "play none none none",
-              },
-            });
-          } else {
-            // Mobile: simple whole-element reveal — NO SplitType
-            gsap.fromTo(
-              h3,
-              { opacity: 0, y: 15 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.7,
-                ease: "power2.out",
-                force3D: true,
-                onComplete: () => gsap.set(h3, { clearProps: "all" }),
-                scrollTrigger: {
-                  trigger: card,
-                  containerAnimation: pin,
-                  start: "left 90%",
-                  toggleActions: "play none none none",
-                },
-              }
-            );
-          }
+          // Desktop & Mobile: SplitType chars
+          const splitCard = new SplitType(h3, { types: "chars" });
+          splits.push(splitCard);
+          
+          gsap.fromTo(splitCard.chars, {
+            y: 20,
+            opacity: 0,
+          }, {
+            y: 0,
+            opacity: 1,
+            stagger: 0.02,
+            duration: 0.8,
+            ease: "power2.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: card,
+              containerAnimation: pin,
+              start: isMobile ? "left 95%" : "left 80%",
+              toggleActions: "play none none reverse",
+            },
+          });
         }
 
         if (items.length > 0) {
@@ -247,12 +212,11 @@ const Skills = () => {
               duration: 0.7,
               ease: "power3.out",
               force3D: true,
-              onComplete: () => gsap.set(items, { clearProps: "all" }),
               scrollTrigger: {
                 trigger: card,
                 containerAnimation: pin,
-                start: "left 90%",
-                toggleActions: "play none none none",
+                start: isMobile ? "left 95%" : "left 90%",
+                toggleActions: "play none none reverse",
               },
             }
           );
@@ -302,7 +266,7 @@ const Skills = () => {
       isCleanedUp = true;
       splits.forEach((s) => s.revert());
     };
-  }, { scope: wrapperRef });
+  }, { scope: wrapperRef, dependencies: [] });
 
   return (
     <section ref={wrapperRef} className="relative bg-[#0a0a0a]" id="skills">
@@ -349,24 +313,24 @@ const Skills = () => {
           <div
             ref={sectionRef}
             className="flex h-full items-center min-w-max"
-            style={{ paddingLeft: "clamp(1.5rem, 15vw, 40vw)", paddingRight: "clamp(1.5rem, 10vw, 10vw)" }}
+            style={{ paddingLeft: "clamp(1.5rem, 8vw, 25vw)", paddingRight: "clamp(1.5rem, 10vw, 10vw)" }}
           >
             <div
               className="flex items-center h-full"
-              style={{ gap: "clamp(3rem, 12vw, 20vw)", paddingRight: "clamp(2rem, 10vw, 20vw)" }}
+              style={{ gap: "clamp(2rem, 8vw, 15vw)", paddingRight: "clamp(2rem, 10vw, 20vw)" }}
             >
               {skillsData.map((skill, index) => (
                 <div
                   key={skill.category}
-                  className="skill-card flex flex-col h-full"
-                  style={{ paddingTop: "clamp(6vh, 12vh, 20vh)" }}
+                  className="skill-card flex flex-col justify-start h-full"
+                  style={{ paddingTop: "clamp(12vh, 14vh, 16vh)" }}
                 >
                   {/* Category label + heading */}
-                  <div className="mb-6 md:mb-12">
-                    <span className="text-base md:text-3xl font-mono text-purple-500/50 uppercase tracking-[0.2em] block">
+                  <div className="flex items-baseline gap-3 md:gap-6 mb-6 md:mb-12 flex-nowrap">
+                    <span className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
                       {`0${index + 1}`}
                     </span>
-                    <h3 className="text-2xl sm:text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mt-1 md:mt-2 whitespace-nowrap leading-tight pb-2 md:pb-4">
+                    <h3 className="text-2xl sm:text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter whitespace-nowrap leading-none pb-2 md:pb-4">
                       {skill.category}
                     </h3>
                   </div>
@@ -375,26 +339,25 @@ const Skills = () => {
                   <div
                     className={`grid ${
                       skill.items.length > 6
-                        ? "grid-cols-2 sm:grid-cols-3"
-                        : "grid-cols-2"
+                        ? "grid-cols-3 sm:grid-cols-3 lg:grid-cols-4"
+                        : "grid-cols-2 sm:grid-cols-3"
                     }`}
-                    style={{ gap: "clamp(0.75rem, 2vw, 2.5rem)" }}
+                    style={{ gap: "clamp(0.75rem, 2vw, 2rem)" }}
                   >
                     {skill.items.map((item) => (
                       <div
                         key={item.name}
-                        className="skill-item flex items-center group/item"
-                        style={{ gap: "clamp(0.5rem, 1.5vw, 1.5rem)" }}
+                        className="skill-item flex items-center gap-3 sm:gap-3.5 md:gap-4 group/item"
                       >
                         <div
                           className={`${
-                            item.name === "BeautifulSoup" || item.name === "BeautifulSoup"
+                            item.name === "BeautifulSoup"
                               ? "flex-none p-1"
-                              : "p-1.5 md:p-3"
+                              : "p-2 md:p-3.5"
                           } bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 overflow-hidden flex-shrink-0`}
                           style={{
-                            width:  "clamp(2rem, 4vw, 3.5rem)",
-                            height: "clamp(2rem, 4vw, 3.5rem)",
+                            width:  "clamp(2.5rem, 5.5vw, 4rem)",
+                            height: "clamp(2.5rem, 5.5vw, 4rem)",
                           }}
                         >
                           <img
@@ -405,7 +368,7 @@ const Skills = () => {
                         </div>
                         <span
                           className="font-light text-white/60 group-hover/item:text-white transition-colors duration-300 whitespace-nowrap"
-                          style={{ fontSize: "clamp(0.65rem, 1.5vw, 1.25rem)" }}
+                          style={{ fontSize: "clamp(0.8rem, 1.6vw, 1.25rem)" }}
                         >
                           {item.name}
                         </span>

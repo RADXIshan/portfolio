@@ -57,46 +57,30 @@ const Projects = () => {
 
             // 1. Massive Intro Title Reveal
             if (mainTitleRef.current) {
-                if (isMobile) {
-                    // Mobile: one-shot fade-up, NO scrub exit.
-                    // A scrub that fades to opacity:0/0.2 conflicts with the entry
-                    // tween on scroll-back, leaving the title permanently blank.
-                    // clearProps releases GSAP ownership so CSS controls opacity after.
-                    gsap.fromTo(mainTitleRef.current,
-                        { opacity: 0, y: 40 },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: 1.0,
-                            ease: "power3.out",
-                            force3D: true,
-                            onComplete: () =>
-                                gsap.set(mainTitleRef.current, { clearProps: "all" }),
-                            scrollTrigger: {
-                                trigger: introSectionRef.current,
-                                start: "top 90%",
-                                toggleActions: "play none none none",
-                            },
-                        }
-                    );
-                } else {
-                    // Desktop: SplitType char reveal
-                    splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
-                    gsap.from(splitIntro.chars, {
-                        y: 150,
-                        rotateX: -90,
-                        opacity: 0,
-                        stagger: 0.05,
-                        duration: 1.5,
-                        ease: "power4.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: introSectionRef.current,
-                            start: "top 80%",
-                            toggleActions: "play none none none"
-                        }
-                    });
-                    // Desktop-only scrub exit — enough scroll range to reverse cleanly
+                // Desktop & Mobile: SplitType char reveal
+                splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
+                
+                gsap.fromTo(splitIntro.chars, {
+                    y: isMobile ? 80 : 150,
+                    rotateX: isMobile ? -45 : -90,
+                    opacity: 0,
+                }, {
+                    y: 0,
+                    rotateX: 0,
+                    opacity: 1,
+                    stagger: isMobile ? 0.03 : 0.05,
+                    duration: isMobile ? 1.0 : 1.5,
+                    ease: "power4.out",
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: mainTitleRef.current,
+                        start: isMobile ? "top 85%" : "top 80%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+
+                // Desktop-only scrub exit — enough scroll range to reverse cleanly
+                if (!isMobile) {
                     gsap.to(mainTitleRef.current, {
                         y: -100,
                         scale: 0.9,
@@ -164,7 +148,7 @@ const Projects = () => {
                         scrollTrigger: {
                             trigger: section,
                             start: "top 70%",
-                            toggleActions: "play none none none",
+                            toggleActions: "play none none reverse",
                         }
                     });
                 });
@@ -188,7 +172,7 @@ const Projects = () => {
                             scrollTrigger: {
                                 trigger: card,
                                 start: "top 90%",
-                                toggleActions: "play none none none",
+                                toggleActions: "play none none reverse",
                             },
                         }
                     );
@@ -212,7 +196,7 @@ const Projects = () => {
                 splitIntro = null;
             }
         };
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [] });
 
     return (
         <section ref={containerRef} className="relative w-full bg-[#0a0a0a]" id="projects">
