@@ -58,32 +58,29 @@ const Projects = () => {
             // 1. Massive Intro Title Reveal
             if (mainTitleRef.current) {
                 if (isMobile) {
-                    gsap.from(mainTitleRef.current, {
-                        y: 40,
-                        opacity: 0,
-                        duration: 1.0,
-                        ease: "power3.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: introSectionRef.current,
-                            start: "top 90%",
-                            toggleActions: "play none none none"
+                    // Mobile: one-shot fade-up, NO scrub exit.
+                    // A scrub that fades to opacity:0/0.2 conflicts with the entry
+                    // tween on scroll-back, leaving the title permanently blank.
+                    // clearProps releases GSAP ownership so CSS controls opacity after.
+                    gsap.fromTo(mainTitleRef.current,
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1.0,
+                            ease: "power3.out",
+                            force3D: true,
+                            onComplete: () =>
+                                gsap.set(mainTitleRef.current, { clearProps: "all" }),
+                            scrollTrigger: {
+                                trigger: introSectionRef.current,
+                                start: "top 90%",
+                                toggleActions: "play none none none",
+                            },
                         }
-                    });
-                    // Exit: only start fading when the section is already 40% scrolled past top
-                    gsap.to(mainTitleRef.current, {
-                        y: -30,
-                        opacity: 0.2,
-                        ease: "none",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: introSectionRef.current,
-                            start: "40% top",
-                            end: "bottom top",
-                            scrub: true
-                        }
-                    });
+                    );
                 } else {
+                    // Desktop: SplitType char reveal
                     splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
                     gsap.from(splitIntro.chars, {
                         y: 150,
@@ -99,8 +96,9 @@ const Projects = () => {
                             toggleActions: "play none none none"
                         }
                     });
+                    // Desktop-only scrub exit — enough scroll range to reverse cleanly
                     gsap.to(mainTitleRef.current, {
-                        y: isMobile ? -30 : -100,
+                        y: -100,
                         scale: 0.9,
                         opacity: 0.2,
                         ease: "none",
