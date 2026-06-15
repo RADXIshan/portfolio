@@ -184,7 +184,7 @@ const Projects = () => {
                             duration: 0.6,
                             ease: "power2.out",
                             force3D: true,
-                            onComplete: () => gsap.set(card, { clearProps: "all" }),
+                            onComplete: () => gsap.set(card, { clearProps: "transform,opacity" }),
                             scrollTrigger: {
                                 trigger: card,
                                 start: "top 90%",
@@ -286,11 +286,12 @@ const Projects = () => {
                     </div>
 
                     {/* Mobile View (Hidden on PC) */}
-                    <div className="lg:hidden flex flex-col px-4 py-12 gap-6">
+                    <div className="lg:hidden flex flex-col px-4 py-12 gap-12 pb-[20vh]">
                         {projects.map((project, index) => (
                             <div 
                                 key={project.id} 
-                                className="mobile-project-card-wrapper"
+                                className="mobile-project-card-wrapper sticky"
+                                style={{ top: `calc(120px + ${index * 24}px)`, zIndex: index }}
                             >
                                 <div className="project-card-inner w-full bg-[#111] border border-white/5 rounded-[2.5rem] p-8 flex flex-col shadow-2xl overflow-hidden relative">
                                     <div className="project-content flex flex-col">
