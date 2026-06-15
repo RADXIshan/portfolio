@@ -66,19 +66,24 @@ const App = () => {
       document.body.classList.add('no-scroll');
       window.lenis?.stop();
     } else {
+      const isMobile = window.innerWidth < 768;
       // Entrance animation for content
       gsap.fromTo(".app-content", 
-        { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
+        { 
+          opacity: 0, 
+          scale: isMobile ? 1 : 1.05, 
+          filter: isMobile ? 'none' : 'blur(20px)' 
+        },
         { 
           opacity: 1, 
           scale: 1, 
-          filter: 'blur(0px)', 
-          duration: 1.5, 
+          filter: 'none', 
+          duration: isMobile ? 1.0 : 1.5, 
           ease: 'power3.out',
           onComplete: () => {
             document.body.classList.remove('no-scroll');
             window.lenis?.start();
-            gsap.set(".app-content", { clearProps: "filter,scale" });
+            gsap.set(".app-content", { clearProps: "all" });
           }
         }
       );

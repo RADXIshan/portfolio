@@ -90,7 +90,7 @@ const Footer = () => {
     <footer ref={footerRef} className="relative z-50 bg-[#0a0a0a] text-white py-20 px-8 border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center text-center mb-20">
-            <h2 className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8 mix-blend-difference">
+            <h2 className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
                 LET'S BUILD <br />
                 <span className="text-white/20 italic font-light">TOGETHER.</span>
             </h2>

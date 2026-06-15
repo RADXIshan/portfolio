@@ -10,9 +10,10 @@ const Hero = ({ isLoading }) => {
 
   const heroRef = useRef(null);
   const textRef = useRef(null);
+  const subtitleRef = useRef(null);
 
   useGSAP(() => {
-    if (isLoading || !textRef.current) return;
+    if (isLoading || !textRef.current || !subtitleRef.current) return;
 
     const tl = gsap.timeline({
       defaults: { ease: "power4.out" }
@@ -40,7 +41,7 @@ const Hero = ({ isLoading }) => {
     );
 
     // 3. Subtitle Animation
-    const subtitle = new SplitType(heroRef.current.querySelector(".hero-subtitle"), { types: 'chars' });
+    const subtitle = new SplitType(subtitleRef.current, { types: 'chars' });
     tl.from(subtitle.chars, {
         opacity: 0,
         y: 10,
@@ -142,16 +143,17 @@ const Hero = ({ isLoading }) => {
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(300px,80vw,600px)] h-[clamp(300px,80vw,600px)] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none will-change-transform transform-gpu" />
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,50vw,400px)] h-[clamp(200px,50vw,400px)] bg-zinc-400/5 rounded-full blur-[100px] pointer-events-none delay-700 will-change-transform transform-gpu" />
 
-      <div className="overflow-hidden py-4 px-10"> {/* Added px-10 for horizontal buffer */}
+      <div className="overflow-hidden py-4 px-4 sm:px-10"> {/* Added responsive padding for horizontal buffer */}
         <h1 
             ref={textRef}
-            className="hero-title text-[clamp(2.5rem,15vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 mix-blend-difference z-10 whitespace-nowrap will-change-transform"
+            className="hero-title text-[clamp(2.5rem,10vw,15rem)] font-bold tracking-tighter leading-[1.2] py-2 px-2 z-10 whitespace-nowrap will-change-transform"
         >
             {title}
         </h1>
       </div>
       
       <p 
+        ref={subtitleRef}
         className="hero-subtitle text-[clamp(0.9rem,2vw,1.4rem)] font-light tracking-[0.2em] sm:tracking-[0.4em] text-white/50 uppercase z-10 whitespace-nowrap"
       >
         Software Developer
