@@ -22,9 +22,10 @@
   }
 }
 
-html.lenis, html.lenis body {
+html, html.lenis, html.lenis body {
   height: auto;
   overflow-x: clip;
+  -webkit-overflow-scrolling: touch;
 }
 
 .lenis.lenis-smooth {
@@ -113,9 +114,12 @@ body::before {
   overflow: hidden !important;
 }
 
-/* app-content is hidden initially via GSAP in App.jsx - no CSS override needed */
+/* app-content: GSAP sets opacity:0 inline during preloader.
+   After reveal completes, clearProps removes the inline style
+   so it falls back to the natural opacity:1 below. */
 .app-content {
   will-change: opacity;
+  opacity: 1;   /* CSS default — GSAP inline overrides this */
 }
 
 .bg-glow {

@@ -43,7 +43,7 @@ const Footer = () => {
           scrollTrigger: {
             trigger: ".footer-headline",
             start: "top 95%",
-            toggleActions: "play none none reset",
+            toggleActions: "play none none none",
           },
         });
       } else {
@@ -65,7 +65,7 @@ const Footer = () => {
           scrollTrigger: {
             trigger: ".footer-headline",
             start: "top 95%",
-            toggleActions: "play none none reset",
+            toggleActions: "play none none none",
           },
         });
       }
@@ -84,7 +84,7 @@ const Footer = () => {
         scrollTrigger: {
           trigger: ".footer-email",
           start: "top 95%",
-          toggleActions: "play none none reset",
+          toggleActions: "play none none none",
         },
       });
 
@@ -102,7 +102,7 @@ const Footer = () => {
         scrollTrigger: {
           trigger: ".footer-bottom",
           start: "top 98%",
-          toggleActions: "play none none reset",
+          toggleActions: "play none none none",
         },
       });
 

@@ -71,29 +71,35 @@ const App = () => {
       document.body.classList.add('no-scroll');
       window.lenis?.stop();
     } else {
-      // Remove scroll lock first so lenis can work
       document.body.classList.remove('no-scroll');
 
       const isMobile = window.innerWidth < 768;
 
+      // Safety net: guarantee visibility in case animation stalls on mobile
+      const safetyTimer = setTimeout(() => {
+        gsap.set(".app-content", { clearProps: "all" });
+        window.lenis?.start();
+        ScrollTrigger.refresh();
+      }, 4000);
+
+      const onRevealComplete = () => {
+        clearTimeout(safetyTimer);
+        gsap.set(".app-content", { clearProps: "all" });
+        window.lenis?.start();
+        ScrollTrigger.refresh();
+      };
+
       if (isMobile) {
-        // On mobile: simple fade-in only, no scale/blur (GPU-heavy and buggy)
         gsap.fromTo(".app-content",
           { opacity: 0 },
           {
             opacity: 1,
             duration: 0.8,
             ease: 'power2.out',
-            onComplete: () => {
-              gsap.set(".app-content", { clearProps: "opacity" });
-              window.lenis?.start();
-              // Recalculate all scroll triggers now layout is visible
-              ScrollTrigger.refresh();
-            }
+            onComplete: onRevealComplete,
           }
         );
       } else {
-        // Desktop: full entrance animation
         gsap.fromTo(".app-content",
           { opacity: 0, scale: 1.05, filter: 'blur(20px)' },
           {
@@ -102,15 +108,12 @@ const App = () => {
             filter: 'none',
             duration: 1.5,
             ease: 'power3.out',
-            onComplete: () => {
-              gsap.set(".app-content", { clearProps: "all" });
-              window.lenis?.start();
-              // Recalculate all scroll triggers now layout is visible
-              ScrollTrigger.refresh();
-            }
+            onComplete: onRevealComplete,
           }
         );
       }
+
+      return () => clearTimeout(safetyTimer);
     }
 
     return () => {

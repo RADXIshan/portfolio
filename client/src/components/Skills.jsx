@@ -122,7 +122,7 @@ const Skills = () => {
                         scrollTrigger: {
                             trigger: introSectionRef.current,
                             start: "top 80%",
-                            toggleActions: "restart none none reset"
+                            toggleActions: "play none none none",
                         }
                     });
                 } else {
@@ -139,7 +139,7 @@ const Skills = () => {
                         scrollTrigger: {
                             trigger: introSectionRef.current,
                             start: "top 80%",
-                            toggleActions: "restart none none reset"
+                            toggleActions: "play none none none",
                         }
                     });
                 }
@@ -193,7 +193,7 @@ const Skills = () => {
                                 trigger: card,
                                 containerAnimation: pin,
                                 start: "left 80%",
-                                toggleActions: "restart none none reset",
+                                toggleActions: "play none none none",
                             }
                         });
                     } else {
@@ -210,7 +210,7 @@ const Skills = () => {
                                 trigger: card,
                                 containerAnimation: pin,
                                 start: "left 80%",
-                                toggleActions: "restart none none reset",
+                                toggleActions: "play none none none",
                             }
                         });
                     }
@@ -228,7 +228,7 @@ const Skills = () => {
                             trigger: card,
                             containerAnimation: pin,
                             start: "left 80%",
-                            toggleActions: "restart none none reset",
+                            toggleActions: "play none none none",
                         }
                     });
                 }

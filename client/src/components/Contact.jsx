@@ -22,7 +22,7 @@ const MagneticSocialLink = ({ href, ariaLabel, children }) => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ariaLabel}
-      className="social-link-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
+      className="contact-social-item w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all duration-300"
     >
       {children}
     </a>
@@ -84,7 +84,7 @@ const Contact = () => {
         scrollTrigger: {
           trigger: contactRef.current,
           start: "top 95%",
-          toggleActions: "play none none reset",
+          toggleActions: "play none none none",
         }
       });
 
@@ -128,8 +128,8 @@ const Contact = () => {
         force3D: true,
       }, 0.05);
 
-      // Social Links Stagger (Ensuring visibility)
-      tl.fromTo(".social-link-item", {
+      // Social Links Stagger
+      tl.fromTo(".contact-social-item", {
         scale: 0.7,
         opacity: 0,
       }, {
