@@ -78,33 +78,44 @@ const Hero = ({ isLoading }) => {
     if (window.matchMedia("(hover: hover)").matches) {
         const socialItems = gsap.utils.toArray(".social-link-item");
         socialItems.forEach(item => {
-            const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-            const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+            const xTo = gsap.quickTo(item, "x", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
+            const yTo = gsap.quickTo(item, "y", { duration: 1, ease: "elastic.out(1, 0.3)", force3D: true });
+
+            let rect = null;
+
+            const handleMouseEnter = () => {
+                rect = item.getBoundingClientRect();
+            };
 
             const handleMouseMove = (e) => {
+                if (!rect) {
+                    rect = item.getBoundingClientRect();
+                }
                 const { clientX, clientY } = e;
-                const { left, top, width, height } = item.getBoundingClientRect();
-                const x = clientX - (left + width / 2);
-                const y = clientY - (top + height / 2);
+                const x = clientX - (rect.left + rect.width / 2);
+                const y = clientY - (rect.top + rect.height / 2);
                 xTo(x * 0.3);
                 yTo(y * 0.3);
             };
 
             const handleMouseLeave = () => {
+                rect = null;
                 xTo(0);
                 yTo(0);
             };
 
+            item.addEventListener("mouseenter", handleMouseEnter);
             item.addEventListener("mousemove", handleMouseMove);
             item.addEventListener("mouseleave", handleMouseLeave);
-            activeListeners.push({ item, handleMouseMove, handleMouseLeave });
+            activeListeners.push({ item, handleMouseEnter, handleMouseMove, handleMouseLeave });
         });
     }
 
     return () => {
         if (splitTitle) splitTitle.revert();
         if (subtitle) subtitle.revert();
-        activeListeners.forEach(({ item, handleMouseMove, handleMouseLeave }) => {
+        activeListeners.forEach(({ item, handleMouseEnter, handleMouseMove, handleMouseLeave }) => {
+            item.removeEventListener("mouseenter", handleMouseEnter);
             item.removeEventListener("mousemove", handleMouseMove);
             item.removeEventListener("mouseleave", handleMouseLeave);
         });

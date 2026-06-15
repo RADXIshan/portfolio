@@ -48,8 +48,9 @@ const About = () => {
     });
 
     // Text Split Animation
+    let split;
     if (paragraphRef.current) {
-        const split = new SplitType(paragraphRef.current, { types: 'lines' });
+        split = new SplitType(paragraphRef.current, { types: 'lines' });
         
         gsap.from(split.lines, {
             y: 30,
@@ -57,6 +58,7 @@ const About = () => {
             stagger: 0.1,
             duration: 1,
             ease: "power3.out",
+            force3D: true,
             scrollTrigger: {
                 trigger: paragraphRef.current,
                 start: "top 80%",
@@ -70,12 +72,17 @@ const About = () => {
         opacity: 0,
         duration: 1,
         ease: "power3.out",
+        force3D: true,
         scrollTrigger: {
             trigger: aboutRef.current,
             start: "top 70%",
             toggleActions: "restart none none reset"
         }
     });
+
+    return () => {
+        if (split) split.revert();
+    };
 
   }, { scope: aboutRef });
 
