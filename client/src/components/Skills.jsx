@@ -304,20 +304,20 @@ const Skills = () => {
 
       {/* ── Horizontal scroll (all screen sizes) ──────────────────────────── */}
       {/*
-        h-[400vh] on mobile gives more scroll distance so each card
-        has enough room to scroll into view at a comfortable pace.
+        h-[280vh] on mobile gives a tighter and more comfortable scroll distance
+        than h-[400vh] to avoid scrolling too far past content.
         On desktop h-[300vh] is enough.
       */}
-      <div ref={triggerRef} className="relative h-[400vh] md:h-[300vh]">
+      <div ref={triggerRef} className="relative h-[280vh] md:h-[300vh]">
         <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
           <div
             ref={sectionRef}
             className="flex h-full items-center min-w-max"
-            style={{ paddingLeft: "clamp(1.5rem, 8vw, 25vw)", paddingRight: "clamp(1.5rem, 10vw, 10vw)" }}
+            style={{ paddingLeft: "clamp(1.5rem, 8vw, 25vw)", paddingRight: "clamp(1.5rem, 8vw, 15vw)" }}
           >
             <div
               className="flex items-center h-full"
-              style={{ gap: "clamp(2rem, 8vw, 15vw)", paddingRight: "clamp(2rem, 10vw, 20vw)" }}
+              style={{ gap: "clamp(2rem, 8vw, 15vw)" }}
             >
               {skillsData.map((skill, index) => (
                 <div
@@ -327,10 +327,10 @@ const Skills = () => {
                 >
                   {/* Category label + heading */}
                   <div className="flex items-baseline gap-3 md:gap-6 mb-6 md:mb-12 flex-nowrap">
-                    <span className="text-base sm:text-2xl md:text-5xl lg:text-6xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
+                    <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
                       {`0${index + 1}`}
                     </span>
-                    <h3 className="text-2xl sm:text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter whitespace-nowrap leading-none pb-2 md:pb-4">
+                    <h3 className="text-3xl sm:text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter whitespace-nowrap leading-none pb-2 md:pb-4">
                       {skill.category}
                     </h3>
                   </div>
@@ -342,7 +342,7 @@ const Skills = () => {
                         ? "grid-cols-3 sm:grid-cols-3 lg:grid-cols-4"
                         : "grid-cols-2 sm:grid-cols-3"
                     }`}
-                    style={{ gap: "clamp(0.75rem, 2vw, 2rem)" }}
+                    style={{ gap: "clamp(0.9rem, 2.5vw, 2rem)" }}
                   >
                     {skill.items.map((item) => (
                       <div
@@ -353,11 +353,11 @@ const Skills = () => {
                           className={`${
                             item.name === "BeautifulSoup"
                               ? "flex-none p-1"
-                              : "p-2 md:p-3.5"
+                              : "p-2 md:p-3"
                           } bg-white/[0.05] border border-white/10 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover/item:bg-white/10 group-hover/item:-translate-y-1 overflow-hidden flex-shrink-0`}
                           style={{
-                            width:  "clamp(2.5rem, 5.5vw, 4rem)",
-                            height: "clamp(2.5rem, 5.5vw, 4rem)",
+                            width:  "clamp(3.0rem, 6vw, 4.5rem)",
+                            height: "clamp(3.0rem, 6vw, 4.5rem)",
                           }}
                         >
                           <img
@@ -368,7 +368,7 @@ const Skills = () => {
                         </div>
                         <span
                           className="font-light text-white/60 group-hover/item:text-white transition-colors duration-300 whitespace-nowrap"
-                          style={{ fontSize: "clamp(0.8rem, 1.6vw, 1.25rem)" }}
+                          style={{ fontSize: "clamp(0.95rem, 1.8vw, 1.25rem)" }}
                         >
                           {item.name}
                         </span>
@@ -380,17 +380,17 @@ const Skills = () => {
             </div>
           </div>
 
-          {/* Scroll indicator — desktop only */}
+          {/* Scroll indicator — visible on all screen sizes */}
           <div
             ref={indicatorRef}
-            className="hidden md:flex absolute bottom-12 items-center gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500"
-            style={{ left: "clamp(1.5rem, 15vw, 40vw)" }}
+            className="flex absolute bottom-8 md:bottom-12 items-center gap-4 md:gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500"
+            style={{ left: "clamp(1.5rem, 8vw, 25vw)" }}
           >
             <div className="flex flex-col">
-              <span className="text-[11px] uppercase tracking-[0.5em] text-white/70 font-black">Keep</span>
-              <span className="text-[9px] uppercase tracking-[0.5em] text-purple-500 font-black">Scrolling</span>
+              <span className="text-[9px] md:text-[11px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-white/70 font-black leading-tight">Keep</span>
+              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-purple-500 font-black leading-tight">Scrolling</span>
             </div>
-            <div className="relative w-48 h-[1px] bg-white/10 overflow-hidden">
+            <div className="relative w-24 sm:w-36 md:w-48 h-[1px] bg-white/10 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]" />
             </div>
           </div>
