@@ -97,13 +97,15 @@ const App = () => {
     if (!cursorDot || !cursorOutline) return;
 
     // Set centering properties to avoid inline override of translate(-50%, -50%)
-    gsap.set(cursorDot, { xPercent: -50, yPercent: -50 });
-    gsap.set(cursorOutline, { xPercent: -50, yPercent: -50 });
+    gsap.set(cursorDot, { xPercent: -50, yPercent: -50, force3D: true });
+    gsap.set(cursorOutline, { xPercent: -50, yPercent: -50, force3D: true });
 
-    const xToDot = gsap.quickTo(cursorDot, "x", { duration: 0.08, ease: "power2.out" });
-    const yToDot = gsap.quickTo(cursorDot, "y", { duration: 0.08, ease: "power2.out" });
-    const xToOutline = gsap.quickTo(cursorOutline, "x", { duration: 0.35, ease: "power3.out" });
-    const yToOutline = gsap.quickTo(cursorOutline, "y", { duration: 0.35, ease: "power3.out" });
+    const xToDot = gsap.quickTo(cursorDot, "x", { duration: 0.08, ease: "power2.out", force3D: true });
+    const yToDot = gsap.quickTo(cursorDot, "y", { duration: 0.08, ease: "power2.out", force3D: true });
+    const xToOutline = gsap.quickTo(cursorOutline, "x", { duration: 0.35, ease: "power3.out", force3D: true });
+    const yToOutline = gsap.quickTo(cursorOutline, "y", { duration: 0.35, ease: "power3.out", force3D: true });
+
+    let currentCursorState = "default";
 
     const moveCursor = (e) => {
       const { clientX, clientY } = e;
@@ -119,16 +121,23 @@ const App = () => {
       const isClickable = target.closest('a, button, .cursor-pointer, input, textarea');
 
       if (isProject) {
-        cursorDot.classList.add('project-active');
-        cursorOutline.classList.add('hidden');
+        if (currentCursorState !== "project") {
+          currentCursorState = "project";
+          gsap.to(cursorDot, { scale: 5, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+          gsap.to(cursorOutline, { scale: 0, opacity: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        }
       } else if (isClickable) {
-        cursorDot.classList.add('active');
-        cursorOutline.classList.add('active');
-        cursorDot.classList.remove('project-active');
-        cursorOutline.classList.remove('hidden');
+        if (currentCursorState !== "clickable") {
+          currentCursorState = "clickable";
+          gsap.to(cursorDot, { scale: 1.5, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+          gsap.to(cursorOutline, { scale: 1.5, opacity: 1, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        }
       } else {
-        cursorDot.classList.remove('active', 'project-active');
-        cursorOutline.classList.remove('active', 'hidden');
+        if (currentCursorState !== "default") {
+          currentCursorState = "default";
+          gsap.to(cursorDot, { scale: 1, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+          gsap.to(cursorOutline, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        }
       }
     };
 

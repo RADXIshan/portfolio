@@ -94,6 +94,7 @@ const Contact = () => {
       stagger: 0.03,
       duration: 0.5,
       ease: "power3.out",
+      force3D: true,
     }, 0);
 
     // Subtitle Reveal (Faster)
@@ -105,6 +106,7 @@ const Contact = () => {
       opacity: 1,
       duration: 0.5,
       ease: "power3.out",
+      force3D: true,
     }, 0.1);
 
     // Cards Reveal (Faster, force3D for performance)
@@ -130,6 +132,7 @@ const Contact = () => {
       stagger: 0.05,
       duration: 0.5,
       ease: "back.out(2)",
+      force3D: true,
     }, 0.2);
 
     // Form Fields Reveal (Faster)
@@ -142,6 +145,7 @@ const Contact = () => {
       stagger: 0.05,
       duration: 0.6,
       ease: "power2.out",
+      force3D: true,
     }, 0.15);
 
     // Submit Button Reveal
@@ -153,6 +157,7 @@ const Contact = () => {
       opacity: 1,
       duration: 0.5,
       ease: "power2.out",
+      force3D: true,
     }, 0.3);
 
     // Contact Background Glow
@@ -162,7 +167,8 @@ const Contact = () => {
         duration: 8,
         repeat: -1,
         yoyo: true,
-        ease: "sine.inOut"
+        ease: "sine.inOut",
+        force3D: true,
     });
 
     ScrollTrigger.refresh();

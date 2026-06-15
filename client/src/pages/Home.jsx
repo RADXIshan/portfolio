@@ -25,17 +25,25 @@ const Home = ({ isLoading, setActiveSection }) => {
       { id: "contact", color: "#0a0a0a" },
     ];
 
+    let currentColor = "";
+
     sections.forEach(({ id, color }) => {
       ScrollTrigger.create({
         trigger: `#${id}`,
         start: "top 50%",
         end: "bottom 50%",
         onEnter: () => {
-          gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
+          if (currentColor !== color) {
+            currentColor = color;
+            gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
+          }
           setActiveSection(id);
         },
         onEnterBack: () => {
-          gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
+          if (currentColor !== color) {
+            currentColor = color;
+            gsap.to(document.body, { "--bg-color": color, duration: 0.8 });
+          }
           setActiveSection(id);
         },
       });

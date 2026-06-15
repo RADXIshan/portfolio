@@ -48,6 +48,7 @@ const Hero = ({ isLoading }) => {
         stagger: 0.01,
         duration: 1,
         ease: "power3.out",
+        force3D: true,
     }, "-=0.8");
 
     // 4. Social Links Animation
@@ -58,15 +59,18 @@ const Hero = ({ isLoading }) => {
       stagger: 0.08,
       duration: 1,
       ease: "elastic.out(1, 0.75)",
+      force3D: true,
     }, "-=0.6");
 
     // 5. Background Glow Animation
+    gsap.set(".bg-glow", { xPercent: -50, yPercent: -50 });
     gsap.to(".bg-glow", {
         scale: 1.2,
         duration: 4,
         repeat: -1,
         yoyo: true,
-        ease: "sine.inOut"
+        ease: "sine.inOut",
+        force3D: true,
     });
 
     // Magnetic Effect for Social Links (Only if hover is supported)

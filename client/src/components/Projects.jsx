@@ -59,6 +59,7 @@ const Projects = () => {
                 stagger: 0.05,
                 duration: 1.5,
                 ease: "power4.out",
+                force3D: true,
                 scrollTrigger: {
                     trigger: introSectionRef.current,
                     start: "top 80%",
@@ -71,6 +72,7 @@ const Projects = () => {
                 scale: 0.9,
                 opacity: 0.2,
                 ease: "none",
+                force3D: true,
                 scrollTrigger: {
                     trigger: introSectionRef.current,
                     start: "top top",
@@ -86,8 +88,8 @@ const Projects = () => {
             const projectSections = gsap.utils.toArray(".project-full-section");
             
             // Set initial state for images
-            gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1 });
-            gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 });
+            gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1, force3D: true });
+            gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, force3D: true });
 
             projectSections.forEach((section, i) => {
                 if (i === 0) return;
@@ -96,6 +98,7 @@ const Projects = () => {
                     clipPath: "inset(0% 0% 0% 0%)",
                     scale: 1,
                     ease: "none",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: section,
                         start: "top bottom",
@@ -109,6 +112,7 @@ const Projects = () => {
                     opacity: 0.1,
                     scale: 0.95,
                     ease: "none",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: section,
                         start: "top bottom",
@@ -125,6 +129,7 @@ const Projects = () => {
                     opacity: 0,
                     duration: 1.2,
                     ease: "power3.out",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: section,
                         start: "top 70%",
@@ -149,6 +154,7 @@ const Projects = () => {
                     yPercent: -15,
                     transformOrigin: "top center",
                     ease: "none",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: cards[i + 1],
                         start: "top center",
@@ -166,6 +172,7 @@ const Projects = () => {
                     opacity: 0,
                     duration: 1,
                     ease: "power3.out",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: card,
                         start: "top 85%",

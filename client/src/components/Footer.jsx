@@ -35,6 +35,7 @@ const Footer = () => {
       stagger: 0.02,
       duration: 1.5,
       ease: "power4.out",
+      force3D: true,
       scrollTrigger: {
         trigger: ".footer-headline",
         start: "top 95%",
@@ -52,6 +53,7 @@ const Footer = () => {
       duration: 1,
       ease: "power3.out",
       delay: 0.5,
+      force3D: true,
       scrollTrigger: {
         trigger: ".footer-email",
         start: "top 95%",
@@ -69,6 +71,7 @@ const Footer = () => {
       stagger: 0.2,
       duration: 1,
       ease: "power3.out",
+      force3D: true,
       scrollTrigger: {
         trigger: ".footer-bottom",
         start: "top 98%",

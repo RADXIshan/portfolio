@@ -108,13 +108,14 @@ const Skills = () => {
         if (mainTitleRef.current) {
             const splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
             splits.push(splitIntro);
-            gsap.from(splitIntro.chars, {
+             gsap.from(splitIntro.chars, {
                 y: 150,
                 rotateX: -90,
                 opacity: 0,
                 stagger: 0.05,
                 duration: 1.5,
                 ease: "power4.out",
+                force3D: true,
                 scrollTrigger: {
                     trigger: introSectionRef.current,
                     start: "top 80%",
@@ -127,6 +128,7 @@ const Skills = () => {
                 scale: 0.9,
                 opacity: 0,
                 ease: "none",
+                force3D: true,
                 scrollTrigger: {
                     trigger: introSectionRef.current,
                     start: "top top",
@@ -141,6 +143,7 @@ const Skills = () => {
             {
                 x: () => -(section.offsetWidth - window.innerWidth),
                 ease: "none",
+                force3D: true,
                 scrollTrigger: {
                     trigger: trigger,
                     start: "top top",
@@ -166,6 +169,7 @@ const Skills = () => {
                     stagger: 0.02,
                     duration: 0.8,
                     ease: "power2.out",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: card,
                         containerAnimation: pin,
@@ -182,6 +186,7 @@ const Skills = () => {
                     stagger: 0.05,
                     duration: 0.8,
                     ease: "power3.out",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: card,
                         containerAnimation: pin,
@@ -198,6 +203,7 @@ const Skills = () => {
             {
                 opacity: 0.4,
                 x: 0,
+                force3D: true,
                 scrollTrigger: {
                     trigger: trigger,
                     start: "top center",
@@ -211,6 +217,7 @@ const Skills = () => {
         gsap.to(indicatorRef.current, {
             opacity: 0,
             x: -20,
+            force3D: true,
             scrollTrigger: {
                 trigger: trigger,
                 start: "bottom 30%",
