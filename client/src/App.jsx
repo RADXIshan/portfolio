@@ -43,7 +43,7 @@ const App = () => {
     }
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothTouch: false,
       touchMultiplier: 2,
@@ -53,6 +53,9 @@ const App = () => {
 
     // Always stop lenis initially — preloader is always shown first
     lenis.stop();
+
+    // Keep ScrollTrigger in sync with Lenis scroll position (prevents lag/desync)
+    lenis.on("scroll", ScrollTrigger.update);
 
     // Use gsap ticker for RAF — avoids double RAF loops and syncs with GSAP
     const onTick = (time) => lenis.raf(time * 1000);
@@ -74,6 +77,7 @@ const App = () => {
     document.addEventListener('click', handleAnchorClick);
 
     return () => {
+      lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(onTick);
       lenis.destroy();
       document.removeEventListener('click', handleAnchorClick);

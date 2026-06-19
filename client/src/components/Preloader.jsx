@@ -4,79 +4,96 @@ import logo from '../assets/logo.png';
 
 const Preloader = ({ onComplete }) => {
   const preloaderRef = useRef(null);
+  const curtainRef = useRef(null);
+  const ringRef = useRef(null);
+  const ringProgressRef = useRef(null);
+  const monogramRef = useRef(null);
+  const nameRef = useRef(null);
+  const taglineRef = useRef(null);
   const counterRef = useRef(null);
   const lineRef = useRef(null);
-  const logoRef = useRef(null);
-  const textRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const panelsRef = useRef([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          onComplete();
-        }
-      });
+      const tl = gsap.timeline({ onComplete });
 
-      // Initial State
-      gsap.set(logoRef.current, { opacity: 0, y: 40, scale: 0.95 });
-      gsap.set(textRef.current, { opacity: 0, y: 10 });
+      gsap.set(curtainRef.current, { scaleY: 1, transformOrigin: 'top center' });
+      gsap.set(ringRef.current, { opacity: 0, scale: 0.92 });
+      gsap.set(ringProgressRef.current, { strokeDashoffset: 283 });
+      gsap.set(monogramRef.current, { opacity: 0, y: 24 });
+      gsap.set(nameRef.current, { opacity: 0, y: 12 });
+      gsap.set(taglineRef.current, { opacity: 0, y: 8 });
+      gsap.set(counterRef.current, { opacity: 0 });
       gsap.set(lineRef.current, { scaleX: 0, transformOrigin: 'left center' });
-      gsap.set(panelsRef.current, { scaleY: 1 });
 
-      // Entrance
-      tl.to(logoRef.current, {
+      // Entrance — refined, unhurried
+      tl.to(ringRef.current, {
         opacity: 1,
-        y: 0,
         scale: 1,
-        duration: 1.8,
-        ease: 'power4.out'
+        duration: 1.4,
+        ease: 'power3.out',
       })
-      .to(textRef.current, {
+      .to(ringProgressRef.current, {
+        strokeDashoffset: 0,
+        duration: 2.6,
+        ease: 'power2.inOut',
+      }, '-=1.1')
+      .to(monogramRef.current, {
         opacity: 1,
         y: 0,
         duration: 1.2,
-        ease: 'power3.out'
-      }, "-=1.4")
+        ease: 'power3.out',
+      }, '-=2.2')
+      .to(nameRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power3.out',
+      }, '-=1.6')
+      .to(taglineRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+      }, '-=0.7')
+      .to(counterRef.current, {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out',
+      }, '-=0.8')
       .to(lineRef.current, {
         scaleX: 1,
-        duration: 2.8,
-        ease: 'power2.inOut'
-      }, "-=1.6");
+        duration: 2.4,
+        ease: 'power2.inOut',
+      }, '-=2.4');
 
-      // Counter animation
       let count = { value: 0 };
       gsap.to(count, {
         value: 100,
-        duration: 2.8,
+        duration: 2.6,
         ease: 'power2.inOut',
-        delay: 0.2,
+        delay: 0.15,
         onUpdate: () => {
           if (counterRef.current) {
-            counterRef.current.textContent = Math.round(count.value);
+            counterRef.current.textContent = String(Math.round(count.value)).padStart(2, '0');
           }
-        }
+        },
       });
 
-      // Exit Animation
-      // Fade and blur the central content
-      tl.to(wrapperRef.current, {
+      // Exit — curtain lifts, content fades
+      tl.to([ringRef.current, monogramRef.current, nameRef.current, taglineRef.current, counterRef.current, lineRef.current], {
         opacity: 0,
-        scale: 1.1,
-        filter: 'blur(15px)',
-        duration: 1,
-        ease: 'power3.inOut',
-        delay: 0.2
+        y: -12,
+        duration: 0.7,
+        stagger: 0.04,
+        ease: 'power2.inOut',
+        delay: 0.15,
       })
-      // Slide panels up
-      .to(panelsRef.current, {
+      .to(curtainRef.current, {
         scaleY: 0,
-        transformOrigin: 'top center',
-        duration: 1.2,
-        stagger: 0.05,
-        ease: 'expo.inOut'
-      }, "-=0.6");
+        duration: 1.1,
+        ease: 'power4.inOut',
+      }, '-=0.35');
 
     }, preloaderRef);
 
@@ -84,75 +101,78 @@ const Preloader = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <div 
+    <div
       ref={preloaderRef}
-      className="fixed inset-0 z-[20000] flex items-center justify-center overflow-hidden pointer-events-none"
+      className="preloader-root fixed inset-0 z-[20000] flex items-center justify-center overflow-hidden"
     >
-      {/* Background Panels for elegant exit */}
-      <div className="absolute inset-0 flex z-0">
-        {[...Array(4)].map((_, i) => (
+      <div ref={curtainRef} className="preloader-curtain absolute inset-0 bg-[#080808]" />
+
+      <div className="preloader-grain absolute inset-0 opacity-[0.04] bg-noise pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col items-center px-6">
+        {/* Circular progress ring */}
+        <div ref={ringRef} className="relative mb-10 md:mb-12">
+          <svg className="w-36 h-36 md:w-44 md:h-44 -rotate-90" viewBox="0 0 100 100">
+            <circle
+              cx="50" cy="50" r="45"
+              fill="none"
+              stroke="rgba(255,255,255,0.06)"
+              strokeWidth="0.5"
+            />
+            <circle
+              ref={ringProgressRef}
+              cx="50" cy="50" r="45"
+              fill="none"
+              stroke="rgba(255,255,255,0.7)"
+              strokeWidth="0.75"
+              strokeLinecap="round"
+              strokeDasharray="283"
+              strokeDashoffset="283"
+            />
+          </svg>
+
           <div
-            key={i}
-            ref={el => panelsRef.current[i] = el}
-            className="flex-1 h-full bg-[#0a0a0a]"
-          ></div>
-        ))}
-      </div>
-
-      {/* Noise Overlay */}
-      <div className="absolute inset-0 z-10 opacity-[0.03] bg-noise pointer-events-none mix-blend-overlay"></div>
-
-      {/* Content */}
-      <div ref={wrapperRef} className="relative z-20 flex flex-col items-center justify-center w-full px-6">
-        
-        {/* Elegant Logo Container */}
-        <div 
-          ref={logoRef} 
-          className="mb-14 flex flex-col items-center"
-        >
-          <div className="relative p-7 rounded-[2rem] bg-white/[0.01] border border-white/5 backdrop-blur-3xl shadow-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-20"></div>
-            <img 
-              src={logo} 
-              alt="iR Logo" 
-              className="w-16 h-auto md:w-24 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+            ref={monogramRef}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <img
+              src={logo}
+              alt="IR"
+              className="w-14 h-14 md:w-[4.5rem] md:h-[4.5rem] rounded-full object-cover ring-1 ring-white/10"
             />
           </div>
         </div>
 
-        {/* Typography & Progress */}
-        <div className="flex flex-col items-center w-full max-w-[240px] md:max-w-[300px]">
-          <div className="flex items-end mb-6 overflow-hidden">
-            <span 
-              ref={counterRef} 
-              className="text-6xl md:text-8xl font-light text-white tracking-tighter leading-none"
-              style={{ fontFamily: '"Outfit", sans-serif', fontVariantNumeric: 'tabular-nums' }}
-            >
-              0
-            </span>
-            <span className="text-2xl md:text-3xl text-white/40 font-light ml-2 mb-1 md:mb-2 leading-none">%</span>
-          </div>
-
-          {/* Very thin, elegant progress line */}
-          <div className="w-full h-[1px] bg-white/10 relative overflow-hidden rounded-full">
-            <div 
-              ref={lineRef}
-              className="absolute top-0 left-0 h-full w-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
-            ></div>
-          </div>
-
-          <div className="mt-8 flex items-center justify-between w-full">
-             <div className="h-[1px] w-8 bg-white/20"></div>
-             <div 
-              ref={textRef}
-              className="text-[9px] md:text-[10px] font-medium uppercase tracking-[0.5em] text-white/30 pl-[0.5em]"
-             >
-               Initializing
-             </div>
-             <div className="h-[1px] w-8 bg-white/20"></div>
-          </div>
+        <div ref={nameRef} className="text-center mb-6">
+          <p className="text-[10px] md:text-xs uppercase tracking-[0.55em] text-white/35 mb-3 pl-[0.55em]">
+            Portfolio
+          </p>
+          <h1 className="text-2xl md:text-3xl font-light tracking-[0.18em] text-white/90 uppercase">
+            Ishan Roy
+          </h1>
         </div>
 
+        <p
+          ref={taglineRef}
+          className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-white/25 mb-8 pl-[0.4em]"
+        >
+          Curating Experience
+        </p>
+
+        <div className="flex flex-col items-center w-full max-w-[200px]">
+          <span
+            ref={counterRef}
+            className="text-sm font-mono text-white/40 tracking-[0.3em] mb-4 tabular-nums"
+          >
+            00
+          </span>
+          <div className="w-full h-px bg-white/[0.06] relative overflow-hidden">
+            <div
+              ref={lineRef}
+              className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-transparent via-white/60 to-transparent"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

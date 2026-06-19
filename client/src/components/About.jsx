@@ -5,117 +5,196 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowUpRight } from "lucide-react";
 import SplitType from 'split-type';
+import {
+  ZOOM_O_ENTER,
+  ZOOM_TEXT_END,
+  ZOOM_PARA_END,
+  ZOOM_CTA_END,
+  zoomScrollStart,
+  zoomScrollEnd,
+} from "../constants/zoomTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const About = () => {
+const About = ({ isReady = true, transitionRef }) => {
   const aboutRef = useRef(null);
   const imageRef = useRef(null);
   const imageWrapperRef = useRef(null);
-  const textRef = useRef(null);
+  const headerRef = useRef(null);
   const paragraphRef = useRef(null);
+  const ctaRef = useRef(null);
 
   useGSAP(() => {
+    if (!isReady) return;
+
     let split = null;
     let isCleanedUp = false;
+    const isDesktop = window.innerWidth >= 768;
 
     const initAnimations = () => {
       if (isCleanedUp) return;
 
-      // Image Reveal on wrapper
-      gsap.fromTo(
-        imageWrapperRef.current,
-        { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)", scale: 1.05 },
-        { 
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
-          scale: 1, 
-          duration: 1.8, 
-          ease: "power4.inOut",
-          force3D: true,
-          onComplete: () => gsap.set(imageWrapperRef.current, { clearProps: "will-change" }),
-          scrollTrigger: {
-              trigger: aboutRef.current,
-              start: window.innerWidth < 768 ? "top 85%" : "top 60%",
-              toggleActions: "play none none reverse"
-          }
-        }
-      );
+      const transitionEl = transitionRef?.current;
+      const header = headerRef.current;
+      const paragraph = paragraphRef.current;
+      const imageWrapper = imageWrapperRef.current;
+      const cta = ctaRef.current;
 
-      // Parallax effect on scroll — desktop only (scrub on mobile causes jank)
-      if (window.innerWidth >= 768) {
-        gsap.to(imageRef.current, {
-            yPercent: 15,
-            ease: "none",
-            force3D: true,
-            scrollTrigger: {
-                trigger: aboutRef.current,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true
-            }
+      if (!transitionEl) return;
+
+      // ── Set initial hidden states explicitly ──────────────────────────────
+      if (header) gsap.set(header, { x: -40, opacity: 0, force3D: true });
+      if (paragraph && !isDesktop) gsap.set(paragraph, { opacity: 0, y: 24, force3D: true });
+      if (cta) gsap.set(cta, { opacity: 0, y: 16, force3D: true });
+      if (imageWrapper) {
+        gsap.set(imageWrapper, {
+          clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
+          scale: 1.05,
+          force3D: true,
         });
       }
 
-      // Text Split Animation
-      if (paragraphRef.current) {
-        if (window.innerWidth >= 768) {
-          // Desktop only: SplitType line reveal
-          split = new SplitType(paragraphRef.current, { types: 'lines' });
-          gsap.from(split.lines, {
-            y: 30,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 1,
-            ease: "power3.out",
+      // ── Text reveals — scrubbed to the same scroll as the O zoom ──────────
+      // Using the transition wrapper ensures animations fire during the pin.
+      if (header) {
+        gsap.to(header, {
+          x: 0,
+          opacity: 1,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: transitionEl,
+            start: zoomScrollStart(ZOOM_O_ENTER),
+            end: zoomScrollEnd(ZOOM_TEXT_END),
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      if (paragraph) {
+        if (isDesktop) {
+          gsap.set(paragraph, { opacity: 1, y: 0, clearProps: "transform" });
+
+          split = new SplitType(paragraph, { types: "lines" });
+          if (split.lines?.length) {
+            gsap.set(split.lines, { y: 28, opacity: 0, force3D: true });
+
+            const lineTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: transitionEl,
+                start: zoomScrollStart(ZOOM_O_ENTER + 0.02),
+                end: zoomScrollEnd(ZOOM_PARA_END),
+                scrub: true,
+                invalidateOnRefresh: true,
+                onLeave: () => gsap.set(split.lines, { opacity: 1, y: 0 }),
+                onLeaveBack: () => gsap.set(split.lines, { opacity: 0, y: 28 }),
+              },
+            });
+
+            split.lines.forEach((line, i) => {
+              lineTl.to(line, { y: 0, opacity: 1, ease: "none", duration: 0.2 }, i * 0.08);
+            });
+          } else {
+            gsap.fromTo(paragraph,
+              { opacity: 0, y: 24 },
+              {
+                opacity: 1,
+                y: 0,
+                ease: "none",
+                force3D: true,
+                scrollTrigger: {
+                  trigger: transitionEl,
+                  start: zoomScrollStart(ZOOM_O_ENTER),
+                  end: zoomScrollEnd(ZOOM_PARA_END),
+                  scrub: true,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+          }
+        } else {
+          gsap.to(paragraph, {
+            opacity: 1,
+            y: 0,
+            ease: "none",
             force3D: true,
             scrollTrigger: {
-              trigger: paragraphRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
+              trigger: transitionEl,
+              start: zoomScrollStart(ZOOM_O_ENTER),
+              end: zoomScrollEnd(ZOOM_PARA_END),
+              scrub: true,
+              invalidateOnRefresh: true,
+              onLeave: () => gsap.set(paragraph, { opacity: 1, y: 0 }),
+            },
           });
-        } else {
-          // Mobile: simple whole-element fade — no SplitType layout thrash
-          gsap.fromTo(
-            paragraphRef.current,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: "power2.out",
-              force3D: true,
-              onComplete: () => gsap.set(paragraphRef.current, { clearProps: "all" }),
-              scrollTrigger: {
-                trigger: paragraphRef.current,
-                start: "top 90%",
-                toggleActions: "play none none reverse",
-              },
-            }
-          );
         }
       }
 
-      gsap.from(".about-header", {
-          x: -50,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
+      if (cta) {
+        gsap.to(cta, {
+          opacity: 1,
+          y: 0,
+          ease: "none",
           force3D: true,
           scrollTrigger: {
-              trigger: aboutRef.current,
-              start: "top 70%",
-              toggleActions: "play none none reverse"
-          }
-      });
+            trigger: transitionEl,
+            start: zoomScrollStart(ZOOM_O_ENTER + 0.12),
+            end: zoomScrollEnd(ZOOM_CTA_END),
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // ── Photo — own trigger, plays when image enters viewport ───────────
+      if (imageWrapper) {
+        gsap.to(imageWrapper, {
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+          scale: 1,
+          duration: 1.8,
+          ease: "power4.inOut",
+          force3D: true,
+          onComplete: () => gsap.set(imageWrapper, { clearProps: "will-change" }),
+          scrollTrigger: {
+            trigger: imageWrapper,
+            start: isDesktop ? "top 78%" : "top 85%",
+            toggleActions: "play none none reverse",
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // Parallax on photo — desktop only
+      if (isDesktop && imageRef.current) {
+        gsap.to(imageRef.current, {
+          yPercent: 15,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: aboutRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
 
       ScrollTrigger.refresh();
     };
 
+    const setup = () => {
+      // Wait for the zoom pin ScrollTrigger to be registered first
+      requestAnimationFrame(() => {
+        requestAnimationFrame(initAnimations);
+      });
+    };
+
     if (document.fonts) {
-      document.fonts.ready.then(initAnimations);
+      document.fonts.ready.then(setup);
     } else {
-      initAnimations();
+      setup();
     }
 
     return () => {
@@ -126,19 +205,17 @@ const About = () => {
       }
     };
 
-  }, { scope: aboutRef, dependencies: [] });
+  }, { scope: aboutRef, dependencies: [isReady] });
 
   return (
     <div
       id="about"
       ref={aboutRef}
-      className="relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center px-8 py-20 sm:px-12 md:px-20 lg:px-[5vw] gap-12 lg:gap-24 overflow-hidden"
+      className="about-section relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center px-8 py-20 sm:px-12 md:px-20 lg:px-[5vw] gap-12 lg:gap-24 overflow-hidden z-[1]"
     >
-      {/* Image Section */}
-      <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
+      <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative order-2 lg:order-1">
         <div ref={imageWrapperRef} className="relative w-full max-w-md aspect-[3/4] overflow-hidden rounded-2xl group transform-gpu">
            <div className="w-full h-full relative overflow-hidden">
-             {/* Easter Egg Code */}
              <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center p-4 sm:p-8 overflow-hidden underline-offset-4">
                   <pre className="text-green-500/80 font-mono text-[min(3.5vw,14px)] sm:text-base leading-relaxed">
                     {`const ishan = {
@@ -158,15 +235,13 @@ const About = () => {
                 onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x800/131313/FFFFFF?text=Ishan'; }}
             />
            </div>
-           {/* Decorative Elements */}
            <div className="absolute -bottom-6 -left-6 w-24 h-24 border-l-2 border-b-2 border-white/20 hidden md:block"></div>
            <div className="absolute -top-6 -right-6 w-24 h-24 border-r-2 border-t-2 border-white/20 hidden md:block"></div>
         </div>
       </div>
 
-      {/* Text Section */}
-      <div ref={textRef} className="w-full lg:w-1/2 flex flex-col items-start gap-8">
-        <div className="about-header overflow-hidden">
+      <div className="w-full lg:w-1/2 flex flex-col items-start gap-8 order-1 lg:order-2">
+        <div ref={headerRef} className="about-header overflow-hidden">
             <h2 className="text-sm font-mono text-purple-400 uppercase tracking-[0.3em] mb-2">
                 / WHO I AM
             </h2>
@@ -177,13 +252,13 @@ const About = () => {
         </div>
         
         <div className="space-y-6 max-w-xl">
-            <p ref={paragraphRef} className="text-xl sm:text-2xl text-gray-300 leading-snug font-light">
+            <p ref={paragraphRef} className="text-xl sm:text-2xl text-gray-300 leading-snug font-light overflow-hidden">
             I’m <span className="text-white font-medium">Ishan Roy</span>, a software developer driven by the intersection of design and engineering. I don't just write code; I build immersive, high-performance applications that leave a lasting impression.
             From full-stack architectures to AI-powered systems, I thrive on solving complex problems with elegant solutions.
             </p>
         </div>
 
-        <div className="pt-4">
+        <div ref={ctaRef} className="pt-4">
             <a href="#contact" className="group relative inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full font-bold overflow-hidden transition-all duration-300 hover:pr-14">
                 <span className="relative z-10 transition-transform duration-300 group-hover:-translate-x-1">Let's Talk</span>
                 <ArrowUpRight className="w-6 h-6 relative z-10 transition-all duration-300 group-hover:rotate-45 group-hover:translate-x-2" />

@@ -19,7 +19,7 @@ import SplitType from "split-type";
 //   style that survives matchMedia cleanup and revert cycles.
 // ──────────────────────────────────────────────────────────────────────────────
 
-const Hero = ({ isLoading }) => {
+const Hero = ({ isReady }) => {
 
   const heroRef    = useRef(null);
   const textRef    = useRef(null);
@@ -27,7 +27,7 @@ const Hero = ({ isLoading }) => {
   const socialRef  = useRef(null);
 
   useGSAP(() => {
-    if (isLoading || !textRef.current || !subtitleRef.current) return;
+    if (!isReady || !textRef.current || !subtitleRef.current) return;
 
     const mm = gsap.matchMedia();
     let activeListeners = [];
@@ -185,7 +185,7 @@ const Hero = ({ isLoading }) => {
       mm.revert();
     };
 
-  }, { scope: heroRef, dependencies: [isLoading] });
+  }, { scope: heroRef, dependencies: [isReady] });
 
   const socialLinks = [
     { icon: faLinkedin,     label: "LinkedIn", href: "https://www.linkedin.com/in/ishanroy-radx/" },
@@ -198,7 +198,7 @@ const Hero = ({ isLoading }) => {
     <div
       id="home"
       ref={heroRef}
-      className="flex flex-col items-center justify-center min-h-[100svh] gap-6 px-4 sm:px-8 py-4 text-center overflow-hidden relative"
+      className="flex flex-col items-center justify-center h-screen gap-6 px-4 sm:px-8 py-4 text-center overflow-hidden relative"
     >
       {/* Background Glow — no blur on mobile (GPU killer), subtle gradient only */}
       <div className="bg-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[clamp(200px,70vw,600px)] h-[clamp(200px,70vw,600px)] rounded-full pointer-events-none md:blur-[140px] md:bg-blue-500/5" />
@@ -207,14 +207,14 @@ const Hero = ({ isLoading }) => {
       {/* Title — no overflow-hidden wrapper needed (no char-split animation) */}
       <h1
         ref={textRef}
-        className="hero-title text-[clamp(3rem,12vw,15rem)] font-bold tracking-tighter leading-[1.15] z-10 whitespace-nowrap"
+        className={`hero-title text-[clamp(3rem,12vw,15rem)] font-bold tracking-tighter leading-[1.15] z-10 whitespace-nowrap ${!isReady ? "opacity-0" : ""}`}
       >
-        Ishan Roy
+        ISHAN R<span className="zoom-o">O</span>Y
       </h1>
 
       <p
         ref={subtitleRef}
-        className="hero-subtitle text-[clamp(0.75rem,2.5vw,1.4rem)] font-light tracking-[0.15em] sm:tracking-[0.35em] text-white/50 uppercase z-10 whitespace-nowrap"
+        className={`hero-subtitle text-[clamp(0.75rem,2.5vw,1.4rem)] font-light tracking-[0.15em] sm:tracking-[0.35em] text-white/50 uppercase z-10 whitespace-nowrap ${!isReady ? "opacity-0" : ""}`}
       >
         Software Developer
       </p>

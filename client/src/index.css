@@ -135,10 +135,152 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-/* Fix mobile Safari 100vh including browser chrome — use svh units instead */
+/* Hero section */
 #home {
-  min-height: 100vh;       /* fallback for older browsers */
-  min-height: 100svh;      /* exact visible area on mobile Safari */
+  height: 100%;
+}
+
+/* ── Hero → About O portal transition ───────────────────────────────────── */
+.hero-transition-wrapper {
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+.hero-transition-sticky {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+.hero-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #0a0a0a;
+  contain: layout style paint;
+}
+
+.portal-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  contain: layout style;
+}
+
+/* Mirrors hero flex layout so portal title aligns with hero title */
+.portal-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 1rem;
+  text-align: center;
+}
+
+.portal-spacer {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.zoom-portal-text {
+  font-size: clamp(3rem, 12vw, 15rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.85);
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.zoom-o {
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 1);
+  position: relative;
+  display: inline-block;
+}
+
+/* Pull About up so text enters viewport during the O zoom */
+.about-section {
+  margin-top: -38vh;
+}
+
+@media (min-width: 768px) {
+  .about-section {
+    margin-top: -42vh;
+  }
+}
+
+/* Scroll cue — visible throughout the entire zoom section */
+.scroll-cue {
+  position: absolute;
+  bottom: clamp(2rem, 5vh, 4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.zoom-scroll-cue {
+  z-index: 20;
+}
+
+/* ── Premium preloader ───────────────────────────────────────────────────── */
+.preloader-root {
+  pointer-events: none;
+}
+
+.preloader-curtain {
+  will-change: transform;
+}
+
+/* ── Premium navbar ──────────────────────────────────────────────────────── */
+.nav-bar-premium {
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+}
+
+.menu-overlay-premium {
+  background: #080808;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .nav-bar-premium {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(10, 10, 10, 0.92);
+  }
+}
+
+.scroll-cue-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
+}
+
+.scroll-arrow {
+  color: rgba(255, 255, 255, 0.35);
+  will-change: transform;
 }
 
 /* ── Mobile Performance Overrides ────────────────────────────────────────── */

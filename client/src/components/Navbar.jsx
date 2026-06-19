@@ -81,7 +81,7 @@ const Navbar = ({ activeSection, isLoading }) => {
         }, "-=0.8");
       }
 
-      // Navbar entrance animation
+      // Navbar entrance animation — reveals after preloader
       if (isLoading) {
         gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
       } else {
