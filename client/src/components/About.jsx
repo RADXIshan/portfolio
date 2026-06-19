@@ -47,7 +47,9 @@ const About = ({ isReady = true, transitionRef }) => {
 
       if (!transitionEl) return;
 
-      const revealChars = (element, { startPct, endPct, stagger = 0.012, fromY = "110%" }) => {
+      const header = headerRef.current;
+
+      const revealChars = (element, { triggerElement, stagger = 0.012, fromY = "110%", delay = 0 }) => {
         const splitText = new SplitType(element, { types: "words,chars" });
         splits.push(splitText);
 
@@ -55,20 +57,20 @@ const About = ({ isReady = true, transitionRef }) => {
 
         gsap.set(splitText.chars, { y: fromY, opacity: 0, force3D: true });
 
-        const charTl = gsap.timeline({
+        gsap.to(splitText.chars, {
+          y: "0%",
+          opacity: 1,
+          stagger: stagger,
+          duration: 0.8,
+          delay: delay,
+          ease: "power3.out",
+          force3D: true,
           scrollTrigger: {
-            trigger: transitionEl,
-            start: zoomScrollStart(startPct),
-            end: zoomScrollEnd(endPct),
-            scrub: true,
+            trigger: triggerElement || element,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
             invalidateOnRefresh: true,
-            onLeave: () => gsap.set(splitText.chars, { opacity: 1, y: "0%" }),
-            onLeaveBack: () => gsap.set(splitText.chars, { opacity: 0, y: fromY }),
           },
-        });
-
-        splitText.chars.forEach((char, i) => {
-          charTl.to(char, { y: "0%", opacity: 1, ease: "none", duration: 0.12 }, i * stagger);
         });
 
         return splitText;
@@ -83,30 +85,29 @@ const About = ({ isReady = true, transitionRef }) => {
         });
       }
 
-      // ── Text reveals — scrubbed to the same scroll as the O zoom ──────────
-      // Using the transition wrapper ensures animations fire during the pin.
+      // ── Text reveals — triggered as the header enters the viewport ────────
       if (eyebrow) {
         revealChars(eyebrow, {
-          startPct: ZOOM_O_ENTER,
-          endPct: ZOOM_O_ENTER + 0.1,
+          triggerElement: header || eyebrow,
           stagger: isDesktop ? 0.025 : 0.035,
           fromY: "100%",
+          delay: 0,
         });
       }
 
       if (titleLine1) {
         revealChars(titleLine1, {
-          startPct: ZOOM_O_ENTER + 0.02,
-          endPct: ZOOM_TEXT_END - 0.03,
+          triggerElement: header || titleLine1,
           stagger: isDesktop ? 0.012 : 0.018,
+          delay: 0.1,
         });
       }
 
       if (titleLine2) {
         revealChars(titleLine2, {
-          startPct: ZOOM_O_ENTER + 0.05,
-          endPct: ZOOM_TEXT_END,
+          triggerElement: header || titleLine2,
           stagger: isDesktop ? 0.012 : 0.018,
+          delay: 0.25,
         });
       }
 
