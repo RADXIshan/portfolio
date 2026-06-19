@@ -22,7 +22,8 @@ const About = ({ isReady = true, transitionRef }) => {
   const imageWrapperRef = useRef(null);
   const headerRef = useRef(null);
   const eyebrowRef = useRef(null);
-  const titleRef = useRef(null);
+  const titleLine1Ref = useRef(null);
+  const titleLine2Ref = useRef(null);
   const paragraphRef = useRef(null);
   const ctaRef = useRef(null);
 
@@ -38,7 +39,8 @@ const About = ({ isReady = true, transitionRef }) => {
 
       const transitionEl = transitionRef?.current;
       const eyebrow = eyebrowRef.current;
-      const title = titleRef.current;
+      const titleLine1 = titleLine1Ref.current;
+      const titleLine2 = titleLine2Ref.current;
       const paragraph = paragraphRef.current;
       const imageWrapper = imageWrapperRef.current;
       const cta = ctaRef.current;
@@ -46,7 +48,7 @@ const About = ({ isReady = true, transitionRef }) => {
       if (!transitionEl) return;
 
       const revealChars = (element, { startPct, endPct, stagger = 0.012, fromY = "110%" }) => {
-        const splitText = new SplitType(element, { types: "chars" });
+        const splitText = new SplitType(element, { types: "words,chars" });
         splits.push(splitText);
 
         if (!splitText.chars?.length) return null;
@@ -73,8 +75,6 @@ const About = ({ isReady = true, transitionRef }) => {
       };
 
       // ── Set initial hidden states explicitly ──────────────────────────────
-      if (paragraph && !isDesktop) gsap.set(paragraph, { opacity: 0, y: 24, force3D: true });
-      if (cta) gsap.set(cta, { opacity: 0, y: 16, force3D: true });
       if (imageWrapper) {
         gsap.set(imageWrapper, {
           clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
@@ -94,85 +94,60 @@ const About = ({ isReady = true, transitionRef }) => {
         });
       }
 
-      if (title) {
-        revealChars(title, {
+      if (titleLine1) {
+        revealChars(titleLine1, {
           startPct: ZOOM_O_ENTER + 0.02,
+          endPct: ZOOM_TEXT_END - 0.03,
+          stagger: isDesktop ? 0.012 : 0.018,
+        });
+      }
+
+      if (titleLine2) {
+        revealChars(titleLine2, {
+          startPct: ZOOM_O_ENTER + 0.05,
           endPct: ZOOM_TEXT_END,
           stagger: isDesktop ? 0.012 : 0.018,
         });
       }
 
       if (paragraph) {
-        if (isDesktop) {
-          gsap.set(paragraph, { opacity: 1, y: 0, clearProps: "transform" });
+        gsap.set(paragraph, { opacity: 1, y: 0, clearProps: "transform" });
 
-          const split = new SplitType(paragraph, { types: "lines" });
-          splits.push(split);
-          if (split.lines?.length) {
-            gsap.set(split.lines, { y: 28, opacity: 0, force3D: true });
+        const split = new SplitType(paragraph, { types: "lines,words" });
+        splits.push(split);
+        if (split.lines?.length) {
+          gsap.set(split.lines, { y: 24, opacity: 0, force3D: true });
 
-            const lineTl = gsap.timeline({
-              scrollTrigger: {
-                trigger: transitionEl,
-                start: zoomScrollStart(ZOOM_O_ENTER + 0.02),
-                end: zoomScrollEnd(ZOOM_PARA_END),
-                scrub: true,
-                invalidateOnRefresh: true,
-                onLeave: () => gsap.set(split.lines, { opacity: 1, y: 0 }),
-                onLeaveBack: () => gsap.set(split.lines, { opacity: 0, y: 28 }),
-              },
-            });
-
-            split.lines.forEach((line, i) => {
-              lineTl.to(line, { y: 0, opacity: 1, ease: "none", duration: 0.2 }, i * 0.08);
-            });
-          } else {
-            gsap.fromTo(paragraph,
-              { opacity: 0, y: 24 },
-              {
-                opacity: 1,
-                y: 0,
-                ease: "none",
-                force3D: true,
-                scrollTrigger: {
-                  trigger: transitionEl,
-                  start: zoomScrollStart(ZOOM_O_ENTER),
-                  end: zoomScrollEnd(ZOOM_PARA_END),
-                  scrub: true,
-                  invalidateOnRefresh: true,
-                },
-              }
-            );
-          }
-        } else {
-          gsap.to(paragraph, {
-            opacity: 1,
+          gsap.to(split.lines, {
             y: 0,
-            ease: "none",
+            opacity: 1,
+            stagger: 0.05,
+            duration: 0.8,
+            ease: "power3.out",
             force3D: true,
             scrollTrigger: {
-              trigger: transitionEl,
-              start: zoomScrollStart(ZOOM_O_ENTER),
-              end: zoomScrollEnd(ZOOM_PARA_END),
-              scrub: true,
+              trigger: paragraph,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
               invalidateOnRefresh: true,
-              onLeave: () => gsap.set(paragraph, { opacity: 1, y: 0 }),
             },
           });
         }
       }
 
       if (cta) {
+        gsap.set(cta, { opacity: 0, y: 16, force3D: true });
+
         gsap.to(cta, {
           opacity: 1,
           y: 0,
-          ease: "none",
+          duration: 0.8,
+          ease: "power3.out",
           force3D: true,
           scrollTrigger: {
-            trigger: transitionEl,
-            start: zoomScrollStart(ZOOM_O_ENTER + 0.12),
-            end: zoomScrollEnd(ZOOM_CTA_END),
-            scrub: true,
+            trigger: cta,
+            start: "top 90%",
+            toggleActions: "play none none reverse",
             invalidateOnRefresh: true,
           },
         });
@@ -277,11 +252,14 @@ const About = ({ isReady = true, transitionRef }) => {
                 / WHO I AM
             </h2>
             <h1
-              ref={titleRef}
-              className="text-4xl sm:text-6xl lg:text-8xl font-bold leading-[0.85] tracking-tighter overflow-hidden"
+              className="text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.9] tracking-tighter overflow-hidden"
             >
-                Crafting digital <br />
-                <span className="text-white/40 italic font-light">experiences.</span>
+              <span className="block overflow-hidden pb-1 sm:pb-2">
+                <span ref={titleLine1Ref} className="inline-block whitespace-nowrap">Crafting digital</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span ref={titleLine2Ref} className="inline-block text-white/40 italic font-light whitespace-nowrap">experiences.</span>
+              </span>
             </h1>
         </div>
         

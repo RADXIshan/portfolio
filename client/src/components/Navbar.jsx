@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useMagnetic } from "../hooks/useMagnetic";
 

@@ -154,6 +154,8 @@ const Home = ({ isLoading, setActiveSection }) => {
   }, { scope: mainRef, dependencies: [isLoading] });
 
   useGSAP(() => {
+    if (isLoading) return;
+
     const sections = [
       { id: "home", color: "#0a0a0a" },
       { id: "about", color: "#0a0a0a" },
@@ -185,7 +187,7 @@ const Home = ({ isLoading, setActiveSection }) => {
         },
       });
     });
-  }, { scope: mainRef });
+  }, { scope: mainRef, dependencies: [isLoading] });
 
   return (
     <main ref={mainRef}>

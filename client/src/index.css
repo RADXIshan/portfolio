@@ -226,6 +226,11 @@ body {
   font-kerning: none;
 }
 
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .about-header .char {
   display: inline-block;
   will-change: transform, opacity;
