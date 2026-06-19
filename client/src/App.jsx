@@ -54,6 +54,24 @@ const App = () => {
     // Always stop lenis initially — preloader is always shown first
     lenis.stop();
 
+    // Proxy scroll position so ScrollTrigger reads Lenis, not native scroll
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value) {
+        if (arguments.length) {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+    });
+
     // Keep ScrollTrigger in sync with Lenis scroll position (prevents lag/desync)
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -78,6 +96,7 @@ const App = () => {
 
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
+      ScrollTrigger.scrollerProxy(document.documentElement, {});
       gsap.ticker.remove(onTick);
       lenis.destroy();
       document.removeEventListener('click', handleAnchorClick);

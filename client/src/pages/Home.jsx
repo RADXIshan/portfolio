@@ -224,8 +224,8 @@ const Home = ({ isLoading, setActiveSection }) => {
       </div>
 
       <About isReady={!isLoading} transitionRef={transitionRef} />
-      <Skills />
-      <Projects />
+      <Skills isReady={!isLoading} />
+      <Projects isReady={!isLoading} />
       <Contact />
       <Footer />
 

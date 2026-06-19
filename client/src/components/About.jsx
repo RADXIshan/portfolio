@@ -21,13 +21,15 @@ const About = ({ isReady = true, transitionRef }) => {
   const imageRef = useRef(null);
   const imageWrapperRef = useRef(null);
   const headerRef = useRef(null);
+  const eyebrowRef = useRef(null);
+  const titleRef = useRef(null);
   const paragraphRef = useRef(null);
   const ctaRef = useRef(null);
 
   useGSAP(() => {
     if (!isReady) return;
 
-    let split = null;
+    const splits = [];
     let isCleanedUp = false;
     const isDesktop = window.innerWidth >= 768;
 
@@ -35,15 +37,42 @@ const About = ({ isReady = true, transitionRef }) => {
       if (isCleanedUp) return;
 
       const transitionEl = transitionRef?.current;
-      const header = headerRef.current;
+      const eyebrow = eyebrowRef.current;
+      const title = titleRef.current;
       const paragraph = paragraphRef.current;
       const imageWrapper = imageWrapperRef.current;
       const cta = ctaRef.current;
 
       if (!transitionEl) return;
 
+      const revealChars = (element, { startPct, endPct, stagger = 0.012, fromY = "110%" }) => {
+        const splitText = new SplitType(element, { types: "chars" });
+        splits.push(splitText);
+
+        if (!splitText.chars?.length) return null;
+
+        gsap.set(splitText.chars, { y: fromY, opacity: 0, force3D: true });
+
+        const charTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: transitionEl,
+            start: zoomScrollStart(startPct),
+            end: zoomScrollEnd(endPct),
+            scrub: true,
+            invalidateOnRefresh: true,
+            onLeave: () => gsap.set(splitText.chars, { opacity: 1, y: "0%" }),
+            onLeaveBack: () => gsap.set(splitText.chars, { opacity: 0, y: fromY }),
+          },
+        });
+
+        splitText.chars.forEach((char, i) => {
+          charTl.to(char, { y: "0%", opacity: 1, ease: "none", duration: 0.12 }, i * stagger);
+        });
+
+        return splitText;
+      };
+
       // ── Set initial hidden states explicitly ──────────────────────────────
-      if (header) gsap.set(header, { x: -40, opacity: 0, force3D: true });
       if (paragraph && !isDesktop) gsap.set(paragraph, { opacity: 0, y: 24, force3D: true });
       if (cta) gsap.set(cta, { opacity: 0, y: 16, force3D: true });
       if (imageWrapper) {
@@ -56,19 +85,20 @@ const About = ({ isReady = true, transitionRef }) => {
 
       // ── Text reveals — scrubbed to the same scroll as the O zoom ──────────
       // Using the transition wrapper ensures animations fire during the pin.
-      if (header) {
-        gsap.to(header, {
-          x: 0,
-          opacity: 1,
-          ease: "none",
-          force3D: true,
-          scrollTrigger: {
-            trigger: transitionEl,
-            start: zoomScrollStart(ZOOM_O_ENTER),
-            end: zoomScrollEnd(ZOOM_TEXT_END),
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
+      if (eyebrow) {
+        revealChars(eyebrow, {
+          startPct: ZOOM_O_ENTER,
+          endPct: ZOOM_O_ENTER + 0.1,
+          stagger: isDesktop ? 0.025 : 0.035,
+          fromY: "100%",
+        });
+      }
+
+      if (title) {
+        revealChars(title, {
+          startPct: ZOOM_O_ENTER + 0.02,
+          endPct: ZOOM_TEXT_END,
+          stagger: isDesktop ? 0.012 : 0.018,
         });
       }
 
@@ -76,7 +106,8 @@ const About = ({ isReady = true, transitionRef }) => {
         if (isDesktop) {
           gsap.set(paragraph, { opacity: 1, y: 0, clearProps: "transform" });
 
-          split = new SplitType(paragraph, { types: "lines" });
+          const split = new SplitType(paragraph, { types: "lines" });
+          splits.push(split);
           if (split.lines?.length) {
             gsap.set(split.lines, { y: 28, opacity: 0, force3D: true });
 
@@ -199,10 +230,7 @@ const About = ({ isReady = true, transitionRef }) => {
 
     return () => {
       isCleanedUp = true;
-      if (split) {
-        split.revert();
-        split = null;
-      }
+      splits.forEach((split) => split.revert());
     };
 
   }, { scope: aboutRef, dependencies: [isReady] });
@@ -242,10 +270,16 @@ const About = ({ isReady = true, transitionRef }) => {
 
       <div className="w-full lg:w-1/2 flex flex-col items-start gap-8 order-1 lg:order-2">
         <div ref={headerRef} className="about-header overflow-hidden">
-            <h2 className="text-sm font-mono text-purple-400 uppercase tracking-[0.3em] mb-2">
+            <h2
+              ref={eyebrowRef}
+              className="text-sm font-mono text-purple-400 uppercase tracking-[0.3em] mb-2 overflow-hidden"
+            >
                 / WHO I AM
             </h2>
-            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold leading-[0.85] tracking-tighter">
+            <h1
+              ref={titleRef}
+              className="text-4xl sm:text-6xl lg:text-8xl font-bold leading-[0.85] tracking-tighter overflow-hidden"
+            >
                 Crafting digital <br />
                 <span className="text-white/40 italic font-light">experiences.</span>
             </h1>

@@ -89,15 +89,17 @@ const skillsData = [
   },
 ];
 
-const Skills = () => {
-  const wrapperRef      = useRef(null); // full section scope
-  const triggerRef      = useRef(null); // the tall scroll-pinned div
-  const sectionRef      = useRef(null); // inner horizontal content
+const Skills = ({ isReady = true }) => {
+  const wrapperRef      = useRef(null);
+  const triggerRef      = useRef(null);
+  const sectionRef      = useRef(null);
   const indicatorRef    = useRef(null);
   const introSectionRef = useRef(null);
   const mainTitleRef    = useRef(null);
 
   useGSAP(() => {
+    if (!isReady) return;
+
     const trigger = triggerRef.current;
     const section = sectionRef.current;
     if (!trigger || !section) return;
@@ -105,22 +107,30 @@ const Skills = () => {
     const splits = [];
     let isCleanedUp = false;
 
+    const getHorizontalScroll = () => {
+      const distance = section.scrollWidth - window.innerWidth;
+      return distance > 0 ? -distance : 0;
+    };
+
     const initAnimations = () => {
       if (isCleanedUp) return;
 
       const isMobile = window.innerWidth < 768;
 
+      gsap.set(section, { x: 0, force3D: true });
+
       // ── "Tech Stack." intro title ──────────────────────────────────────────
       if (mainTitleRef.current) {
-        // Desktop & Mobile: SplitType char reveal
         const splitIntro = new SplitType(mainTitleRef.current, { types: "chars" });
         splits.push(splitIntro);
-        
-        gsap.fromTo(splitIntro.chars, {
+        gsap.set(splitIntro.chars, {
           y: isMobile ? 80 : 150,
           rotateX: isMobile ? -45 : -90,
           opacity: 0,
-        }, {
+          force3D: true,
+        });
+
+        gsap.to(splitIntro.chars, {
           y: 0,
           rotateX: 0,
           opacity: 1,
@@ -132,11 +142,12 @@ const Skills = () => {
             trigger: mainTitleRef.current,
             start: isMobile ? "top 85%" : "top 80%",
             toggleActions: "play none none reverse",
+            invalidateOnRefresh: true,
           },
         });
 
-        // Scrub exit — only on desktop
         if (!isMobile) {
+          gsap.set(mainTitleRef.current, { y: 0, scale: 1, opacity: 1, force3D: true });
           gsap.to(mainTitleRef.current, {
             y: -100,
             scale: 0.9,
@@ -148,57 +159,53 @@ const Skills = () => {
               start: "top top",
               end: "bottom top",
               scrub: true,
+              invalidateOnRefresh: true,
             },
           });
         }
       }
 
-      // ── Horizontal scroll (ALL screen sizes) ──────────────────────────────
+      // ── Horizontal scroll (CSS sticky viewport + scrubbed x translate) ───
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: trigger,
+          trigger,
           start: "top top",
           end: "bottom bottom",
-          scrub: isMobile ? 0.8 : 1, // smooth momentum on mobile, smoothed on desktop
+          scrub: isMobile ? 0.8 : 1,
           invalidateOnRefresh: true,
-        }
+          fastScrollEnd: true,
+        },
       });
 
       if (isMobile) {
-        // Add a 15% scroll delay/gap at the start before horizontal scroll begins
-        tl.to(section, { x: 0, duration: 0.15 });
+        tl.to(section, { x: 0, duration: 0.15, ease: "none" });
         tl.to(section, {
-          x: () => -(section.offsetWidth - window.innerWidth),
+          x: getHorizontalScroll,
           ease: "none",
           duration: 0.85,
           force3D: true,
         });
       } else {
         tl.to(section, {
-          x: () => -(section.offsetWidth - window.innerWidth),
+          x: getHorizontalScroll,
           ease: "none",
           duration: 1,
           force3D: true,
         });
       }
 
-      const pin = tl;
-
       // ── Card header + item reveal (scoped to containerAnimation) ──────────
-      const cards = gsap.utils.toArray(".skill-card");
+      const cards = gsap.utils.toArray(".skill-card", wrapperRef.current);
       cards.forEach((card) => {
         const h3    = card.querySelector("h3");
         const items = card.querySelectorAll(".skill-item");
 
         if (h3) {
-          // Desktop & Mobile: SplitType chars
           const splitCard = new SplitType(h3, { types: "chars" });
           splits.push(splitCard);
-          
-          gsap.fromTo(splitCard.chars, {
-            y: 20,
-            opacity: 0,
-          }, {
+          gsap.set(splitCard.chars, { y: 20, opacity: 0, force3D: true });
+
+          gsap.to(splitCard.chars, {
             y: 0,
             opacity: 1,
             stagger: 0.02,
@@ -207,61 +214,61 @@ const Skills = () => {
             force3D: true,
             scrollTrigger: {
               trigger: card,
-              containerAnimation: pin,
+              containerAnimation: tl,
               start: isMobile ? "left 95%" : "left 80%",
               toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
             },
           });
         }
 
         if (items.length > 0) {
-          gsap.fromTo(
-            items,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1,
-              y: 0,
-              stagger: 0.04,
-              duration: 0.7,
-              ease: "power3.out",
-              force3D: true,
-              scrollTrigger: {
-                trigger: card,
-                containerAnimation: pin,
-                start: isMobile ? "left 95%" : "left 90%",
-                toggleActions: "play none none reverse",
-              },
-            }
-          );
+          gsap.set(items, { opacity: 0, y: 20, force3D: true });
+          gsap.to(items, {
+            opacity: 1,
+            y: 0,
+            stagger: 0.04,
+            duration: 0.7,
+            ease: "power3.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: card,
+              containerAnimation: tl,
+              start: isMobile ? "left 95%" : "left 90%",
+              toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
+            },
+          });
         }
       });
 
       // ── Scroll indicator ───────────────────────────────────────────────────
       if (indicatorRef.current) {
-        gsap.fromTo(
-          indicatorRef.current,
-          { opacity: 0, x: -20 },
-          {
-            opacity: 0.4,
-            x: 0,
-            force3D: true,
-            scrollTrigger: {
-              trigger: trigger,
-              start: "top center",
-              end: "top top",
-              scrub: true,
-            },
-          }
-        );
+        gsap.set(indicatorRef.current, { opacity: 0, x: -20, force3D: true });
+
+        gsap.to(indicatorRef.current, {
+          opacity: 0.4,
+          x: 0,
+          force3D: true,
+          scrollTrigger: {
+            trigger,
+            start: "top center",
+            end: "top top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
         gsap.to(indicatorRef.current, {
           opacity: 0,
           x: -20,
           force3D: true,
           scrollTrigger: {
-            trigger: trigger,
+            trigger,
             start: "bottom 30%",
             end: "bottom top",
             scrub: true,
+            invalidateOnRefresh: true,
           },
         });
       }
@@ -269,17 +276,27 @@ const Skills = () => {
       ScrollTrigger.refresh();
     };
 
+    const setup = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(initAnimations);
+      });
+    };
+
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", onResize);
+
     if (document.fonts) {
-      document.fonts.ready.then(initAnimations);
+      document.fonts.ready.then(setup);
     } else {
-      initAnimations();
+      setup();
     }
 
     return () => {
       isCleanedUp = true;
+      window.removeEventListener("resize", onResize);
       splits.forEach((s) => s.revert());
     };
-  }, { scope: wrapperRef, dependencies: [] });
+  }, { scope: wrapperRef, dependencies: [isReady] });
 
   return (
     <section ref={wrapperRef} className="relative bg-[#0a0a0a]" id="skills">
@@ -316,16 +333,11 @@ const Skills = () => {
       </div>
 
       {/* ── Horizontal scroll (all screen sizes) ──────────────────────────── */}
-      {/*
-        h-[280vh] on mobile gives a tighter and more comfortable scroll distance
-        than h-[400vh] to avoid scrolling too far past content.
-        On desktop h-[300vh] is enough.
-      */}
       <div ref={triggerRef} className="relative h-[280vh] md:h-[300vh]">
-        <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+        <div className="skills-horizontal-sticky sticky top-0 h-screen w-full flex items-center overflow-hidden">
           <div
             ref={sectionRef}
-            className="flex h-full items-center min-w-max"
+            className="flex h-full items-center min-w-max will-change-transform"
             style={{ paddingLeft: "clamp(1.5rem, 8vw, 25vw)", paddingRight: "clamp(1.5rem, 8vw, 15vw)" }}
           >
             <div
@@ -338,7 +350,6 @@ const Skills = () => {
                   className="skill-card flex flex-col justify-start h-full"
                   style={{ paddingTop: "clamp(12vh, 14vh, 16vh)" }}
                 >
-                  {/* Category label + heading */}
                   <div className="flex items-baseline gap-3 md:gap-6 mb-6 md:mb-12 flex-nowrap">
                     <span className="text-xl sm:text-2xl md:text-5xl lg:text-6xl font-mono text-purple-500/50 uppercase tracking-[0.2em]">
                       {`0${index + 1}`}
@@ -348,7 +359,6 @@ const Skills = () => {
                     </h3>
                   </div>
 
-                  {/* Skill items grid */}
                   <div
                     className={`grid ${
                       skill.items.length > 6
@@ -393,7 +403,6 @@ const Skills = () => {
             </div>
           </div>
 
-          {/* Scroll indicator — visible on all screen sizes */}
           <div
             ref={indicatorRef}
             className="flex absolute bottom-8 md:bottom-12 items-center gap-4 md:gap-8 opacity-40 hover:opacity-100 transition-opacity duration-500"

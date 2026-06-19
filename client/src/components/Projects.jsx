@@ -10,7 +10,7 @@ import mindtrace from "../assets/mindtrace.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Projects = () => {
+const Projects = ({ isReady = true }) => {
     const containerRef = useRef(null);
     const rightRef = useRef(null);
     const mainTitleRef = useRef(null);
@@ -46,6 +46,8 @@ const Projects = () => {
     ];
 
     useGSAP(() => {
+        if (!isReady) return;
+
         const mm = gsap.matchMedia();
         let splitIntro = null;
         let isCleanedUp = false;
@@ -55,16 +57,17 @@ const Projects = () => {
 
             const isMobile = window.innerWidth < 768;
 
-            // 1. Massive Intro Title Reveal
+            // 1. Intro title reveal
             if (mainTitleRef.current) {
-                // Desktop & Mobile: SplitType char reveal
-                splitIntro = new SplitType(mainTitleRef.current, { types: 'chars' });
-                
-                gsap.fromTo(splitIntro.chars, {
+                splitIntro = new SplitType(mainTitleRef.current, { types: "chars" });
+                gsap.set(splitIntro.chars, {
                     y: isMobile ? 80 : 150,
                     rotateX: isMobile ? -45 : -90,
                     opacity: 0,
-                }, {
+                    force3D: true,
+                });
+
+                gsap.to(splitIntro.chars, {
                     y: 0,
                     rotateX: 0,
                     opacity: 1,
@@ -75,12 +78,13 @@ const Projects = () => {
                     scrollTrigger: {
                         trigger: mainTitleRef.current,
                         start: isMobile ? "top 85%" : "top 80%",
-                        toggleActions: "play none none reverse"
-                    }
+                        toggleActions: "play none none reverse",
+                        invalidateOnRefresh: true,
+                    },
                 });
 
-                // Desktop-only scrub exit — enough scroll range to reverse cleanly
                 if (!isMobile) {
+                    gsap.set(mainTitleRef.current, { y: 0, scale: 1, opacity: 1, force3D: true });
                     gsap.to(mainTitleRef.current, {
                         y: -100,
                         scale: 0.9,
@@ -91,18 +95,18 @@ const Projects = () => {
                             trigger: introSectionRef.current,
                             start: "top top",
                             end: "bottom top",
-                            scrub: true
-                        }
+                            scrub: true,
+                            invalidateOnRefresh: true,
+                        },
                     });
                 }
             }
 
-            // 2. DESKTOP ANIMATIONS (lg and above)
+            // 2. Desktop animations
             mm.add("(min-width: 1024px)", () => {
                 const images = gsap.utils.toArray(".sticky-image-item");
                 const projectSections = gsap.utils.toArray(".project-full-section");
-                
-                // Set initial state for images
+
                 gsap.set(images, { clipPath: "inset(100% 0% 0% 0%)", opacity: 1, force3D: true });
                 gsap.set(images[0], { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, force3D: true });
 
@@ -119,10 +123,11 @@ const Projects = () => {
                             start: "top bottom",
                             end: "top top",
                             scrub: true,
-                        }
+                            invalidateOnRefresh: true,
+                        },
                     });
 
-                    gsap.to(images[i-1], {
+                    gsap.to(images[i - 1], {
                         yPercent: -20,
                         opacity: 0.1,
                         scale: 0.95,
@@ -133,15 +138,19 @@ const Projects = () => {
                             start: "top bottom",
                             end: "top top",
                             scrub: true,
-                        }
+                            invalidateOnRefresh: true,
+                        },
                     });
                 });
 
                 projectSections.forEach((section) => {
                     const content = section.querySelector(".project-content");
-                    gsap.from(content, {
-                        x: -50,
-                        opacity: 0,
+                    if (!content) return;
+
+                    gsap.set(content, { x: -50, opacity: 0, force3D: true });
+                    gsap.to(content, {
+                        x: 0,
+                        opacity: 1,
                         duration: 1.2,
                         ease: "power3.out",
                         force3D: true,
@@ -149,43 +158,48 @@ const Projects = () => {
                             trigger: section,
                             start: "top 70%",
                             toggleActions: "play none none reverse",
-                        }
+                            invalidateOnRefresh: true,
+                        },
                     });
                 });
             });
 
-            // 3. MOBILE ANIMATIONS (below lg) — NO scrub (causes touch jank)
+            // 3. Mobile animations
             mm.add("(max-width: 1023px)", () => {
                 const cards = gsap.utils.toArray(".mobile-project-card-wrapper");
-                
-                // Simple fade+slide reveal only — toggleActions so no scrub overhead
+
                 cards.forEach((card) => {
-                    gsap.fromTo(card,
-                        { opacity: 0, y: 40 },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: 0.6,
-                            ease: "power2.out",
-                            force3D: true,
-                            onComplete: () => gsap.set(card, { clearProps: "transform,opacity" }),
-                            scrollTrigger: {
-                                trigger: card,
-                                start: "top 90%",
-                                toggleActions: "play none none reverse",
-                            },
-                        }
-                    );
+                    gsap.set(card, { opacity: 0, y: 40, force3D: true });
+                    gsap.to(card, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        force3D: true,
+                        onComplete: () => gsap.set(card, { clearProps: "transform,opacity" }),
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 90%",
+                            toggleActions: "play none none reverse",
+                            invalidateOnRefresh: true,
+                        },
+                    });
                 });
             });
 
             ScrollTrigger.refresh();
         };
 
+        const setup = () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(initAnimations);
+            });
+        };
+
         if (document.fonts) {
-            document.fonts.ready.then(initAnimations);
+            document.fonts.ready.then(setup);
         } else {
-            initAnimations();
+            setup();
         }
 
         return () => {
@@ -196,16 +210,15 @@ const Projects = () => {
                 splitIntro = null;
             }
         };
-    }, { scope: containerRef, dependencies: [] });
+    }, { scope: containerRef, dependencies: [isReady] });
 
     return (
         <section ref={containerRef} className="relative w-full bg-[#0a0a0a]" id="projects">
-            {/* Massive Full-Width Hero Title */}
             <div ref={introSectionRef} className="h-[70vh] lg:h-screen w-full flex flex-col justify-center items-center px-6 md:px-20 overflow-hidden relative border-b border-white/5">
                 <div className="absolute top-12 md:top-20 left-6 md:left-20">
                     <span className="text-[10px] md:text-sm font-mono text-purple-400 uppercase tracking-[0.5em]">/ Selected Projects</span>
                 </div>
-                
+
                 <h1 ref={mainTitleRef} className="text-[clamp(3.8rem,16vw,25rem)] lg:text-[clamp(5rem,18vw,25rem)] font-black tracking-tighter text-white leading-[0.9] uppercase select-none text-center flex flex-col items-center">
                     <span>Selected</span>
                     <span>Work.</span>
@@ -218,14 +231,12 @@ const Projects = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row w-full relative">
-                
-                {/* Desktop Left Side / Mobile Stack */}
+
                 <div className="w-full lg:w-1/2 flex flex-col">
-                    {/* PC View (Hidden on Mobile) */}
                     <div className="hidden lg:flex flex-col">
                         {projects.map((project, index) => (
-                            <div 
-                                key={project.id} 
+                            <div
+                                key={project.id}
                                 className="project-full-section relative h-screen flex flex-col justify-center px-6 md:px-16 lg:pl-24 lg:pr-12"
                             >
                                 <div className="project-content flex flex-col gap-6 group">
@@ -244,12 +255,12 @@ const Projects = () => {
                                     <div className="flex flex-wrap gap-3 mt-4">
                                         {project.technologies.map((tech, i) => (
                                             <span key={i} className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-full text-[11px] font-mono text-white/70 tracking-wider hover:text-white hover:bg-white/20 transition-all duration-300">
-                                            {tech}
-                                        </span>
+                                                {tech}
+                                            </span>
                                         ))}
                                     </div>
                                     <div className="flex gap-8 mt-8">
-                                            <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/70 hover:text-white transition-all duration-300 group/link">
+                                        <a href={project.githublink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/70 hover:text-white transition-all duration-300 group/link">
                                             <div className="p-3 bg-white/10 rounded-full group-hover:bg-purple-500/30 transition-colors">
                                                 <Github size={20} />
                                             </div>
@@ -257,9 +268,9 @@ const Projects = () => {
                                         </a>
                                         {project.liveLink && (
                                             <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/70 hover:text-white transition-all duration-300 group/link">
-                                            <div className="p-3 bg-white/10 rounded-full group-hover:bg-purple-500/30 transition-colors">
-                                                <ArrowUpRight size={22} className="group-hover/link:rotate-45 transition-transform duration-500" />
-                                            </div>
+                                                <div className="p-3 bg-white/10 rounded-full group-hover:bg-purple-500/30 transition-colors">
+                                                    <ArrowUpRight size={22} className="group-hover/link:rotate-45 transition-transform duration-500" />
+                                                </div>
                                                 <span className="text-xs font-mono uppercase tracking-[0.3em] font-black hidden md:block">Live Demo</span>
                                             </a>
                                         )}
@@ -269,11 +280,10 @@ const Projects = () => {
                         ))}
                     </div>
 
-                    {/* Mobile View (Hidden on PC) */}
                     <div className="lg:hidden flex flex-col px-4 py-12 gap-12 pb-[20vh]">
                         {projects.map((project, index) => (
-                            <div 
-                                key={project.id} 
+                            <div
+                                key={project.id}
                                 className="mobile-project-card-wrapper sticky"
                                 style={{ top: `calc(120px + ${index * 24}px)`, zIndex: index }}
                             >
@@ -291,10 +301,10 @@ const Projects = () => {
 
                                         <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-6 border border-white/10 p-4 bg-white/5">
                                             <div className="w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-black">
-                                                <img 
-                                                    src={project.image} 
-                                                    alt={project.name} 
-                                                    className="w-full h-full object-contain" 
+                                                <img
+                                                    src={project.image}
+                                                    alt={project.name}
+                                                    className="w-full h-full object-contain"
                                                 />
                                             </div>
                                         </div>
@@ -330,18 +340,17 @@ const Projects = () => {
                     </div>
                 </div>
 
-                {/* Desktop Right Side: Sticky Images (Desktop Only) */}
                 <div ref={rightRef} className="hidden lg:flex w-1/2 h-screen sticky top-0 items-center justify-center p-24 pl-12 pr-24 pointer-events-none">
                     <div className="relative w-full h-[85%] max-w-2xl rounded-[4rem] overflow-hidden border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] bg-black p-10">
                         {projects.map((project, index) => (
-                            <div 
-                                key={project.id} 
+                            <div
+                                key={project.id}
                                 className="sticky-image-item absolute inset-[40px] will-change-transform rounded-[2.5rem] border border-white/10 overflow-hidden bg-[#111]"
                                 style={{ zIndex: 10 + index }}
                             >
-                                <img 
-                                    src={project.image} 
-                                    alt={project.name} 
+                                <img
+                                    src={project.image}
+                                    alt={project.name}
                                     className="w-full h-full object-contain p-2"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />

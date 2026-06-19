@@ -221,6 +221,16 @@ body {
   }
 }
 
+.about-header h1,
+.about-header h2 {
+  font-kerning: none;
+}
+
+.about-header .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
 /* Scroll cue — visible throughout the entire zoom section */
 .scroll-cue {
   position: absolute;
@@ -334,9 +344,21 @@ body {
 }
 
 /* ── General performance: contain repaint to each section ────────────────── */
-#skills,
-#projects,
+/* Note: #skills and #projects use position:sticky — layout containment breaks it */
 #about,
 #contact {
   contain: layout style;
+}
+
+#skills,
+#projects {
+  contain: style;
+}
+
+.skills-horizontal-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
