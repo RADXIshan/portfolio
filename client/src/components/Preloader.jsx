@@ -4,12 +4,12 @@ import logo from '../assets/logo.png';
 
 const Preloader = ({ onComplete }) => {
   const preloaderRef = useRef(null);
+  const counterRef = useRef(null);
+  const lineRef = useRef(null);
   const logoRef = useRef(null);
-  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const wrapperRef = useRef(null);
   const panelsRef = useRef([]);
-  const hundredRef = useRef(null);
-  const tensRef = useRef(null);
-  const onesRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -19,160 +19,140 @@ const Preloader = ({ onComplete }) => {
         }
       });
 
-      const isMobile = window.innerWidth < 768;
+      // Initial State
+      gsap.set(logoRef.current, { opacity: 0, y: 40, scale: 0.95 });
+      gsap.set(textRef.current, { opacity: 0, y: 10 });
+      gsap.set(lineRef.current, { scaleX: 0, transformOrigin: 'left center' });
+      gsap.set(panelsRef.current, { scaleY: 1 });
 
-      // 1. Initial State
-      gsap.set(panelsRef.current, { yPercent: 0 });
-      gsap.set(logoRef.current, { opacity: 0, scale: 0.8, filter: 'invert(1)' });
-      gsap.set([hundredRef.current, tensRef.current, onesRef.current], { y: 0 });
-      gsap.set(hundredRef.current, { opacity: 0, width: 0 });
-      
-      // 2. Entrance
+      // Entrance
       tl.to(logoRef.current, {
         opacity: 1,
+        y: 0,
         scale: 1,
+        duration: 1.8,
+        ease: 'power4.out'
+      })
+      .to(textRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1.2,
         ease: 'power3.out'
+      }, "-=1.4")
+      .to(lineRef.current, {
+        scaleX: 1,
+        duration: 2.8,
+        ease: 'power2.inOut'
+      }, "-=1.6");
+
+      // Counter animation
+      let count = { value: 0 };
+      gsap.to(count, {
+        value: 100,
+        duration: 2.8,
+        ease: 'power2.inOut',
+        delay: 0.2,
+        onUpdate: () => {
+          if (counterRef.current) {
+            counterRef.current.textContent = Math.round(count.value);
+          }
+        }
+      });
+
+      // Exit Animation
+      // Fade and blur the central content
+      tl.to(wrapperRef.current, {
+        opacity: 0,
+        scale: 1.1,
+        filter: 'blur(15px)',
+        duration: 1,
+        ease: 'power3.inOut',
+        delay: 0.2
       })
-      
-      // 3. SUPERCHARGED COUNTER ANIMATION
-      .to(onesRef.current, {
-        y: '-90.9090909091%', // Precision for 11 items (0-9-0) -> (10/11)
-        duration: 2.5,
-        ease: 'power4.inOut'
-      }, "-=0.2")
-      
-      .to(tensRef.current, {
-        y: '-90.9090909091%', 
-        duration: 2.5,
-        ease: 'power4.inOut'
-      }, "<") 
-      
-      .to(hundredRef.current, {
-        opacity: 1,
-        width: isMobile ? '2.4rem' : '4.2rem',
-        duration: 0.4,
-        ease: 'power2.out'
-      }, "-=0.6")
-      
-      // 4. Final Exit: simple fade+translate on mobile, blur on desktop
-      .to(containerRef.current, isMobile
-        ? {
-            opacity: 0,
-            y: -30,
-            duration: 0.6,
-            ease: 'power3.inOut',
-            delay: 0.2
-          }
-        : {
-            opacity: 0,
-            scale: 0.9,
-            y: -40,
-            filter: 'blur(10px)',
-            duration: 0.8,
-            ease: 'power3.inOut',
-            delay: 0.2
-          }
-      )
-      
-      // 5. PANEL EXIT — fewer stagger panels on mobile for perf
+      // Slide panels up
       .to(panelsRef.current, {
-        yPercent: -100,
-        duration: isMobile ? 0.8 : 1.2,
-        stagger: {
-          amount: isMobile ? 0.2 : 0.4,
-          from: isMobile ? "start" : "random"
-        },
+        scaleY: 0,
+        transformOrigin: 'top center',
+        duration: 1.2,
+        stagger: 0.05,
         ease: 'expo.inOut'
-      }, "-=0.2");
+      }, "-=0.6");
 
     }, preloaderRef);
 
     return () => ctx.revert();
   }, [onComplete]);
 
-  const reel = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-
   return (
     <div 
       ref={preloaderRef}
       className="fixed inset-0 z-[20000] flex items-center justify-center overflow-hidden pointer-events-none"
     >
-      {/* Optimized Single Noise Layer */}
-      <div className="absolute inset-0 bg-[#0a0a0a] z-0">
-        <div className="absolute inset-[-100%] w-[300%] h-[300%] opacity-[0.03] bg-noise pointer-events-none"></div>
-      </div>
-
-      {/* Background Staggered Panels */}
-      <div className="absolute inset-0 flex z-10">
-        {[...Array(5)].map((_, i) => (
+      {/* Background Panels for elegant exit */}
+      <div className="absolute inset-0 flex z-0">
+        {[...Array(4)].map((_, i) => (
           <div
             key={i}
             ref={el => panelsRef.current[i] = el}
-            className="flex-1 h-full bg-[#0a0a0a] border-r border-white/5 last:border-r-0"
+            className="flex-1 h-full bg-[#0a0a0a]"
           ></div>
         ))}
       </div>
 
-      {/* Center Content */}
-      <div ref={containerRef} className="relative z-20 flex flex-col items-center gap-4 md:gap-6 pointer-events-auto">
-        <div className="relative">
-          <div 
-            ref={logoRef}
-            className="p-3 md:p-5 border border-white/10 rounded-[2rem] md:rounded-[2.5rem] bg-white/[0.03] backdrop-blur-xl flex items-center justify-center transform-gpu"
-          >
+      {/* Noise Overlay */}
+      <div className="absolute inset-0 z-10 opacity-[0.03] bg-noise pointer-events-none mix-blend-overlay"></div>
+
+      {/* Content */}
+      <div ref={wrapperRef} className="relative z-20 flex flex-col items-center justify-center w-full px-6">
+        
+        {/* Elegant Logo Container */}
+        <div 
+          ref={logoRef} 
+          className="mb-14 flex flex-col items-center"
+        >
+          <div className="relative p-7 rounded-[2rem] bg-white/[0.01] border border-white/5 backdrop-blur-3xl shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-20"></div>
             <img 
               src={logo} 
               alt="iR Logo" 
-              className="w-24 md:w-32 h-auto rounded-xl md:rounded-2xl"
+              className="w-16 h-auto md:w-24 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]"
             />
           </div>
         </div>
-        
-        <div className="flex items-center justify-center h-[140px] md:h-[200px] select-none px-4 gap-0 overflow-hidden">
-          {/* Hundreds Digit */}
-          <div ref={hundredRef} className="opacity-0 w-0 h-full flex flex-col items-center overflow-hidden">
-            <span className="h-full flex items-center justify-center text-7xl md:text-9xl font-black text-white leading-none text-center" style={{ fontFamily: '"Outfit", sans-serif' }}>
-              1
+
+        {/* Typography & Progress */}
+        <div className="flex flex-col items-center w-full max-w-[240px] md:max-w-[300px]">
+          <div className="flex items-end mb-6 overflow-hidden">
+            <span 
+              ref={counterRef} 
+              className="text-6xl md:text-8xl font-light text-white tracking-tighter leading-none"
+              style={{ fontFamily: '"Outfit", sans-serif', fontVariantNumeric: 'tabular-nums' }}
+            >
+              0
             </span>
+            <span className="text-2xl md:text-3xl text-white/40 font-light ml-2 mb-1 md:mb-2 leading-none">%</span>
           </div>
 
-          {/* Tens Reel */}
-          <div className="relative h-full overflow-hidden w-[3.6rem] md:w-[6.2rem] flex flex-col items-center">
-            <div ref={tensRef} className="flex flex-col items-center">
-              {reel.map((d, i) => (
-                <span key={i} className="h-[140px] md:h-[200px] flex items-center justify-center text-7xl md:text-9xl font-black text-white leading-none text-center" style={{ fontFamily: '"Outfit", sans-serif' }}>
-                  {d}
-                </span>
-              ))}
-            </div>
+          {/* Very thin, elegant progress line */}
+          <div className="w-full h-[1px] bg-white/10 relative overflow-hidden rounded-full">
+            <div 
+              ref={lineRef}
+              className="absolute top-0 left-0 h-full w-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+            ></div>
           </div>
 
-          {/* Ones Reel */}
-          <div className="relative h-full overflow-hidden w-[3.6rem] md:w-[6.2rem] flex flex-col items-center">
-            <div ref={onesRef} className="flex flex-col items-center">
-              {reel.map((d, i) => (
-                <span key={i} className="h-[140px] md:h-[200px] flex items-center justify-center text-7xl md:text-9xl font-black text-white leading-none text-center" style={{ fontFamily: '"Outfit", sans-serif' }}>
-                  {d}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Percent Symbol */}
-          <div className="flex flex-col self-center ml-2">
-            <span className="text-4xl md:text-6xl font-black text-white/30" style={{ fontFamily: '"Outfit", sans-serif' }}>
-              %
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-4">
-             <div className="h-[1px] w-16 bg-white/20"></div>
-             <div className="tracking-[0.8em] text-white/20 uppercase text-[9px] md:text-xs font-bold pl-[0.8em]">
-                Initializing
+          <div className="mt-8 flex items-center justify-between w-full">
+             <div className="h-[1px] w-8 bg-white/20"></div>
+             <div 
+              ref={textRef}
+              className="text-[9px] md:text-[10px] font-medium uppercase tracking-[0.5em] text-white/30 pl-[0.5em]"
+             >
+               Initializing
              </div>
+             <div className="h-[1px] w-8 bg-white/20"></div>
+          </div>
         </div>
+
       </div>
     </div>
   );
