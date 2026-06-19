@@ -135,8 +135,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center text-center mb-20">
             {/* overflow-hidden clips the chars as they animate up from y:100 */}
-            <div className="footer-headline-wrap overflow-hidden pb-2">
-              <h2 ref={headlineRef} className="footer-headline text-[clamp(3rem,10vw,10rem)] font-bold tracking-tighter leading-none mb-8">
+            <div className="footer-headline-wrap overflow-hidden py-4 px-4 -my-4 -mx-4">
+              <h2 ref={headlineRef} className="footer-headline text-[clamp(2.2rem,8vw,8rem)] font-bold tracking-tighter leading-[1.1] mb-8">
                   LET'S BUILD <br />
                   <span className="text-white/20 italic font-light">TOGETHER.</span>
               </h2>
