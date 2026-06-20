@@ -157,18 +157,18 @@ const Home = ({ isLoading, setActiveSection }) => {
     if (isLoading) return;
 
     const sections = [
-      { id: "home", color: "#0a0a0a" },
-      { id: "about", color: "#0a0a0a" },
-      { id: "skills", color: "#0a0a0a" },
-      { id: "projects", color: "#0a0a0a" },
-      { id: "contact", color: "#0a0a0a" },
+      { trigger: "#hero-transition", id: "home", color: "#0a0a0a" },
+      { trigger: "#about", id: "about", color: "#0a0a0a" },
+      { trigger: "#skills", id: "skills", color: "#0a0a0a" },
+      { trigger: "#projects", id: "projects", color: "#0a0a0a" },
+      { trigger: "#contact", id: "contact", color: "#0a0a0a" },
     ];
 
     let currentColor = "";
 
-    sections.forEach(({ id, color }) => {
+    sections.forEach(({ trigger, id, color }) => {
       ScrollTrigger.create({
-        trigger: `#${id}`,
+        trigger: trigger,
         start: "top 50%",
         end: "bottom 50%",
         onEnter: () => {

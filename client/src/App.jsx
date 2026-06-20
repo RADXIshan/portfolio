@@ -22,6 +22,38 @@ const App = () => {
     gsap.set(".app-content", { opacity: 0 });
   }, []);
 
+  // Handle smooth scroll anchor clicks for all devices
+  useEffect(() => {
+    const handleAnchorClick = (e) => {
+      const link = e.target.closest('a');
+      if (link && link.hash && link.pathname === window.location.pathname) {
+        e.preventDefault();
+        const hash = link.hash;
+        if (hash === '#home') {
+          if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+            window.lenis.scrollTo(0);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        } else {
+          const target = document.querySelector(hash);
+          if (target) {
+            if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+              window.lenis.scrollTo(target);
+            } else {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+    };
+  }, []);
+
   useEffect(() => {
     // On mobile, skip Lenis entirely — native scroll is smoother and Lenis
     // RAF loop adds CPU overhead that causes jank on low-end phones.
@@ -80,26 +112,11 @@ const App = () => {
     gsap.ticker.add(onTick);
     gsap.ticker.lagSmoothing(0);
 
-    // Smooth scroll for anchor links
-    const handleAnchorClick = (e) => {
-      const link = e.target.closest('a');
-      if (link && link.hash && link.pathname === window.location.pathname) {
-        const target = document.querySelector(link.hash);
-        if (target) {
-          e.preventDefault();
-          lenis.scrollTo(target);
-        }
-      }
-    };
-
-    document.addEventListener('click', handleAnchorClick);
-
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
       ScrollTrigger.scrollerProxy(document.documentElement, {});
       gsap.ticker.remove(onTick);
       lenis.destroy();
-      document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 
