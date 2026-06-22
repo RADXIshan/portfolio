@@ -191,7 +191,7 @@ const Hero = ({ isReady }) => {
     { icon: faLinkedin,     label: "LinkedIn", href: "https://www.linkedin.com/in/ishanroy-radx/" },
     { icon: faGithub,       label: "GitHub",   href: "https://github.com/RADXIshan" },
     { icon: faEnvelope,     label: "Email",    href: "mailto:ishanroy3118107@gmail.com" },
-    { icon: faFileArrowDown,label: "Resume",   href: "https://drive.google.com/file/d/1_X79WIINx7SmFOyGYLFEvio_YyIVO2nt/view?usp=sharing" },
+    { icon: faFileArrowDown,label: "Resume",   href: "https://drive.google.com/file/d/1baJJfGPZhekaTkrOqgnRzuKw91gMU1oY/view?usp=sharing" },
   ];
 
   return (
