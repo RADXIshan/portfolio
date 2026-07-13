@@ -66,7 +66,9 @@ const App = () => {
         start: () => {},
         destroy: () => {},
         scrollTo: (target) => {
-          if (target && target.scrollIntoView) {
+          if (typeof target === 'number') {
+            window.scrollTo({ top: target, behavior: 'smooth' });
+          } else if (target && target.scrollIntoView) {
             target.scrollIntoView({ behavior: 'smooth' });
           }
         },
